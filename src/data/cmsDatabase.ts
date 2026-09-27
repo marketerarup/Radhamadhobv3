@@ -278,7 +278,7 @@ export const INITIAL_SEO_SEED: SeoPageRecord[] = [
     seo_title:
       'রাধামাধব সাংস্কৃতিক জোট | সনাতনী সংস্কৃতি, নাটক, নৃত্য ও ঐতিহ্যের পরিবার',
     meta_description:
-      'রাধামাধব সাংস্কৃতিক জোট একটি সনাতনী সাংস্কৃতিক সংগঠন। ধর্মীয় নাটক, পৌরাণিক নাটক, বৈদিক নৃত্য, গীতিনাট্য ও ঐতিহ্য সংরক্ষণে আমাদের অফিসিয়াল ওয়েবসাইট।',
+      'রাধামাধব সাংস্কৃতিক জোট একটি সনাতনী সাংস্কৃতিক সংগঠন। ধর্মীয় নাটক, পৌরাণিক নাটক, বৈদিক নৃত্য, গীতিনাট্য ও ঐতিহ্য সংরক্ষণে আমাদের অফিশিয়াল ওয়েবসাইট।',
     keywords:
       'রাধামাধব সাংস্কৃতিক জোট, Radhamadhob Cultural Alliance, সনাতনী সংস্কৃতি, ধর্মীয় নাটক, পৌরাণিক নাটক, বিনয় কুমার সেন',
     url_slug: '/',
@@ -409,7 +409,7 @@ export const INITIAL_SEO_SEED: SeoPageRecord[] = [
     seo_title:
       'যোগাযোগ ও হোয়াটসঅ্যাপে যুক্ত হোন | রাধামাধব সাংস্কৃতিক জোট',
     meta_description:
-      'রাধামাধব সাংস্কৃতিক জোটের সাথে যুক্ত হতে সরাসরি হোয়াটসঅ্যাপে (+880 1797-059419) অথবা অফিসিয়াল ফেসবুক পেজে যোগাযোগ করুন।',
+      'রাধামাধব সাংস্কৃতিক জোটের সাথে যুক্ত হতে সরাসরি হোয়াটসঅ্যাপে (+880 1797-059419) অথবা অফিশিয়াল ফেসবুক পেজে যোগাযোগ করুন।',
     keywords:
       'যোগাযোগ, হোয়াটসঅ্যাপ, ফেসবুক পেজ, 01797-059419, রাধামাধব সাংস্কৃতিক জোট যোগাযোগ',
     url_slug: '/contact',
@@ -433,7 +433,7 @@ export const INITIAL_SEO_SEED: SeoPageRecord[] = [
     seo_title:
       'গোপনীয়তা নীতিমালা (Privacy Policy) | রাধামাধব সাংস্কৃতিক জোট',
     meta_description:
-      'রাধামাধব সাংস্কৃতিক জোটের অফিসিয়াল ওয়েবসাইটের গোপনীয়তা নীতিমালা, ছবি ও মিডিয়া নীতিমালা এবং হোয়াটসঅ্যাপ যোগাযোগ নীতি (বাংলা ও English)।',
+      'রাধামাধব সাংস্কৃতিক জোটের অফিশিয়াল ওয়েবসাইটের গোপনীয়তা নীতিমালা, ছবি ও মিডিয়া নীতিমালা এবং হোয়াটসঅ্যাপ যোগাযোগ নীতি (বাংলা ও English)।',
     keywords:
       'গোপনীয়তা নীতিমালা, Privacy Policy, Image Policy, রাধামাধব সাংস্কৃতিক জোট',
     url_slug: '/privacy-policy',
@@ -466,13 +466,13 @@ export interface PrivacyPolicyCollectionDoc {
 export const INITIAL_PRIVACY_POLICY_DOC: PrivacyPolicyCollectionDoc = {
   id: 'privacy-policy-main',
   bengali_policy: `১. ভূমিকা (Introduction):
-রাধামাধব সাংস্কৃতিক জোট একটি সনাতনী সাংস্কৃতিক সংগঠন। সনাতনী সংস্কৃতি, নাটক, নৃত্য, সংগীত ও ঐতিহ্য সংরক্ষণ এবং প্রচারের লক্ষ্যে এই অফিসিয়াল ওয়েবসাইটটি পরিচালিত হয়।
+রাধামাধব সাংস্কৃতিক জোট একটি সনাতনী সাংস্কৃতিক সংগঠন। সনাতনী সংস্কৃতি, নাটক, নৃত্য, সংগীত ও ঐতিহ্য সংরক্ষণ এবং প্রচারের লক্ষ্যে এই অফিশিয়াল ওয়েবসাইটটি পরিচালিত হয়।
 
 ২. ওয়েবসাইট সম্পর্কিত তথ্য (Website Information):
 এই ওয়েবসাইটটি রাধামাধব সাংস্কৃতিক জোটের সাংস্কৃতিক কার্যক্রম, মঞ্চনাটক, গীতিনাট্য, নৃত্য অনুষ্ঠান, সদস্য পরিচিতি, ফটো গ্যালারি এবং ভিডিও আর্কাইভ জনসাধারণের সামনে তুলে ধরার জন্য তৈরি।
 
 ৩. ছবি ও মিডিয়া নীতিমালা (Image and Media Policy):
-এই ওয়েবসাইটে প্রদর্শিত সকল মঞ্চ আলোকচিত্র, নাটকের ছবি, সদস্যদের ছবি এবং লোগো রাধামাধব সাংস্কৃতিক জোটের নিজস্ব সম্পদ। ছবিগুলো শুধুমাত্র সাংস্কৃতিক প্রচার ও ঐতিহ্য সংরক্ষণের কাজে ব্যবহৃত হয়। কোনো কৃত্রিম (AI) ছবি ব্যবহার করা হয় না।
+এই ওয়েবসাইটে প্রদর্শিত সকল মঞ্চ আলোকচিত্র, নাটকের ছবি, সদস্যদের ছবি এবং লোগো রাধামাধব সাংস্কৃতিক জোটের নিজস্ব সম্পদ। ছবিগুলো কেবল সাংস্কৃতিক প্রচার ও ঐতিহ্য সংরক্ষণের কাজে ব্যবহৃত হয়। কোনো কৃত্রিম (AI) ছবি ব্যবহার করা হয় না।
 
 ৪. ব্যবহারকারীর তথ্য (User Data):
 এই ওয়েবসাইটটি কোনো ফর্মের মাধ্যমে দর্শনার্থীদের ব্যক্তিগত তথ্য সংগ্রহ বা সংরক্ষণ করে না।
@@ -549,7 +549,7 @@ export async function validateAndOptimizeUploadedImage(
   ];
   if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpe?g|png|webp|gif)$/i)) {
     throw new Error(
-      'অবৈধ ফাইল ফরম্যাট! শুধুমাত্র আসল ছবি ফাইল (JPG, PNG, WEBP) আপলোড করুন।'
+      'অবৈধ ফাইল ফরম্যাট! কেবল আসল ছবি ফাইল (JPG, PNG, WEBP) আপলোড করুন।'
     );
   }
   if (file.size > 15 * 1024 * 1024) {
@@ -680,16 +680,16 @@ export function applyDynamicSeoToDocumentHead(seoPage: SeoPageRecord): void {
 // PERSISTENCE HELPERS FOR `programs`, `seo`, `privacy_policy`, AND `users`
 // ============================================================================
 
-const CMS_DB_NAME = 'RadhamadhobFullCMSDatabase_bilingual_v6';
+const CMS_DB_NAME = 'RadhamadhobFullCMSDatabase_bilingual_v7';
 const CMS_DB_VERSION = 1;
 const PROGRAMS_STORE = 'programs';
 const SEO_STORE = 'seo';
 const PRIVACY_STORE = 'privacy_policy';
 const USERS_STORE = 'users';
 
-const PROGRAMS_LS_KEY = 'radhamadhob_cms_programs_bilingual_v6';
-const SEO_LS_KEY = 'radhamadhob_cms_seo_bilingual_v6';
-const PRIVACY_LS_KEY = 'radhamadhob_cms_privacy_policy_bilingual_v6';
+const PROGRAMS_LS_KEY = 'radhamadhob_cms_programs_bilingual_v7';
+const SEO_LS_KEY = 'radhamadhob_cms_seo_bilingual_v7';
+const PRIVACY_LS_KEY = 'radhamadhob_cms_privacy_policy_bilingual_v7';
 const USERS_LS_KEY = 'radhamadhob_cms_users_v1';
 const ADMIN_SESSION_LS_KEY = 'radhamadhob_cms_admin_session_v1';
 
@@ -753,13 +753,19 @@ export function normalizeProgramRecords(
       ? seed.date_en || dateBn
       : rawDateEn || dateBn || '2025';
 
+    const isCustomProgImg =
+      item.image && item.image.startsWith('data:image');
+    const resolvedProgImg = isCustomProgImg
+      ? item.image
+      : seed?.image || item.image || INITIAL_PROGRAMS_SEED[0].image;
+
     return {
       ...item,
       title: titleBn,
       title_bn: titleBn,
       titleEn: titleEn,
       title_en: titleEn,
-      image: item.image || seed?.image || INITIAL_PROGRAMS_SEED[0].image,
+      image: resolvedProgImg,
       description: descBn,
       description_bn: descBn,
       descriptionEn: descEn,

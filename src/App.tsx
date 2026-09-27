@@ -98,7 +98,7 @@ interface HeroSlideData {
 
 const CUSTOM_LOGO_STORAGE_KEY = 'radhamadhob_original_logo_v1';
 
-const DEFAULT_HERO_SLIDES: HeroSlideData[] = ANALYZED_PHOTOS.slice(0, 5).map(
+const DEFAULT_HERO_SLIDES: HeroSlideData[] = ANALYZED_PHOTOS.slice(0, 6).map(
   (photo, idx) => ({
     id: `slide-${idx + 1}`,
     imageUrl: photo.imageUrl,
@@ -429,9 +429,10 @@ export default function App() {
     }
   };
 
-  // Active Circular Photo in About Us Section
+  // Active Circular Photo in About Us Section (uses distinct photos 6..11 from ANALYZED_PHOTOS)
+  const aboutSectionPhotos = ANALYZED_PHOTOS.slice(6, 12);
   const [activeAboutPhoto, setActiveAboutPhoto] = useState<string>(
-    ANALYZED_PHOTOS[2]?.imageUrl || ANALYZED_PHOTOS[0].imageUrl
+    aboutSectionPhotos[0]?.imageUrl || ANALYZED_PHOTOS[0].imageUrl
   );
 
   // Read More Expand State in Intro Section & About Section (Mobile Page Length Optimization)
@@ -452,8 +453,8 @@ export default function App() {
   }, []);
 
   const activeHeroSlides = isMobileViewport
-    ? slides.slice(0, 3)
-    : slides.slice(0, 5);
+    ? slides.slice(0, 4)
+    : slides.slice(0, 6);
 
   useEffect(() => {
     if (currentSlide >= activeHeroSlides.length && activeHeroSlides.length > 0) {
@@ -756,7 +757,7 @@ export default function App() {
       titleBn: 'অপবিত্র বিনোদন বন্ধে সচেতনতা',
       titleEn: 'Sacred Site Awareness',
       descBn:
-        'পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+        'পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
       descEn:
         'Creating awareness to stop impure and non-devotional entertainment at Puja mandaps and sacred pilgrimage sites.',
       icon: Drama,
@@ -769,7 +770,7 @@ export default function App() {
       titleBn: 'পৌরাণিক নাট্য ও ডিজিটাল সাউন্ড',
       titleEn: 'Mythological Drama & Digital Sound',
       descBn:
-        '২০১১ সাল থেকে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং পদ্ধতিতে সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান।',
+        '২০১১ সাল থেকে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং পদ্ধতিতে সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান।',
       descEn:
         'Dramatizing the history and mythological chronicles of Sanatan Dharma using state-of-the-art digital sound recording since 2011.',
       icon: BookOpen,
@@ -1436,7 +1437,7 @@ export default function App() {
                 <p className="text-sm sm:text-lg text-[#44403C] leading-relaxed font-normal">
                   {t(
                     siteSettings.intro_text ||
-                      'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+                      'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
                     siteSettings.intro_text_en ||
                       'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites.'
                   )}
@@ -1455,7 +1456,7 @@ export default function App() {
                     <p className="text-xs sm:text-sm text-[#57534E] leading-relaxed">
                       {t(
                         siteSettings.intro_expanded_details_bn ||
-                          'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়। যোগাযোগ : ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
+                          'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়। যোগাযোগ : ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
                         siteSettings.intro_expanded_details_en ||
                           'Dramatizing the history and mythological chronicles of Sanatan Dharma to spread awareness and devotion among everyone through sacred entertainment. We invite you to always stand by our side to carry this mission forward. Contact: 01797059419 (WhatsApp).'
                       )}
@@ -1475,7 +1476,7 @@ export default function App() {
                           ? 'সংক্ষিপ্ত করুন'
                           : 'Show Less'
                         : lang === 'bn'
-                        ? 'আরো দেখুন'
+                        ? 'আরও দেখুন'
                         : 'Read More'}
                     </span>
                     <ChevronDown
@@ -1536,9 +1537,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 4 Circular Thumbnails to switch original photo in About section */}
-              <div className="flex items-center gap-3 mt-5">
-                {ANALYZED_PHOTOS.slice(0, 4).map((photo, idx) => (
+              {/* 6 Circular Thumbnails to switch original photo in About section */}
+              <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-5">
+                {aboutSectionPhotos.map((photo, idx) => (
                   <button
                     key={photo.id}
                     type="button"
@@ -1603,13 +1604,13 @@ export default function App() {
               <p className="text-sm sm:text-lg lg:text-xl text-[#1C1917] font-medium leading-relaxed">
                 {t(
                   siteSettings.about ||
-                    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
+                    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
                   siteSettings.about_en ||
                     'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites. We dramatize the history and mythological events of Sanatan Dharma to spread awareness and devotion among everyone through entertainment. We invite you to always stand by our side to carry this mission forward.'
                 )}
               </p>
 
-              {/* Secondary History Paragraph (Hidden on mobile until "আরো দেখুন" is clicked) */}
+              {/* Secondary History Paragraph (Hidden on mobile until "আরও দেখুন" is clicked) */}
               <p
                 className={`${
                   isAboutExpanded ? 'block' : 'hidden md:block'
@@ -1617,13 +1618,13 @@ export default function App() {
               >
                 {t(
                   siteSettings.about_secondary ||
-                    'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চ সমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির সহ দেশের স্বনামধন্য বিভিন্ন পূজা মন্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।',
+                    'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দিরসহ দেশের স্বনামধন্য বিভিন্ন পূজা মণ্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।',
                   siteSettings.about_secondary_en ||
                     'Since 2011, Radhamadhob Sanatan Cultural Alliance has been striving with glory to highlight the unknown mythological history of Sanatan Dharma and promote Sattvic entertainment. Every year, Sanatani dramas are staged at major venues across Dhaka and Bangladesh including Shilpakala Academy, Shishu Academy, Krishibid Institution, Institution of Engineers, ISKCON Temple, and renowned Puja mandaps.'
                 )}
               </p>
 
-              {/* Mobile "আরো দেখুন" (Read More) Button */}
+              {/* Mobile "আরও দেখুন" (Read More) Button */}
               <div className="md:hidden pt-1">
                 <button
                   type="button"
@@ -1636,7 +1637,7 @@ export default function App() {
                         ? 'সংক্ষিপ্ত করুন'
                         : 'Show Less'
                       : lang === 'bn'
-                      ? 'আরো দেখুন (সম্পূর্ণ ইতিহাস)'
+                      ? 'আরও দেখুন (সম্পূর্ণ ইতিহাস)'
                       : 'Read More (Full History)'}
                   </span>
                   <ChevronDown
@@ -1737,12 +1738,12 @@ export default function App() {
               <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-2.5">
                 <h4 className="font-bold text-[#0F5132] font-display-bn text-sm sm:text-lg">
                   {lang === 'bn'
-                    ? '২. বাংলাদেশের বৃহত্তর মঞ্চ ও পূজা মন্ডপে নিয়মিত মঞ্চায়ন'
+                    ? '২. বাংলাদেশের বৃহত্তর মঞ্চ ও পূজা মণ্ডপে নিয়মিত মঞ্চায়ন'
                     : '2. Regular Staging at Major Venues Across Bangladesh'}
                 </h4>
                 <p>
                   {lang === 'bn'
-                    ? 'এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চ সমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির সহ দেশের স্বনামধন্য বিভিন্ন পূজা মন্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।'
+                    ? 'এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দিরসহ দেশের স্বনামধন্য বিভিন্ন পূজা মণ্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।'
                     : 'On behalf of this organization, Sanatani dramas are staged every year at the largest stages of Dhaka and Bangladesh — including Shilpakala Academy, Shishu Academy, Krishibid Institution, Institution of Engineers, ISKCON Temple, and renowned Puja mandaps across the country.'}
                 </p>
               </div>
@@ -1768,7 +1769,7 @@ export default function App() {
                 </h4>
                 <p>
                   {lang === 'bn'
-                    ? 'বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি। যা ২০১১ সাল থেকে শুরু করে এখনো পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরো সার্বজনীন রূপ দান করি।'
+                    ? 'বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি। যা ২০১১ সাল থেকে শুরু করে এখনো পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরও সার্বজনীন রূপ দান করি।'
                     : 'Among the Sanatan theatre organizations in Bangladesh, we were the first to abandon traditional microphone staging and pioneer drama performances using a state-of-the-art digital sound recording system — running continuously since 2011 to make Sanatan religious entertainment truly universal.'}
                 </p>
               </div>
@@ -1800,7 +1801,7 @@ export default function App() {
                     “
                     {t(
                       siteSettings.vision_text ||
-                        'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
+                        'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
                       siteSettings.vision_text_en ||
                         'Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness. Dramatizing the history and mythological chronicles of Sanatan Dharma to spread awareness and devotion among all.'
                     )}
@@ -1830,7 +1831,7 @@ export default function App() {
                     “
                     {t(
                       siteSettings.mission_text ||
-                        'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা এবং পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+                        'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা এবং পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
                       siteSettings.mission_text_en ||
                         'Our primary mission is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment and build awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites.'
                     )}

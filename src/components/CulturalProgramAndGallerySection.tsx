@@ -226,7 +226,7 @@ export const CulturalProgramAndGallerySection: React.FC<
             })}
           </div>
 
-          {/* Mobile "আরো দেখুন" for Programs */}
+          {/* Mobile "আরও দেখুন" for Programs */}
           {programs.length > 2 && (
             <div className="flex md:hidden justify-center">
               <button
@@ -243,7 +243,7 @@ export const CulturalProgramAndGallerySection: React.FC<
                   <>
                     <span>
                       {lang === 'bn'
-                        ? `আরো কার্যক্রম দেখুন (${tDigits(programs.length - 2)}+)`
+                        ? `আরও কার্যক্রম দেখুন (${tDigits(programs.length - 2)}+)`
                         : `View More Activities (${programs.length - 2}+)`}
                     </span>
                     <ChevronDown className="w-4 h-4" />
@@ -463,7 +463,7 @@ export const CulturalProgramAndGallerySection: React.FC<
                     <>
                       <span>
                         {lang === 'bn'
-                          ? `আরো ছবি দেখুন (${tDigits(
+                          ? `আরও ছবি দেখুন (${tDigits(
                               filteredGallery.length - MOBILE_GALLERY_INITIAL
                             )}+)`
                           : `View More Photos (${

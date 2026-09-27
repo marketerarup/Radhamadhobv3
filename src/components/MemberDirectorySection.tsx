@@ -150,7 +150,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
 
   const formatRoleLabel = (roleKey: string) => {
     if (roleKey === 'ALL') {
-      return lang === 'en' ? 'All Positions' : 'সকল পদবী';
+      return lang === 'en' ? 'All Positions' : 'সকল পদবি';
     }
     if (lang === 'en') {
       const sample = members.find(
@@ -256,7 +256,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={
                 lang === 'bn'
-                  ? 'সদস্যের নাম বা পদবী দিয়ে খুঁজুন...'
+                  ? 'সদস্যের নাম বা পদবি দিয়ে খুঁজুন...'
                   : 'Search member by name or position...'
               }
               aria-label={lang === 'bn' ? 'সদস্য খুঁজুন' : 'Search members'}
@@ -329,7 +329,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
             })}
           </div>
 
-          {/* Mobile "আরো দেখুন" (Read More) Expandable Button */}
+          {/* Mobile "আরও দেখুন" (Read More) Expandable Button */}
           {filteredMembers.length > MOBILE_INITIAL_COUNT && (
             <div className="flex justify-center pt-1">
               <button
@@ -346,7 +346,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
                   <>
                     <span>
                       {lang === 'bn'
-                        ? `আরো দেখুন (${tDigits(
+                        ? `আরও দেখুন (${tDigits(
                             filteredMembers.length - MOBILE_INITIAL_COUNT
                           )}+ সদস্য)`
                         : `View All (${

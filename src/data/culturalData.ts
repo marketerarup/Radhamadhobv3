@@ -6,6 +6,18 @@ import parvatiDanceSoloImg from '../assets/images/parvati_classical_dance_solo_1
 import asuraBattleImg from '../assets/images/asura_warriors_drama_climax_1790453816467.jpg';
 import youthMaskedImg from '../assets/images/youth_masked_kharga_performance_1790453826523.jpg';
 import shivaShaktiDuetImg from '../assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
+import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
+import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
+import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
+import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
+import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338.jpg';
+import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
+import soloAsuraPurpleStageImg from '../assets/images/solo_asura_purple_stage_1790542195989.jpg';
+import durgaGreenTridentImg from '../assets/images/durga_green_trident_portrait_1790542210952.jpg';
+import durgaLionCurtainImg from '../assets/images/durga_lion_mahishasura_curtain_1790542225436.jpg';
+import durgaSunsetMeditationImg from '../assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
+import durgaSunsetProfileImg from '../assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
+import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
 
 export type LanguageMode = 'bn' | 'en' | 'bilingual';
 
@@ -156,11 +168,11 @@ export const ORGANIZATION_INFO: OrganizationIdentity = {
   taglineBn: 'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।',
   taglineEn: 'Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness.',
   shortIntroBn:
-    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
   shortIntroEn:
     'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness against impure entertainment at Puja mandaps and sacred pilgrimage sites.',
   fullMissionBn:
-    'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
+    'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
   fullMissionEn:
     'We dramatize the history and mythological chronicles of Sanatan Dharma to spread awareness and devotion among everyone through sacred entertainment. We invite you to always stand by our side to carry this mission forward.',
   sattvicMottoBn:
@@ -181,7 +193,7 @@ export const ORGANIZATION_INFO: OrganizationIdentity = {
     bioEn:
       'Binoy Kumar Sen serves as the Director and Principal Stage Instructor of Radhamadhob Sanatan Cultural Alliance, pioneering digital sound stage dramas, Vedic shows, and mythological Geetinatya since 2011.',
     messageBn:
-      '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন বন্ধ করে সনাতন ধর্মের পৌরাণিক ইতিহাসকে নাট্যরূপে তুলে ধরাই আমাদের ব্রত।”',
+      '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন বন্ধ করে সনাতন ধর্মের পৌরাণিক ইতিহাসকে নাট্যরূপে তুলে ধরাই আমাদের ব্রত।”',
     messageEn:
       '“Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness. Our vow is to bring the mythological history of Sanatan Dharma to the stage through pure Sattvic theatre.”',
   },
@@ -282,7 +294,7 @@ export const SEVEN_CORE_PROGRAMS: CoreProgramItem[] = [
     subtitleBn: 'সুর, ছন্দ ও অভিনয়ের অপূর্ব মেলবন্ধন',
     subtitleEn: 'Harmony of Devotional Melody, Rhythm & Acting',
     descriptionBn:
-      'আগমনী গান, শ্যামা সঙ্গীত, কীর্তন ও শাস্ত্রীয় রাগসঙ্গীতের সাথে নাটকীয় অভিনয়ের মেলবন্ধনে পরিবেশিত হয় আমাদের বিশেষ গীতিনাট্য সমূহ।',
+      'আগমনী গান, শ্যামা সঙ্গীত, কীর্তন ও শাস্ত্রীয় রাগসঙ্গীতের সাথে নাটকীয় অভিনয়ের মেলবন্ধনে পরিবেশিত হয় আমাদের বিশেষ গীতিনাট্যসমূহ।',
     descriptionEn:
       'Expressive musical dramas weaving Agomoni songs, Shyama Sangeet, devotional Kirtan, and classical ragas with live dramatic storytelling on stage.',
     highlightsBn: [
@@ -572,6 +584,270 @@ export const DRAMA_PRODUCTIONS: DramaProduction[] = [
 export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
   {
     id: 'photo-1',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 12.17.03 PM.jpeg',
+    titleBn: 'পূজা মণ্ডপ মঞ্চে হর-পার্বতী, মা দুর্গা ও পূর্ণাঙ্গ নাট্যদল',
+    titleEn: 'Pandal Stage Ensemble with Lord Shiva, Devi Durga & Warriors',
+    category: 'community',
+    categoryLabelBn: 'সামাজিক ও সম্মিলিত আয়োজন',
+    categoryLabelEn: 'Community & Social Gathering',
+    imageUrl: pandalStageCastGroupImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Hero Banner Slide 01 & Community Activity Lead',
+    dramaticContextBn:
+      'শারদীয় পূজা মণ্ডপ মঞ্চে দেবাদিদেব মহাদেব, দেবী দুর্গা, মা কালী, অসুর যোদ্ধা ও শিশু শিল্পীদের সম্মিলিত মঞ্চ উপস্থিতি।',
+    dramaticContextEn:
+      'Full cast of child, youth, and adult performers posing on the red stage carpet in front of the Durga Puja pandal backdrop.',
+    visualAnalysisBn:
+      'এই ছবিতে রাধামাধব সনাতন সাংস্কৃতিক জোটের সার্বজনীন ও বহু-প্রজন্মের রূপটি স্পষ্ট। মঞ্চে দুর্গা, কালী, শিব ও অসুর চরিত্রের সকল শিল্পী করজোড়ে দর্শকদের অভিবাদন জানাচ্ছেন।',
+    visualAnalysisEn:
+      'Captures the inclusive community spirit of Radhamadhob Sanatan Cultural Alliance uniting children, youth, and adults on stage.',
+    charactersFeaturedBn: ['দেবাদিদেব মহাদেব', 'দেবী দুর্গা', 'মা কালী', 'অসুর যোদ্ধাবৃন্দ', 'শিশু শিল্পীবৃন্দ'],
+    charactersFeaturedEn: ['Lord Shiva', 'Devi Durga', 'Maa Kali', 'Asura Warriors', 'Child Artists'],
+  },
+  {
+    id: 'photo-2',
+    originalFileRef: '27ed0562-92f9-440c-9346-0bf130913eff.jpg',
+    titleBn: 'মহিষাসুরমর্দিনী নৃত্যনাট্য ও বর্ণাঢ্য মঞ্চ আলোকসজ্জা',
+    titleEn: 'Mahishasuramardini Stage Dance-Drama & Concert Lighting',
+    category: 'stage',
+    categoryLabelBn: 'সাংস্কৃতিক ও মঞ্চ অনুষ্ঠান',
+    categoryLabelEn: 'Cultural Stage Production',
+    imageUrl: durgaStageSpotlightImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Hero Slide 02 & Stage Festival Showcase',
+    dramaticContextBn:
+      'বিশাল এলইডি স্ক্রিন ও মঞ্চ আলোকসজ্জায় কেন্দ্রে দেবী দুর্গা ও সিংহবাহন এবং দুই পাশে লাল-সাদা পোশাকে নৃত্যশিল্পীদের ছন্দোময় পরিবেশনা।',
+    dramaticContextEn:
+      'Devi Durga and her lion vahana at center stage flanked by dancers in red and white costumes with a large LED wall behind.',
+    visualAnalysisBn:
+      'আধুনিক এলইডি ভিজ্যুয়াল, স্পটলাইট ও সমবেত নৃত্যনাট্যের অপূর্ব সমন্বয়।',
+    visualAnalysisEn:
+      'Showcases dynamic group choreography and modern concert stage lighting.',
+    charactersFeaturedBn: ['দেবী দুর্গা', 'সিংহবাহন ও মহিষাসুর', 'নৃত্যশিল্পী দল'],
+    charactersFeaturedEn: ['Devi Durga', 'Lion Vahana & Mahishasura', 'Dance Ensemble'],
+  },
+  {
+    id: 'photo-3',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 3.01.15 PM.jpeg',
+    titleBn: 'গোধূলি আকাশে ধ্যানমগ্না দেবী দুর্গার সাত্ত্বিক রূপ',
+    titleEn: 'Serene Sunset Meditation of Devi Durga in Traditional Attire',
+    category: 'religious',
+    categoryLabelBn: 'বৈদিক ও সাত্ত্বিক আরাধনা',
+    categoryLabelEn: 'Vedic & Sattvic Devotion',
+    imageUrl: durgaSunsetMeditationImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Hero Slide 03 & About Section Featured Portrait',
+    dramaticContextBn:
+      'গোধূলির স্বর্ণালি আকাশের নিচে লাল বেনারসি, স্বর্ণালঙ্কার ও শোলার মুকুটে পদ্মাসনে ধ্যানমগ্না দেবী মহামায়া।',
+    dramaticContextEn:
+      'Devi Durga seated in lotus meditation pose against a golden sunset sky in crimson Banarasi silk, gold jewelry, and Shola crown.',
+    visualAnalysisBn:
+      'সাত্ত্বিক বিনোদন ও আধ্যাত্মিক চেতনার এক অনন্য শৈল্পিক প্রকাশ।',
+    visualAnalysisEn:
+      'An iconic devotional portrait embodying Sattvic grace and sacred Bengali artistry.',
+    charactersFeaturedBn: ['ধ্যানমগ্না দেবী দুর্গা / মহামায়া'],
+    charactersFeaturedEn: ['Meditating Devi Durga / Mahamaya'],
+  },
+  {
+    id: 'photo-4',
+    originalFileRef: '0428df92-1496-4def-b392-44d9838e16e6.jpg',
+    titleBn: 'পৌরাণিক বেশভূষায় রাধামাধব সনাতন সাংস্কৃতিক জোটের পূর্ণাঙ্গ নাট্যদল',
+    titleEn: 'Full Mythological Theatre Ensemble in Traditional Costumes',
+    category: 'community',
+    categoryLabelBn: 'পূর্ণাঙ্গ নাট্যদল ও মহড়া',
+    categoryLabelEn: 'Full Theatre Troupe',
+    imageUrl: fullCastGeometricGroupImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Hero Slide 04 & Ensemble Feature',
+    dramaticContextBn:
+      'দশভুজা দুর্গা, গণেশ, সিংহবাহন, মা কালী, অসুর সেনাপতি ও নৃত্যশিল্পীদের ১৮ জনের পূর্ণাঙ্গ দলের সম্মিলিত আলোকচিত্র।',
+    dramaticContextEn:
+      '18-member cultural troupe in full mythological attire including Ten-Armed Durga, Ganesha, Lion Vahana, Maa Kali, warriors, and dancers.',
+    visualAnalysisBn:
+      'শিশু, কিশোর ও তরুণ শিল্পীদের সমন্বয়ে গঠিত সুশৃঙ্খল নাট্যদলের পূর্ণাঙ্গ চিত্র।',
+    visualAnalysisEn:
+      'Highlights the scale and costume authenticity of the alliance’s stage productions.',
+    charactersFeaturedBn: ['দশভুজা দুর্গা', 'শ্রীগণেশ ও সিংহবাহন', 'মা কালী', 'যোদ্ধা ও নৃত্যশিল্পীবৃন্দ'],
+    charactersFeaturedEn: ['Ten-Armed Durga', 'Ganesha & Lion Vahana', 'Maa Kali', 'Warriors & Dancers'],
+  },
+  {
+    id: 'photo-5',
+    originalFileRef: '0b28f505-8bf1-4a37-a459-04bac373f1ba.jpg',
+    titleBn: 'অসুর রাজদরবার ও রণহুঙ্কার — পৌরাণিক নাট্য সংলাপ',
+    titleEn: 'Asura Royal Court & Battle Dialogue on Stage',
+    category: 'drama',
+    categoryLabelBn: 'পৌরাণিক নাটক',
+    categoryLabelEn: 'Mythological Drama',
+    imageUrl: asuraTrioStageImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Hero Slide 05 & Mythological Drama Lead',
+    dramaticContextBn:
+      'লাল-নীল এলইডি মঞ্চে স্বর্ণমুকুট ও বর্ম পরিহিত তিন পৌরাণিক যোদ্ধা ও রাজচরিত্রের ওজস্বী সংলাপ এবং খড়্গ হাতে রণমূর্তি।',
+    dramaticContextEn:
+      'Three crowned mythological warriors and king characters in golden armor delivering dramatic dialogue on stage.',
+    visualAnalysisBn:
+      'ডিজিটাল সাউন্ড রেকর্ডিং ও শক্তিশালী মঞ্চাভিনয়ের বাস্তব নিদর্শন।',
+    visualAnalysisEn:
+      'Captures the dramatic intensity of Bengali Pauranik Natok staging.',
+    charactersFeaturedBn: ['অসুররাজ ও সেনাপতিবৃন্দ'],
+    charactersFeaturedEn: ['Asura King & Generals'],
+  },
+  {
+    id: 'photo-6',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 1.00.55 PM.jpeg',
+    titleBn: 'রথযাত্রা মহোৎসব ও সামাজিক-ধর্মীয় মিলনমেলায় জোটের সদস্যবৃন্দ',
+    titleEn: 'Rath Yatra Festival & Outdoor Community Gathering',
+    category: 'community',
+    categoryLabelBn: 'সামাজিক ও ধর্মীয় আয়োজন',
+    categoryLabelEn: 'Community & Religious Gathering',
+    imageUrl: rathYatraCommunityGroupImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Social & Religious Gathering Lead',
+    dramaticContextBn:
+      'রথযাত্রা ও সনাতন ধর্মীয় শোভাযাত্রায় গেরুয়া ও ওঁ-খচিত পোশাকে রাধামাধব সনাতন সাংস্কৃতিক জোটের তরুণ ও প্রবীণ সদস্যদের সম্মিলিত উপস্থিতি।',
+    dramaticContextEn:
+      'Members of Radhamadhob Sanatan Cultural Alliance gathered outdoors in traditional saffron attire, dhotis, and saree with folded hands during Rath Yatra.',
+    visualAnalysisBn:
+      'মঞ্চের বাইরেও সামাজিক ও ধর্মীয় উৎসবে সংগঠনের সক্রিয় অংশগ্রহণের প্রামাণ্য চিত্র।',
+    visualAnalysisEn:
+      'Reflects brotherhood, devotion, and active participation in public Sanatan festivals.',
+    charactersFeaturedBn: ['সংগঠনের তরুণ ও জ্যেষ্ঠ সদস্যবৃন্দ'],
+    charactersFeaturedEn: ['Youth & Senior Alliance Members'],
+  },
+  {
+    id: 'photo-7',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 3.01.14 PM.jpeg',
+    titleBn: 'দশভুজা দুর্গার মহিষাসুর বধ ও সিংহবাহনের মঞ্চদৃশ্য',
+    titleEn: 'Ten-Armed Devi Durga Vanquishing Mahishasura with Lion Vahana',
+    category: 'drama',
+    categoryLabelBn: 'পৌরাণিক নাটক',
+    categoryLabelEn: 'Mythological Drama',
+    imageUrl: durgaLionCurtainImg,
+    aspectRatio: 'landscape',
+    placementRole: 'Drama Showcase & Gallery Feature',
+    dramaticContextBn:
+      'শূল হাতে দশভুজা দেবী দুর্গা, বামে মুখোশধারী সিংহবাহন এবং ডানে করজোড়ে শরণাগত মহিষাসুর।',
+    dramaticContextEn:
+      'Ten-armed Devi Durga piercing Mahishasura with her trident while her masked lion vahana crouches beside her.',
+    visualAnalysisBn:
+      'ঐতিহ্যবাহী বাংলা দুর্গোৎসবের পৌরাণিক নাট্যরূপ।',
+    visualAnalysisEn:
+      'Classic theatrical depiction of the triumph of Dharma over Adharma.',
+    charactersFeaturedBn: ['দশভুজা দেবী দুর্গা', 'সিংহবাহন', 'মহিষাসুর'],
+    charactersFeaturedEn: ['Ten-Armed Devi Durga', 'Lion Vahana', 'Mahishasura'],
+  },
+  {
+    id: 'photo-8',
+    originalFileRef: '20f65b04-d84f-46cc-87a9-fb73b17058ad.jpg',
+    titleBn: 'মন্দির প্রাঙ্গণে ত্রিশূলধারিণী মা কালীর জীবন্ত রূপায়ণ',
+    titleEn: 'Young Artist as Maa Kali with Trident at Temple Courtyard',
+    category: 'religious',
+    categoryLabelBn: 'ধর্মীয় অনুষ্ঠান',
+    categoryLabelEn: 'Religious Program',
+    imageUrl: maaKaliTempleGateImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Religious Drama & Gallery Portrait',
+    dramaticContextBn:
+      'মন্দির প্রাঙ্গণে লাল বেনারসি, পুষ্পমাল্য ও ত্রিশূল হাতে অভয় মুদ্রায় মা কালীর সাজে কিশোরী শিল্পী।',
+    dramaticContextEn:
+      'Young artist dressed as Maa Kali holding a silver trident and offering the Abhaya mudra in front of a temple gate.',
+    visualAnalysisBn:
+      'নতুন প্রজন্মের শিল্পীদের নিষ্ঠাপূর্ণ ধর্মীয় চরিত্রাভিনয়ের উজ্জ্বল দৃষ্টান্ত।',
+    visualAnalysisEn:
+      'Showcases dedicated traditional makeup and devotional role portrayal by youth artists.',
+    charactersFeaturedBn: ['মা কালী রূপী শিল্পী'],
+    charactersFeaturedEn: ['Maa Kali Performer'],
+  },
+  {
+    id: 'photo-9',
+    originalFileRef: 'da764a78-6e3e-4b06-8a46-bd73c9a86ded.jpg',
+    titleBn: 'খড়্গ হাতে অসুর সেনাপতির রুদ্র মঞ্চাভিনয়',
+    titleEn: 'Fierce Close-Up of Bearded Asura Warrior with Sword',
+    category: 'drama',
+    categoryLabelBn: 'পৌরাণিক নাটক',
+    categoryLabelEn: 'Mythological Drama',
+    imageUrl: beardedAsuraCloseupImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Drama Character Study & Gallery',
+    dramaticContextBn:
+      'বেগুনি মঞ্চ আলোয় স্বর্ণবর্ম ও নীল ধুতি পরিহিত অসুর যোদ্ধার রক্তমাখা খড়্গ হাতে তীব্র নাটকীয় অভিব্যক্তি।',
+    dramaticContextEn:
+      'Close-up of a bearded actor in golden shoulder armor and royal blue dhoti wielding a sword under purple stage lighting.',
+    visualAnalysisBn:
+      'চরিত্রের গভীরতা, মেকআপ ও শক্তিশালী অভিব্যক্তির প্রামাণ্য আলোকচিত্র।',
+    visualAnalysisEn:
+      'Highlights expressive facial acting and detailed warrior costuming.',
+    charactersFeaturedBn: ['অসুর সেনাপতি'],
+    charactersFeaturedEn: ['Asura General'],
+  },
+  {
+    id: 'photo-10',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 3.01.17 PM.jpeg',
+    titleBn: 'সন্ধ্যার স্বর্ণালি আলোয় দেবী দুর্গার শৈল্পিক প্রতিকৃতি',
+    titleEn: 'Golden Hour Profile Portrait of Devi Durga in Shola Crown',
+    category: 'dance',
+    categoryLabelBn: 'শাস্ত্রীয় সাজ ও নৃত্যকলা',
+    categoryLabelEn: 'Classical Attire & Artistry',
+    imageUrl: durgaSunsetProfileImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Gallery & Cultural Showcase',
+    dramaticContextBn:
+      'গোধূলির আলোয় শোলার মুকুট, নথ, ঝুমকা ও জরির কাজ করা লাল ব্লাউজে দেবী দুর্গার পার্শ্ব-প্রতিকৃতি।',
+    dramaticContextEn:
+      'Side-profile portrait of Devi Durga against golden sunset clouds showcasing intricate gold jewelry, Nath nose ring, and Shola crown.',
+    visualAnalysisBn:
+      'বাংলার চিরায়ত মাতৃরূপ ও ঐতিহ্যবাহী অলঙ্করণের নিখুঁত উপস্থাপনা।',
+    visualAnalysisEn:
+      'Celebrates traditional Bengali bridal and goddess adornment.',
+    charactersFeaturedBn: ['দেবী দুর্গা'],
+    charactersFeaturedEn: ['Devi Durga'],
+  },
+  {
+    id: 'photo-11',
+    originalFileRef: '16e5d832-6ce5-4677-a5e8-d406602fd681.jpg',
+    titleBn: 'বেগুনি মঞ্চ আলোয় স্বর্ণমুকুটধারী অসুর যোদ্ধার একক দৃশ্য',
+    titleEn: 'Solo Asura Warrior in Golden Crown & Armor Under Purple Light',
+    category: 'drama',
+    categoryLabelBn: 'পৌরাণিক নাটক',
+    categoryLabelEn: 'Mythological Drama',
+    imageUrl: soloAsuraPurpleStageImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Drama & Gallery Portrait',
+    dramaticContextBn:
+      'মঞ্চে বেগুনি আলোকছটায় স্বর্ণমুকুট, বর্ম ও ছুরিকা হাতে অসুর সেনাপতির দর্পিত উপস্থিতি।',
+    dramaticContextEn:
+      'Crowned Asura warrior in golden chest armor holding a dagger on a purple-lit stage.',
+    visualAnalysisBn:
+      'পৌরাণিক নাটকের বীররসাত্মক আবহ ও মঞ্চ আলোকসজ্জার সুন্দর সমন্বয়।',
+    visualAnalysisEn:
+      'Captures heroic stage blocking and atmospheric theatre lighting.',
+    charactersFeaturedBn: ['অসুর যোদ্ধা'],
+    charactersFeaturedEn: ['Asura Warrior'],
+  },
+  {
+    id: 'photo-12',
+    originalFileRef: 'WhatsApp Image 2026-09-27 at 3.01.13 PM.jpeg',
+    titleBn: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনীর তেজোময় রূপ',
+    titleEn: 'Radiant Portrait of Devi Durga Holding the Sacred Trident',
+    category: 'religious',
+    categoryLabelBn: 'ধর্মীয় ও পৌরাণিক নাটক',
+    categoryLabelEn: 'Religious & Mythological Drama',
+    imageUrl: durgaGreenTridentImg,
+    aspectRatio: 'portrait',
+    placementRole: 'Religious Program & Gallery Portrait',
+    dramaticContextBn:
+      'ঝলমলে মঞ্চ পর্দার সামনে ত্রিশূল হাতে দেবী দুর্গার করুণাময়ী অথচ তেজোদীপ্ত ভঙ্গিমা।',
+    dramaticContextEn:
+      'Devi Durga holding her trident with both hands in front of a shimmering stage backdrop.',
+    visualAnalysisBn:
+      'ভক্তের দুর্গতি বিনাশকারিণী মা দুর্গার শৈল্পিক মঞ্চ রূপায়ণ।',
+    visualAnalysisEn:
+      'Expressive devotional portrayal of Mother Durga with traditional ornaments.',
+    charactersFeaturedBn: ['দেবী দুর্গতিনাশিনী দুর্গা'],
+    charactersFeaturedEn: ['Devi Durgatinashini Durga'],
+  },
+  {
+    id: 'photo-13',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.38 AM (1).jpeg',
     titleBn: 'সম্মিলিত মঞ্চ সমাপনী ও পূর্ণাঙ্গ শিল্পীদল',
     titleEn: 'Grand Stage Ensemble Finale & Community Cast',
@@ -580,20 +856,20 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     categoryLabelEn: 'Community & Social Gathering',
     imageUrl: heroEnsembleImg,
     aspectRatio: 'landscape',
-    placementRole: 'Hero Banner Slide 01 & Community Activity Lead',
+    placementRole: 'Community Activity & Finale',
     dramaticContextBn:
-      'ঐতিহ্যবাহী লাল-সবুজ-হলুদ শামিয়ানা ও এলইডি স্ক্রিনের নিচে শিশু, কিশোর ও প্রবীণসহ ১৪ জনের অধিক শিল্পীর সম্মিলিত মঞ্চ উপস্থিতি এবং মাইক্রোফোনে সমাপনী বক্তব্য।',
+      'ঐতিহ্যবাহী লাল-সবুজ-হলুদ শামিয়ানা ও এলইডি স্ক্রিনের নিচে শিশু, কিশোর ও প্রবীণসহ ১৪ জনের অধিক শিল্পীর সম্মিলিত মঞ্চ উপস্থিতি।',
     dramaticContextEn:
-      'Full multi-generational cast of 14+ children, youth, and adult performers standing on the red stage carpet under a festive pandal canopy with LED screen backdrop during the closing microphone address.',
+      'Full multi-generational cast standing on the red stage carpet under a festive pandal canopy.',
     visualAnalysisBn:
-      'এই ছবিতে রাধামাধব সাংস্কৃতিক জোটের সার্বজনীন ও বহু-প্রজন্মের রূপটি স্পষ্ট। মঞ্চে দুর্গা, কালী, শিব, লক্ষ্মী, সরস্বতী, গণেশ ও অসুর চরিত্রের সকল শিল্পী একত্রে দাঁড়িয়ে দর্শকদের অভিবাদন জানাচ্ছেন।',
+      'মঞ্চে দুর্গা, কালী, শিব, লক্ষ্মী, সরস্বতী, গণেশ ও অসুর চরিত্রের সকল শিল্পী একত্রে দাঁড়িয়ে দর্শকদের অভিবাদন জানাচ্ছেন।',
     visualAnalysisEn:
-      'Captures the inclusive community spirit of Radhamadhob Cultural Alliance, uniting children and adults dressed as Durga, Kali, Shiva, Lakshmi, Saraswati, Ganesha, and mythological warriors.',
-    charactersFeaturedBn: ['পূর্ণাঙ্গ শিল্পীদল', 'দেবী দুর্গা', 'মা কালী', 'লক্ষ্মী-সরস্বতী', 'শিশু শিল্পীবৃন্দ'],
-    charactersFeaturedEn: ['Full Ensemble Cast', 'Devi Durga', 'Maa Kali', 'Lakshmi-Saraswati', 'Child Artists'],
+      'Unites children and adults dressed as Durga, Kali, Shiva, Lakshmi, Saraswati, Ganesha, and warriors.',
+    charactersFeaturedBn: ['পূর্ণাঙ্গ শিল্পীদল', 'দেবী দুর্গা', 'মা কালী', 'লক্ষ্মী-সরস্বতী'],
+    charactersFeaturedEn: ['Full Ensemble Cast', 'Devi Durga', 'Maa Kali', 'Lakshmi-Saraswati'],
   },
   {
-    id: 'photo-2',
+    id: 'photo-14',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.38 AM (2).jpeg',
     titleBn: 'দশভুজা মহিষাসুরমর্দিনী ও সপরিবার দুর্গা গীতিনাট্য',
     titleEn: 'Ten-Armed Mahishasuramardini Durga Puja Geetinatya',
@@ -602,20 +878,20 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     categoryLabelEn: 'Religious & Mythological Geetinatya',
     imageUrl: durgaPalaImg,
     aspectRatio: 'landscape',
-    placementRole: 'Hero Slide 02 & Religious Festival Showcase',
+    placementRole: 'Religious Festival Showcase',
     dramaticContextBn:
       'কেন্দ্রে দশভুজা দেবী দুর্গা শূল দ্বারা মহিষাসুরকে বিদ্ধ করছেন; বামে বীণা হাতে সরস্বতী ও কার্তিক, ডানে মঙ্গলঘট হাতে লক্ষ্মী ও গজানন গণেশ।',
     dramaticContextEn:
-      'Ten-armed Devi Durga piercing the buffalo-masked demon Mahishasura at center stage, flanked by young artists portraying Saraswati with a Veena, Lakshmi holding a Mangal Kalash, Ganesha, and Kartikeya.',
+      'Ten-armed Devi Durga piercing Mahishasura at center stage, flanked by Saraswati, Lakshmi, Ganesha, and Kartikeya.',
     visualAnalysisBn:
-      'শারদীয় দুর্গোৎসবের চিরায়ত প্রতিমা কাঠামোকে জীবন্ত গীতিনাট্যে রূপ দেওয়া হয়েছে। শিশু শিল্পীদের লক্ষ্মী, সরস্বতী ও গণেশ সাজে অংশগ্রহণ নতুন প্রজন্মকে সনাতনী মূল্যবোধে যুক্ত করার প্রতীক।',
+      'শারদীয় দুর্গোৎসবের চিরায়ত প্রতিমা কাঠামোকে জীবন্ত গীতিনাট্যে রূপ দেওয়া হয়েছে।',
     visualAnalysisEn:
-      'Brings the traditional Bengali Durga Puja iconographic tableau to life on stage, actively engaging children in sacred mythological roles.',
+      'Brings the traditional Bengali Durga Puja iconographic tableau to life on stage.',
     charactersFeaturedBn: ['দশভুজা দুর্গা', 'মহিষাসুর', 'দেবী লক্ষ্মী', 'দেবী সরস্বতী', 'শ্রীগণেশ ও কার্তিক'],
     charactersFeaturedEn: ['Dashabhuja Durga', 'Mahishasura', 'Devi Lakshmi', 'Devi Saraswati', 'Ganesha & Kartikeya'],
   },
   {
-    id: 'photo-3',
+    id: 'photo-15',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.35 AM.jpeg',
     titleBn: 'হর-পার্বতী যুগল দর্শন ও বৈদিক নাট্য পরিবেশনা',
     titleEn: 'Lord Shiva & Devi Parvati Vedic Stage Blessing',
@@ -624,20 +900,20 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     categoryLabelEn: 'Vedic Theatrical Performance',
     imageUrl: shivaParvatiImg,
     aspectRatio: 'landscape',
-    placementRole: 'Hero Slide 03 & Vedic Theatre Card',
+    placementRole: 'Vedic Theatre Card',
     dramaticContextBn:
       'বাঘছাল, রুদ্রাক্ষ, জটা ও সর্পভূষিত ত্রিশূলধারী দেবাদিদেব মহাদেব এবং সিঁদুর-লাল বেনারসি ও শোলার মুকুটে অভয় মুদ্রায় দেবী পার্বতী।',
     dramaticContextEn:
-      'Lord Shiva in matted locks, Rudraksha beads, serpent, and tiger-skin attire holding a golden Trishul beside Devi Parvati in a vermilion Benarasi saree and Shola crown offering the Abhaya Mudra.',
+      'Lord Shiva in tiger-skin attire holding a golden Trishul beside Devi Parvati in a vermilion Benarasi saree offering the Abhaya Mudra.',
     visualAnalysisBn:
-      'লোগোর সিঁদুর লাল রঙের সাথে দেবী পার্বতীর লাল বেনারসি শাড়ির রঙের অপূর্ব সামঞ্জস্য রয়েছে, যা সাত্ত্বিক ও বৈদিক বিনোদনের মূল ভাবকে ফুটিয়ে তোলে।',
+      'সাত্ত্বিক ও বৈদিক বিনোদনের মূল ভাবকে ফুটিয়ে তোলে।',
     visualAnalysisEn:
-      'Directly harmonizes the sacred vermilion of the organization logo with Devi Parvati’s traditional attire, embodying Sattvic and Vedic cultural presentation.',
+      'Embodies Sattvic and Vedic cultural presentation.',
     charactersFeaturedBn: ['দেবাদিদেব মহাদেব', 'দেবী পার্বতী (গৌরী)'],
     charactersFeaturedEn: ['Lord Mahadeva (Shiva)', 'Devi Parvati (Gauri)'],
   },
   {
-    id: 'photo-4',
+    id: 'photo-16',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.38 AM.jpeg',
     titleBn: 'মা কালীর রণচণ্ডী রূপ ও শায়িত মহাদেব নাট্যদৃশ্য',
     titleEn: 'Maa Kali & Supine Shiva Dramatic Religious Play',
@@ -659,7 +935,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     charactersFeaturedEn: ['Maa Dakshinakali', 'Lord Shiva', 'Praying Devotee', 'Youth Co-Actors'],
   },
   {
-    id: 'photo-5',
+    id: 'photo-17',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.35 AM (1).jpeg',
     titleBn: 'দেবী মহামায়ার একক বৈদিক ও শাস্ত্রীয় নৃত্য',
     titleEn: 'Devi Parvati Classical & Vedic Devotional Dance Solo',
@@ -681,7 +957,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     charactersFeaturedEn: ['Devi Parvati / Mahamaya (Solo Dance)'],
   },
   {
-    id: 'photo-6',
+    id: 'photo-18',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.36 AM.jpeg',
     titleBn: 'শিব-শক্তি যুগল নৃত্যনাট্য ও মঞ্চ প্রক্ষেপণ',
     titleEn: 'Shiva-Shakti Dance-Drama & Stage Production',
@@ -703,7 +979,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     charactersFeaturedEn: ['Devi Parvati', 'Lord Shiva (Background)'],
   },
   {
-    id: 'photo-7',
+    id: 'photo-19',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.37 AM (2).jpeg',
     titleBn: 'অসুর সেনাপতিদ্বয়ের রণহুঙ্কার ও পৌরাণিক যুদ্ধদৃশ্য',
     titleEn: 'Asura Generals Battle Cry in Mythological Drama',
@@ -714,7 +990,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     aspectRatio: 'landscape',
     placementRole: 'Mythological Drama Showcase & Gallery Highlight',
     dramaticContextBn:
-      'সোনালী বর্ম ও মুকুট পরিহিত দুই পরাক্রমশালী পৌরাণিক চরিত্র (শুম্ভ-নিশুম্ভ) খড়্গ হাতে মঞ্চে রণহুঙ্কার দিচ্ছেন এবং বামে মুখোশধারী চরিত্র।',
+      'সোনালি বর্ম ও মুকুট পরিহিত দুই পরাক্রমশালী পৌরাণিক চরিত্র (শুম্ভ-নিশুম্ভ) খড়্গ হাতে মঞ্চে রণহুঙ্কার দিচ্ছেন এবং বামে মুখোশধারী চরিত্র।',
     dramaticContextEn:
       'Two bearded actors in ornate golden shoulder armor, royal blue and crimson dhotis, and golden crowns roaring in a dramatic battle scene with a sword and skull-masked spirit.',
     visualAnalysisBn:
@@ -725,7 +1001,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     charactersFeaturedEn: ['Shumbha & Nishumbha (Asura Brothers)', 'Masked Spirit'],
   },
   {
-    id: 'photo-8',
+    id: 'photo-20',
     originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.36 AM (1).jpeg',
     titleBn: 'কিশোর শিল্পীদের মুখোশ ও পৌরাণিক চরিত্রাভিনয়',
     titleEn: 'Youth Masked Spirit & Young Warrior Performance',
@@ -736,7 +1012,7 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
     aspectRatio: 'portrait',
     placementRole: 'Youth Cultural Training & Gallery Portrait',
     dramaticContextBn:
-      'সম্মুখে কঙ্কাল মুখোশ ও খড়্গ হাতে এক শিশু শিল্পী এবং পেছনে সোনালী বর্ম ও তিলক ললাটে কিশোর যোদ্ধা শিল্পী।',
+      'সম্মুখে কঙ্কাল মুখোশ ও খড়্গ হাতে এক শিশু শিল্পী এবং পেছনে সোনালি বর্ম ও তিলক ললাটে কিশোর যোদ্ধা শিল্পী।',
     dramaticContextEn:
       'A young child artist in a skull mask and black-gold sash holding a ritual sword in the foreground, with a teenage prince/warrior actor in golden shoulder armor behind him.',
     visualAnalysisBn:
@@ -745,50 +1021,6 @@ export const ANALYZED_PHOTOS: AnalyzedPhotoItem[] = [
       'Reflects the organization’s core mission of training children and teenagers in traditional Sanatan stage arts.',
     charactersFeaturedBn: ['মুখোশধারী বালক শিল্পী', 'কিশোর যোদ্ধা চরিত্র'],
     charactersFeaturedEn: ['Masked Child Artist', 'Teenage Warrior Actor'],
-  },
-  {
-    id: 'photo-9',
-    originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.36 AM.jpeg',
-    titleBn: 'পৌরাণিক যুদ্ধের চূড়ান্ত মুহূর্ত ও রণসজ্জা',
-    titleEn: 'Climactic Mythological Battle & Stage Costuming',
-    category: 'drama',
-    categoryLabelBn: 'পৌরাণিক নাটক',
-    categoryLabelEn: 'Mythological Drama',
-    imageUrl: asuraBattleImg,
-    aspectRatio: 'landscape',
-    placementRole: 'Gallery Archive',
-    dramaticContextBn:
-      'মঞ্চে খড়্গ ও বর্ম পরিহিত দুই যোদ্ধা এবং মুখোশধারী শক্তির নাটকীয় সংঘর্ষের দৃশ্য।',
-    dramaticContextEn:
-      'Dramatic confrontation on stage featuring armored warriors with raised sword and masked spirit.',
-    visualAnalysisBn:
-      'ঐতিহ্যবাহী মঞ্চসজ্জা ও চরিত্রাভিনয়ের প্রামাণ্য আলোকচিত্র।',
-    visualAnalysisEn:
-      'Authentic documentation of traditional stage costuming and character acting.',
-    charactersFeaturedBn: ['পৌরাণিক যোদ্ধাদ্বয়', 'মুখোশধারী চরিত্র'],
-    charactersFeaturedEn: ['Mythological Warriors', 'Masked Spirit'],
-  },
-  {
-    id: 'photo-10',
-    originalFileRef: 'WhatsApp Image 2026-09-27 at 1.44.34 AM.jpeg',
-    titleBn: 'তরুণ প্রজন্মের ভৈরব মুখোশ নৃত্য ও খড়্গ চালনা',
-    titleEn: 'Next-Generation Bhairav Mask Dance & Swordplay',
-    category: 'dance',
-    categoryLabelBn: 'নৃত্য ও মহড়া',
-    categoryLabelEn: 'Dance & Training',
-    imageUrl: youthMaskedImg,
-    aspectRatio: 'portrait',
-    placementRole: 'Gallery Archive',
-    dramaticContextBn:
-      'কিশোর শিল্পীদের ঐতিহ্যবাহী মুখোশ ও খড়্গ হাতে শক্তিশালী মঞ্চ উপস্থিতি।',
-    dramaticContextEn:
-      'Young artists showcasing traditional mask dance and ritual sword posture on stage.',
-    visualAnalysisBn:
-      'শিশু-কিশোরদের সনাতনী সংস্কৃতি চর্চায় যুক্ত করার অনুপ্রেরণাদায়ক দৃশ্য।',
-    visualAnalysisEn:
-      'Inspiring view of engaging youth in Sanatan cultural stage arts.',
-    charactersFeaturedBn: ['তরুণ শিল্পীবৃন্দ'],
-    charactersFeaturedEn: ['Youth Performers'],
   },
 ];
 
@@ -801,7 +1033,7 @@ export const CULTURAL_EVENTS: CulturalEventItem[] = [
     categoryAndDateEn: 'Mythological Drama & Geetinatya · Sharodiya Durga Puja',
     venueAndStatusBn: 'পরিচালনা: বিনয় কুমার সেন · বুকিং ও নিবন্ধন চলছে',
     venueAndStatusEn: 'Directed by Binoy Kumar Sen · Open for Booking & Registration',
-    imageUrl: durgaPalaImg,
+    imageUrl: durgaStageSpotlightImg,
     fullDescriptionBn:
       'শারদীয় দুর্গোৎসব উপলক্ষে রাধামাধব সাংস্কৃতিক জোটের বিশেষ প্রযোজনা "শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী"। দশভুজা দেবী দুর্গা, লক্ষ্মী, সরস্বতী, কার্তিক, গণেশ ও মহিষাসুরের পূর্ণাঙ্গ মঞ্চাভিনয় ও আগমনী নৃত্যানুষ্ঠান। যেকোনো পূজা মণ্ডপ বা সাংস্কৃতিক মঞ্চে প্রদর্শনের জন্য যোগাযোগ করুন: ০১৭৯৭-০৫৯৪১৯।',
     fullDescriptionEn:
@@ -817,7 +1049,7 @@ export const CULTURAL_EVENTS: CulturalEventItem[] = [
     categoryAndDateEn: 'Religious & Mythological Drama · Dipannita Shyama Puja',
     venueAndStatusBn: 'পরিচালনা: বিনয় কুমার সেন · আসন্ন মঞ্চ প্রযোজনা',
     venueAndStatusEn: 'Directed by Binoy Kumar Sen · Upcoming Stage Production',
-    imageUrl: maaKaliImg,
+    imageUrl: maaKaliTempleGateImg,
     fullDescriptionBn:
       'দীপান্বিতা শ্যামাপূজা উপলক্ষে চণ্ড-মুণ্ড বধ, মুখোশধারী ভৈরব নৃত্য এবং দেবাদিদেব মহাদেবের বক্ষে মা কালীর রণচণ্ডী রূপের জীবন্ত মঞ্চায়ন ও শ্যামা সঙ্গীত সন্ধ্যা।',
     fullDescriptionEn:
@@ -833,7 +1065,7 @@ export const CULTURAL_EVENTS: CulturalEventItem[] = [
     categoryAndDateEn: 'Vedic Theatre & Dance Program · Shivaratri & Youth Seminar',
     venueAndStatusBn: 'পরিচালনা: বিনয় কুমার সেন · নতুন শিল্পী আহ্বান চলছে',
     venueAndStatusEn: 'Directed by Binoy Kumar Sen · Open Call for New Artists',
-    imageUrl: shivaParvatiImg,
+    imageUrl: pandalStageCastGroupImg,
     fullDescriptionBn:
       'দেবাদিদেব মহাদেব ও দেবী গৌরীর যুগল বন্দনা, বৈদিক নৃত্যনাট্য এবং নতুন প্রজন্মকে সনাতনী মূল্যবোধের সাথে পরিচিত করার লক্ষ্যে বিশেষ সাংস্কৃতিক কর্মশালা ও সেমিনার।',
     fullDescriptionEn:

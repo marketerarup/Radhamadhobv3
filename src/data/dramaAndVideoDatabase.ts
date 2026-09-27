@@ -6,6 +6,18 @@ import parvatiDanceSoloImg from '../assets/images/parvati_classical_dance_solo_1
 import asuraBattleImg from '../assets/images/asura_warriors_drama_climax_1790453816467.jpg';
 import youthMaskedImg from '../assets/images/youth_masked_kharga_performance_1790453826523.jpg';
 import shivaShaktiDuetImg from '../assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
+import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
+import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
+import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
+import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
+import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338.jpg';
+import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
+import soloAsuraPurpleStageImg from '../assets/images/solo_asura_purple_stage_1790542195989.jpg';
+import durgaGreenTridentImg from '../assets/images/durga_green_trident_portrait_1790542210952.jpg';
+import durgaLionCurtainImg from '../assets/images/durga_lion_mahishasura_curtain_1790542225436.jpg';
+import durgaSunsetMeditationImg from '../assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
+import durgaSunsetProfileImg from '../assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
+import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -117,12 +129,12 @@ export interface VideoRecord {
  * 1. মহিষাসুরমর্দিনী
  * 2. দক্ষযজ্ঞ
  * 3. দুর্গতিনাশিনী দুর্গা
- * 4. শম্ভু নিশুম্ভবধ
- * 5. মহা মৃত্যুঞ্জয় মন্ত্রের আবির্ভাব
- * 6. কেশব কাশ্মীরের পরাজয়
+ * 4. শুম্ভ-নিশুম্ভ বধ
+ * 5. মহামৃত্যুঞ্জয় মন্ত্রের আবির্ভাব
+ * 6. কেশব কাশ্মীরীর পরাজয়
  * 7. দশমহাবিদ্যা
  * 8. নিমাই সন্ন্যাস
- * 9. মহালক্ষীর আবির্ভাব
+ * 9. মহালক্ষ্মীর আবির্ভাব
  * 10. বিশ্বরূপ দর্শন
  * 11. গিরি গোবর্ধন লীলা
  * 12. রামায়ণ
@@ -134,7 +146,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'মহিষাসুরমর্দিনী',
     titleEn: 'Mahishasuramardini',
     category: 'পৌরাণিক নাটক',
-    poster: durgaPalaImg,
+    poster: durgaLionCurtainImg,
     description:
       'দশভুজা আদ্যাশক্তি মহামায়া কর্তৃক অসুররাজ মহিষাসুর বধ এবং দেবকুলের কল্যাণে মা দুর্গার মঙ্গলময় অধিষ্ঠান নিয়ে পৌরাণিক নাট্য প্রযোজনা।',
     descriptionEn:
@@ -160,7 +172,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Lord Ganesha & Kartikeya',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [durgaPalaImg, asuraBattleImg, heroEnsembleImg],
+    gallery: [durgaLionCurtainImg, durgaStageSpotlightImg, durgaPalaImg, pandalStageCastGroupImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:13:00.000Z',
   },
@@ -193,7 +205,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Prajapati King Daksha & Virabhadra',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [shivaParvatiImg, shivaShaktiDuetImg, youthMaskedImg],
+    gallery: [shivaParvatiImg, pandalStageCastGroupImg, shivaShaktiDuetImg, soloAsuraPurpleStageImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:12:00.000Z',
   },
@@ -202,7 +214,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'দুর্গতিনাশিনী দুর্গা',
     titleEn: 'Durgatinashini Durga',
     category: 'ধর্মীয় নাটক',
-    poster: parvatiDanceSoloImg,
+    poster: durgaGreenTridentImg,
     description:
       'ভক্তের দুর্গতি বিনাশকারিণী মা দুর্গার করুণাময়ী ও শক্তিস্বরূপিণী লীলা এবং শরণাগত ভক্তদের রক্ষার পবিত্র কাহিনী নিয়ে ধর্মীয় নাট্য প্রযোজনা।',
     descriptionEn:
@@ -226,16 +238,16 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Devotees & Seekers',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [parvatiDanceSoloImg, durgaPalaImg],
+    gallery: [durgaGreenTridentImg, durgaSunsetMeditationImg, durgaSunsetProfileImg, durgaLionCurtainImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:11:00.000Z',
   },
   {
     id: 'drama-004-shumbha-nishumbha-vadha',
-    title: 'শম্ভু নিশুম্ভবধ',
+    title: 'শুম্ভ-নিশুম্ভ বধ',
     titleEn: 'Shumbha-Nishumbha Vadha',
     category: 'পৌরাণিক নাটক',
-    poster: asuraBattleImg,
+    poster: asuraTrioStageImg,
     description:
       'শ্রীশ্রী চণ্ডীর অন্তর্গত প্রবল পরাক্রমশালী অসুর ভ্রাতৃদ্বয় শুম্ভ ও নিশুম্ভ এবং চণ্ড-মুণ্ড ও রক্তবীজ বধের লোমহর্ষক পৌরাণিক নাটক।',
     descriptionEn:
@@ -259,16 +271,16 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Chanda, Munda & Raktabija',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [asuraBattleImg, maaKaliImg, youthMaskedImg],
+    gallery: [asuraTrioStageImg, beardedAsuraCloseupImg, soloAsuraPurpleStageImg, asuraBattleImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:10:00.000Z',
   },
   {
     id: 'drama-005-maha-mrityunjaya-mantra',
-    title: 'মহা মৃত্যুঞ্জয় মন্ত্রের আবির্ভাব',
+    title: 'মহামৃত্যুঞ্জয় মন্ত্রের আবির্ভাব',
     titleEn: 'Emergence of the Maha Mrityunjaya Mantra',
     category: 'পৌরাণিক নাটক',
-    poster: shivaShaktiDuetImg,
+    poster: pandalStageCastGroupImg,
     description:
       'মহর্ষি মার্কণ্ডেয়র অকাল মৃত্যু রোধে দেবাদিদেব মহাদেবের আশীর্বাদ ও মহামৃত্যুঞ্জয় মন্ত্রের পবিত্র আবির্ভাবের পৌরাণিক আখ্যান।',
     descriptionEn:
@@ -292,16 +304,16 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Yamaraja',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [shivaShaktiDuetImg, shivaParvatiImg],
+    gallery: [pandalStageCastGroupImg, shivaShaktiDuetImg, shivaParvatiImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:09:00.000Z',
   },
   {
     id: 'drama-006-keshav-kashmiri-parajay',
-    title: 'কেশব কাশ্মীরের পরাজয়',
+    title: 'কেশব কাশ্মীরীর পরাজয়',
     titleEn: 'Defeat of Keshav Kashmiri',
     category: 'ধর্মীয় নাটক',
-    poster: youthMaskedImg,
+    poster: rathYatraCommunityGroupImg,
     description:
       'দিগ্বিজয়ী পণ্ডিত কেশব কাশ্মীরীর অহংকার চূর্ণ ও নিমাই পণ্ডিতের (শ্রীচৈতন্য মহাপ্রভু) অলৌকিক পাণ্ডিত্য ও ভক্তির জয়গান নিয়ে ধর্মীয় নাটক।',
     descriptionEn:
@@ -325,7 +337,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Scholars & Students of Nabadwip',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [youthMaskedImg, heroEnsembleImg],
+    gallery: [rathYatraCommunityGroupImg, fullCastGeometricGroupImg, youthMaskedImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:08:00.000Z',
   },
@@ -334,7 +346,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'দশমহাবিদ্যা',
     titleEn: 'Dashamahavidya',
     category: 'পৌরাণিক নাটক',
-    poster: maaKaliImg,
+    poster: maaKaliTempleGateImg,
     description:
       'আদ্যাশক্তি মহামায়ার দশটি মহাশক্তি রূপ—কালী, তারা, ষোড়শী, ভুবনেশ্বরী, ভৈরবী, ছিন্নমস্তা, ধূমাবতী, বগলামুখী, মাতঙ্গী ও কমলার দিব্য প্রকাশ।',
     descriptionEn:
@@ -358,7 +370,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Bhairav & Yogini Ensemble',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [maaKaliImg, shivaShaktiDuetImg, parvatiDanceSoloImg],
+    gallery: [maaKaliTempleGateImg, maaKaliImg, durgaGreenTridentImg, durgaSunsetMeditationImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:07:00.000Z',
   },
@@ -367,7 +379,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'নিমাই সন্ন্যাস',
     titleEn: 'Nimai Sannyas',
     category: 'ধর্মীয় নাটক',
-    poster: heroEnsembleImg,
+    poster: fullCastGeometricGroupImg,
     description:
       'কলিযুগের পাপী তাপী উদ্ধারে মাতা শচীদেবী ও বিষ্ণুপ্রিয়াকে ত্যাগ করে বিশ্বম্ভর নিমাইয়ের সন্ন্যাস গ্রহণ ও হরিনাম সংকীর্তন প্রচারের হৃদয়স্পর্শী পালা।',
     descriptionEn:
@@ -391,16 +403,16 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Nityananda Prabhu & Keshav Bharati',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [heroEnsembleImg, shivaParvatiImg],
+    gallery: [fullCastGeometricGroupImg, rathYatraCommunityGroupImg, heroEnsembleImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:06:00.000Z',
   },
   {
     id: 'drama-009-mahalakshmi-abirbhab',
-    title: 'মহালক্ষীর আবির্ভাব',
+    title: 'মহালক্ষ্মীর আবির্ভাব',
     titleEn: 'Emergence of Mahalakshmi',
     category: 'পৌরাণিক নাটক',
-    poster: parvatiDanceSoloImg,
+    poster: durgaSunsetMeditationImg,
     description:
       'দুর্বাসা মুনির অভিশাপে শ্রীহীন দেবলোক পুনরুদ্ধারে সমুদ্র মন্থন ও ক্ষীরোদ সাগর হতে মা মহালক্ষ্মীর মঙ্গলময় আবির্ভাবের পৌরাণিক নাটক।',
     descriptionEn:
@@ -424,7 +436,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Devas & Asuras (Samudra Manthan)',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [parvatiDanceSoloImg, durgaPalaImg],
+    gallery: [durgaSunsetMeditationImg, durgaSunsetProfileImg, parvatiDanceSoloImg, durgaPalaImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:05:00.000Z',
   },
@@ -433,7 +445,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'বিশ্বরূপ দর্শন',
     titleEn: 'Vishwaroopa Darshan',
     category: 'গীতিনাট্য',
-    poster: durgaPalaImg,
+    poster: durgaStageSpotlightImg,
     description:
       'কুরুক্ষেত্রের রণাঙ্গনে মোহগ্রস্ত অর্জুনকে ভগবান শ্রীকৃষ্ণের গীতা উপদেশ দান ও অনন্ত বিশ্বরূপ দর্শনের ঐতিহাসিক গীতিনাট্য প্রযোজনা।',
     descriptionEn:
@@ -457,7 +469,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Cosmic Vishwaroopa Tableau & Geetinatya Cast',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [durgaPalaImg, heroEnsembleImg, shivaParvatiImg],
+    gallery: [durgaStageSpotlightImg, fullCastGeometricGroupImg, heroEnsembleImg, durgaPalaImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:04:00.000Z',
   },
@@ -466,7 +478,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'গিরি গোবর্ধন লীলা',
     titleEn: 'Giri Govardhan Leela',
     category: 'পৌরাণিক নাটক',
-    poster: shivaParvatiImg,
+    poster: heroEnsembleImg,
     description:
       'দেবরাজ ইন্দ্রের দর্প চূর্ণ করে বৃন্দাবনবাসীকে রক্ষার্থে বালক শ্রীকৃষ্ণের কনিষ্ঠ আঙুলে গিরি গোবর্ধন ধারণের ভক্তিমূলক পৌরাণিক নাটক।',
     descriptionEn:
@@ -490,7 +502,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'King Indra',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [shivaParvatiImg, heroEnsembleImg],
+    gallery: [heroEnsembleImg, pandalStageCastGroupImg, rathYatraCommunityGroupImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:03:00.000Z',
   },
@@ -499,7 +511,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'রামায়ণ',
     titleEn: 'Ramayana',
     category: 'পৌরাণিক নাটক',
-    poster: asuraBattleImg,
+    poster: beardedAsuraCloseupImg,
     description:
       'মর্যাদা পুরুষোত্তম শ্রীরামচন্দ্রের পিতৃসত্য পালন, সীতা উদ্ধার, রাবণ বধ ও রামরাজ্য প্রতিষ্ঠার চিরন্তন মহাকাব্যিক মঞ্চনাটক।',
     descriptionEn:
@@ -523,7 +535,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'King Ravana of Lanka',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [asuraBattleImg, youthMaskedImg, heroEnsembleImg],
+    gallery: [beardedAsuraCloseupImg, soloAsuraPurpleStageImg, asuraTrioStageImg, asuraBattleImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:02:00.000Z',
   },
@@ -532,7 +544,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
     title: 'জগন্নাথ দেবের প্রকাশ',
     titleEn: 'Manifestation of Lord Jagannath',
     category: 'ধর্মীয় নাটক',
-    poster: heroEnsembleImg,
+    poster: durgaSunsetProfileImg,
     description:
       'মহারাজ ইন্দ্রদ্যুম্নের ভক্তি, নীলমাধব অন্তর্ধান এবং শ্রীক্ষেত্র পুরীতে দারুব্রহ্ম রূপে মহাপ্রভু শ্রীজগন্নাথ, বলভদ্র ও সুভদ্রা দেবীর দিব্য প্রকাশের পালা।',
     descriptionEn:
@@ -556,7 +568,7 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
       'Viswavasu & Vidyapati',
       'Radhamadhob Sanatan Cultural Alliance Ensemble',
     ],
-    gallery: [heroEnsembleImg, durgaPalaImg],
+    gallery: [durgaSunsetProfileImg, rathYatraCommunityGroupImg, pandalStageCastGroupImg, fullCastGeometricGroupImg],
     youtube_link: OFFICIAL_YOUTUBE_CHANNEL_URL,
     created_date: '2026-09-26T10:01:00.000Z',
   },
@@ -576,7 +588,7 @@ export const INITIAL_VIDEOS_SEED: VideoRecord[] = [
       'পরিচালক ও নির্দেশক বিনয় কুমার সেনের নির্দেশনায় দশভুজা দেবী দুর্গার মহিষাসুর বধ পালার মঞ্চ ভিডিও ও বিশেষ মুহূর্তসমূহ। অফিশিয়াল ইউটিউব চ্যানেল (@joyradhe9917)।',
     descriptionEn:
       'Stage performance highlights of Ten-Armed Devi Durga vanquishing Mahishasura, directed by Binoy Kumar Sen on our official YouTube channel (@joyradhe9917).',
-    thumbnail: durgaPalaImg,
+    thumbnail: durgaStageSpotlightImg,
     created_date: '2026-09-26T10:00:00.000Z',
   },
   {
@@ -588,19 +600,19 @@ export const INITIAL_VIDEOS_SEED: VideoRecord[] = [
       'দেবাদিদেব মহাদেব ও দেবী পার্বতীর যুগল দর্শন এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনা। রাধামাধব সনাতন সাংস্কৃতিক জোটের অফিশিয়াল ইউটিউব চ্যানেল (@joyradhe9917)।',
     descriptionEn:
       'Sacred stage presentation of Lord Shiva and Devi Parvati with Vedic dance mudras and devotional music (@joyradhe9917).',
-    thumbnail: shivaParvatiImg,
+    thumbnail: pandalStageCastGroupImg,
     created_date: '2026-09-26T09:30:00.000Z',
   },
   {
     id: 'video-003-maa-kali-pala',
     youtube_link: 'https://www.youtube.com/@joyradhe9917',
-    title: 'মা কালীর রণচণ্ডী রূপ ও ভৈরব খড়্গ নৃত্য — ধর্মীয় নাটক',
-    titleEn: 'Maa Kali Stage Tableau & Masked Bhairav Sword Dance — Religious Drama',
+    title: 'মা কালীর রণচণ্ডী রূপ ও শুম্ভ-নিশুম্ভ বধ পালা — ধর্মীয় নাটক',
+    titleEn: 'Maa Kali Stage Tableau & Shumbha-Nishumbha Vadha — Religious Drama',
     description:
-      'মা দক্ষিণাকালীর জীবন্ত মঞ্চ ট্যাবলো এবং কিশোর শিল্পীদের মুখোশধারী ভৈরব ও অসুর যুদ্ধের নাটকীয় পর্ব (@joyradhe9917)।',
+      'মা দক্ষিণাকালীর জীবন্ত মঞ্চ ট্যাবলো এবং অসুর যুদ্ধের নাটকীয় পর্ব (@joyradhe9917)।',
     descriptionEn:
-      'Dramatic religious stage performance featuring Maa Dakshinakali and youth masked sword choreography (@joyradhe9917).',
-    thumbnail: maaKaliImg,
+      'Dramatic religious stage performance featuring Maa Dakshinakali and Asura battle choreography (@joyradhe9917).',
+    thumbnail: asuraTrioStageImg,
     created_date: '2026-09-26T09:00:00.000Z',
   },
 ];
@@ -652,12 +664,20 @@ export const extractYouTubeId = extractYouTubeVideoId;
  * PERSISTENT STORAGE FOR `dramas` AND `videos` COLLECTIONS (IndexedDB + localStorage)
  * ============================================================================
  */
-const MEDIA_DB_NAME = 'RadhamadhobDramaVideoDB_bilingual_v6';
+const MEDIA_DB_NAME = 'RadhamadhobDramaVideoDB_bilingual_v10';
 const MEDIA_DB_VERSION = 1;
 const DRAMAS_STORE = 'dramas';
 const VIDEOS_STORE = 'videos';
-const DRAMAS_LS_KEY = 'radhamadhob_dramas_collection_bilingual_v6';
-const VIDEOS_LS_KEY = 'radhamadhob_videos_collection_bilingual_v6';
+const DRAMAS_LS_KEY = 'radhamadhob_dramas_collection_bilingual_v10';
+const VIDEOS_LS_KEY = 'radhamadhob_videos_collection_bilingual_v10';
+
+const LEGACY_MISSPELLED_DRAMA_TITLES = new Set([
+  'শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী পালা',
+  'শম্ভু নিশুম্ভবধ',
+  'মহা মৃত্যুঞ্জয় মন্ত্রের আবির্ভাব',
+  'কেশব কাশ্মীরের পরাজয়',
+  'মহালক্ষীর আবির্ভাব',
+]);
 
 const LEGACY_DRAMA_SEED_IDS = new Set([
   'drama-002-maa-kali-leela',
@@ -708,7 +728,7 @@ export function normalizeDramaRecords(records: DramaRecord[]): DramaRecord[] {
     const seed = seedMap.get(item.id);
     const rawTitleBn = (item.title_bn || item.title || seed?.title || '').trim();
     const titleBn =
-      rawTitleBn === 'শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী পালা' && seed
+      LEGACY_MISSPELLED_DRAMA_TITLES.has(rawTitleBn) && seed
         ? seed.title
         : rawTitleBn;
     const rawTitleEn = (item.title_en || item.titleEn || '').trim();
@@ -751,7 +771,14 @@ export function normalizeDramaRecords(records: DramaRecord[]): DramaRecord[] {
         ? seed.castEn || validCast
         : validCast;
 
-    const resolvedPoster = item.poster || seed?.poster || durgaPalaImg;
+    const isCustomPoster = item.poster && item.poster.startsWith('data:image');
+    const resolvedPoster = isCustomPoster
+      ? item.poster
+      : seed?.poster || item.poster || durgaLionCurtainImg;
+
+    const hasCustomGallery =
+      Array.isArray(item.gallery) &&
+      item.gallery.some((g) => g && g.startsWith('data:image'));
 
     return {
       ...item,
@@ -773,10 +800,12 @@ export function normalizeDramaRecords(records: DramaRecord[]): DramaRecord[] {
       director_en: dirEn,
       cast: validCast,
       castEn: validCastEn,
-      gallery:
-        Array.isArray(item.gallery) && item.gallery.length > 0
-          ? item.gallery
-          : seed?.gallery || [resolvedPoster],
+      gallery: hasCustomGallery
+        ? item.gallery
+        : seed?.gallery ||
+          (Array.isArray(item.gallery) && item.gallery.length > 0
+            ? item.gallery
+            : [resolvedPoster]),
       youtube_link: item.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL,
       created_date: item.created_date || new Date().toISOString(),
     };
@@ -803,6 +832,12 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
       ? seed.descriptionEn || seed.description_en || descBn
       : rawDescEn || descBn;
 
+    const isCustomThumb =
+      item.thumbnail && item.thumbnail.startsWith('data:image');
+    const resolvedThumb = isCustomThumb
+      ? item.thumbnail
+      : seed?.thumbnail || item.thumbnail || heroEnsembleImg;
+
     return {
       ...item,
       youtube_link: item.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL,
@@ -816,7 +851,7 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
       description_en: descEn,
       thumbnail: getYouTubeThumbnailUrl(
         item.youtube_link,
-        item.thumbnail || seed?.thumbnail || heroEnsembleImg
+        resolvedThumb
       ),
       created_date: item.created_date || new Date().toISOString(),
     };
@@ -974,6 +1009,18 @@ export async function saveVideosToDatabase(videos: VideoRecord[]): Promise<void>
 }
 
 export const ORIGINAL_STAGE_PHOTO_OPTIONS = [
+  { labelBn: 'দশভুজা দুর্গার মহিষাসুর বধ ও সিংহবাহন', url: durgaLionCurtainImg },
+  { labelBn: 'মহিষাসুরমর্দিনী নৃত্যনাট্য ও স্পটলাইট মঞ্চ', url: durgaStageSpotlightImg },
+  { labelBn: 'পূজা মণ্ডপ মঞ্চে হর-পার্বতী, মা দুর্গা ও নাট্যদল', url: pandalStageCastGroupImg },
+  { labelBn: 'পৌরাণিক বেশভূষায় পূর্ণাঙ্গ নাট্যদল', url: fullCastGeometricGroupImg },
+  { labelBn: 'অসুর রাজদরবার ও তিন যোদ্ধার সংলাপ', url: asuraTrioStageImg },
+  { labelBn: 'খড়্গ হাতে অসুর সেনাপতির ক্লোজ-আপ দৃশ্য', url: beardedAsuraCloseupImg },
+  { labelBn: 'বেগুনি আলোয় স্বর্ণমুকুটধারী অসুর যোদ্ধা', url: soloAsuraPurpleStageImg },
+  { labelBn: 'মন্দির প্রাঙ্গণে ত্রিশূলধারিণী মা কালী', url: maaKaliTempleGateImg },
+  { labelBn: 'গোধূলি আকাশে ধ্যানমগ্না দেবী দুর্গা', url: durgaSunsetMeditationImg },
+  { labelBn: 'সন্ধ্যার আলোয় দেবী দুর্গার পার্শ্ব-প্রতিকৃতি', url: durgaSunsetProfileImg },
+  { labelBn: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনী', url: durgaGreenTridentImg },
+  { labelBn: 'রথযাত্রা মহোৎসবে সাংস্কৃতিক জোটের সদস্যবৃন্দ', url: rathYatraCommunityGroupImg },
   { labelBn: 'দশভুজা মহিষাসুরমর্দিনী পালা', url: durgaPalaImg },
   { labelBn: 'মা কালীর রণচণ্ডী রূপ ও শিব', url: maaKaliImg },
   { labelBn: 'হর-পার্বতী যুগল দর্শন', url: shivaParvatiImg },

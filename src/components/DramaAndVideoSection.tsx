@@ -140,14 +140,14 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             </div>
           </div>
 
-          {/* Official 13 Stage Dramas Repertoire Showcase ("আমাদের নাটক সমূহ: ১–১৩") */}
+          {/* Official 13 Stage Dramas Repertoire Showcase ("আমাদের নাটকসমূহ: ১–১৩") */}
           <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/60 p-4 sm:p-6 shadow-sm space-y-3.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5DEC9] pb-3">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#CC0000] shrink-0" />
                 <h3 className="text-base sm:text-lg font-bold text-[#1C1917] font-display-bn">
                   {lang === 'bn'
-                    ? 'আমাদের নাটক সমূহ (১৩টি পূর্ণাঙ্গ মঞ্চ প্রযোজনা):'
+                    ? 'আমাদের নাটকসমূহ (১৩টি পূর্ণাঙ্গ মঞ্চ প্রযোজনা):'
                     : 'Our Official Stage Dramas (13 Productions):'}
                 </h3>
               </div>
@@ -286,7 +286,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             })}
           </div>
 
-          {/* Mobile "আরো দেখুন" Expandable Button for Dramas */}
+          {/* Mobile "আরও দেখুন" Expandable Button for Dramas */}
           {filteredDramas.length > 2 && (
             <div className="flex md:hidden justify-center pt-1">
               <button
@@ -303,7 +303,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                   <>
                     <span>
                       {lang === 'bn'
-                        ? `আরো নাটক দেখুন (${tDigits(filteredDramas.length - 2)}+)`
+                        ? `আরও নাটক দেখুন (${tDigits(filteredDramas.length - 2)}+)`
                         : `View More Dramas (${filteredDramas.length - 2}+)`}
                     </span>
                     <ChevronDown className="w-4 h-4" />
@@ -331,7 +331,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                 <Video className="w-3.5 h-3.5 text-[#FDE68A]" />
                 <span>
                   {lang === 'bn'
-                    ? 'অফিসিয়াল ইউটিউব চ্যানেল ও মঞ্চ ভিডিও আর্কাইভ'
+                    ? 'অফিশিয়াল ইউটিউব চ্যানেল ও মঞ্চ ভিডিও আর্কাইভ'
                     : 'Official YouTube Channel & Stage Video Archive'}
                 </span>
               </div>
@@ -347,7 +347,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
 
               <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
                 {lang === 'bn'
-                  ? 'রাধামাধব সাংস্কৃতিক জোটের মঞ্চনাটক, বৈদিক নৃত্য এবং ধর্মীয় অনুষ্ঠানের ধারণকৃত ভিডিওসমূহ দেখুন আমাদের অফিসিয়াল ইউটিউব চ্যানেলে।'
+                  ? 'রাধামাধব সাংস্কৃতিক জোটের মঞ্চনাটক, বৈদিক নৃত্য এবং ধর্মীয় অনুষ্ঠানের ধারণকৃত ভিডিওসমূহ দেখুন আমাদের অফিশিয়াল ইউটিউব চ্যানেলে।'
                   : 'Watch recorded stage dramas, Vedic dance performances, and devotional programs of Radhamadhob Cultural Alliance on our official YouTube channel.'}
               </p>
             </div>
@@ -361,7 +361,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
               <Play className="w-4 h-4 fill-current text-[#FDE68A]" />
               <span>
                 {lang === 'bn'
-                  ? 'অফিসিয়াল ইউটিউব চ্যানেল ভিজিট করুন'
+                  ? 'অফিশিয়াল ইউটিউব চ্যানেল ভিজিট করুন'
                   : 'Visit Official YouTube Channel'}
               </span>
               <ExternalLink className="w-3.5 h-3.5" />

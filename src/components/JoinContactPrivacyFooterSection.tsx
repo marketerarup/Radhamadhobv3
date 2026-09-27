@@ -130,13 +130,13 @@ export const JoinContactPrivacyFooterSection: React.FC<
                   <Sparkles className="w-4 h-4 shrink-0" />
                   <span>
                     {lang === 'bn'
-                      ? 'সদস্য ও অভিনয়শিল্পী হওয়ার শর্তাবলী:'
+                      ? 'সদস্য ও অভিনয়শিল্পী হওয়ার শর্তাবলি:'
                       : 'Conditions for Membership & Performers:'}
                   </span>
                 </div>
                 <p className="text-xs sm:text-base font-bold text-white leading-relaxed font-display-bn">
                   {lang === 'bn'
-                    ? '[ শর্ত : অবশ্যই সনাতনী হতে হবে এবং স্বেচ্ছাশ্রম, অভিনয় ও নৃত্যে আগ্রহী হতে হবে। কোন প্রকার সংকীর্ণ মানসিকতা রাখা যাবে না ]'
+                    ? '[ শর্ত : অবশ্যই সনাতনী হতে হবে এবং স্বেচ্ছাশ্রম, অভিনয় ও নৃত্যে আগ্রহী হতে হবে। কোনো প্রকার সংকীর্ণ মানসিকতা রাখা যাবে না ]'
                     : '[ Condition: Must be a Sanatani, willing to offer voluntary service (Svechchhashram), and interested in acting and dance. Any kind of narrow mentality is strictly unacceptable. ]'}
                 </p>
               </div>
@@ -170,7 +170,7 @@ export const JoinContactPrivacyFooterSection: React.FC<
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>
                     {lang === 'bn'
-                      ? 'কোন প্রকার সংকীর্ণ মানসিকতা রাখা যাবে না'
+                      ? 'কোনো প্রকার সংকীর্ণ মানসিকতা রাখা যাবে না'
                       : 'Zero Narrow-Mindedness'}
                   </span>
                 </div>
@@ -374,7 +374,7 @@ export const JoinContactPrivacyFooterSection: React.FC<
                 </h3>
                 <p className="text-sm sm:text-base font-semibold text-[#93C5FD] mt-0.5 truncate">
                   {lang === 'bn'
-                    ? 'আমাদের অফিসিয়াল ফেসবুক পেজ ভিজিট করুন'
+                    ? 'আমাদের অফিশিয়াল ফেসবুক পেজ ভিজিট করুন'
                     : 'Visit Our Facebook Page'}
                 </p>
               </div>
@@ -456,7 +456,7 @@ export const JoinContactPrivacyFooterSection: React.FC<
               )}
             </p>
 
-            {/* Expandable "আরো দেখুন" button for full clauses */}
+            {/* Expandable "আরও দেখুন" button for full clauses */}
             <div>
               <button
                 type="button"
@@ -470,7 +470,7 @@ export const JoinContactPrivacyFooterSection: React.FC<
                       ? 'নীতিমালা সংক্ষিপ্ত করুন'
                       : 'Show Less Policy'
                     : lang === 'bn'
-                    ? 'আরো দেখুন (সম্পূর্ণ গোপনীয়তা নীতিমালা পড়ুন)'
+                    ? 'আরও দেখুন (সম্পূর্ণ গোপনীয়তা নীতিমালা পড়ুন)'
                     : 'Read Full Privacy Policy Clauses'}
                 </span>
                 {isPolicyExpanded ? (

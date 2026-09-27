@@ -93,7 +93,7 @@ export const DEFAULT_PRIVACY_POLICY_SECTIONS: PrivacyPolicySectionData[] = [
     titleBn: 'ভূমিকা (Introduction)',
     titleEn: '1. Introduction',
     contentBn:
-      'রাধামাধব সাংস্কৃতিক জোট ("আমরা", "আমাদের সংগঠন") একটি সনাতনী সাংস্কৃতিক সংগঠন। সনাতনী সংস্কৃতি, নাটক, নৃত্য, সংগীত ও ঐতিহ্য সংরক্ষণ এবং প্রচারের লক্ষ্যে এই অফিসিয়াল ওয়েবসাইটটি পরিচালিত হয়। আমাদের ওয়েবসাইট ভিজিট করার মাধ্যমে আপনি এই গোপনীয়তা নীতিমালার (Privacy Policy) শর্তাবলীর সাথে সম্মতি জ্ঞাপন করছেন।',
+      'রাধামাধব সাংস্কৃতিক জোট ("আমরা", "আমাদের সংগঠন") একটি সনাতনী সাংস্কৃতিক সংগঠন। সনাতনী সংস্কৃতি, নাটক, নৃত্য, সংগীত ও ঐতিহ্য সংরক্ষণ এবং প্রচারের লক্ষ্যে এই অফিসিয়াল ওয়েবসাইটটি পরিচালিত হয়। আমাদের ওয়েবসাইট ভিজিট করার মাধ্যমে আপনি এই গোপনীয়তা নীতিমালার (Privacy Policy) শর্তাবলির সাথে সম্মতি জ্ঞাপন করছেন।',
     contentEn:
       'Radhamadhob Cultural Alliance ("we", "our organization") is a Sanatani cultural organization dedicated to preserving and promoting Sanatani culture, drama, dance, music, and heritage. This Privacy Policy explains how our official website operates and respects visitor privacy.',
   },
@@ -204,27 +204,27 @@ export const INITIAL_SETTINGS_SEED: SiteSettingsRecord = {
   tagline_bn: 'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।',
   tagline_en: 'Let Entertainment be Sattvic, Let Culture be Sanatan — Awaken History, Awaken Consciousness.',
   about:
-    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র ও অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
   about_en:
     'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites.',
   about_secondary:
-    'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
+    'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
   about_secondary_en:
     'We dramatize the history and mythological events of Sanatan Dharma to spread awareness and devotion among everyone through sacred entertainment. We invite you to always stand by our side to carry this mission forward.',
   history_text_bn:
-    'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। রাধামাধব সনাতন সাংস্কৃতিক জোট বাংলাদেশের অন্যতম প্রাচীন ও সুসংগঠিত একটি সনাতন ধর্ম প্রচারকারী সাংস্কৃতিক সংগঠন। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চ সমূহ যেমন শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির সহ দেশের স্বনামধন্য বিভিন্ন পূজা মন্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে। বাংলাদেশের প্রথম বৈদিক ফ্যাশন শো, বিশ্বরূপ দর্শন এবং দশাবতারের মতো গীতিনাট্য এই সংগঠন থেকেই মঞ্চায়িত হয়েছিল। বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি, যা ২০১১ সাল থেকে শুরু করে এখনো পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরো সার্বজনীন রূপ দান করি। রাধামাধব সনাতন সাংস্কৃতিক জোট ধর্মীয় বিনোদনের পাশাপাশি সামাজিক সংস্কারমূলক এবং সামাজিক দাতব্য বিভিন্ন কার্যক্রমও পরিচালনা করে থাকে।',
+    'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনও পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। রাধামাধব সনাতন সাংস্কৃতিক জোট বাংলাদেশের অন্যতম প্রাচীন ও সুসংগঠিত একটি সনাতন ধর্ম প্রচারকারী সাংস্কৃতিক সংগঠন। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ যেমন শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দিরসহ দেশের স্বনামধন্য বিভিন্ন পূজা মণ্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে। বাংলাদেশের প্রথম বৈদিক ফ্যাশন শো, বিশ্বরূপ দর্শন এবং দশাবতারের মতো গীতিনাট্য এই সংগঠন থেকেই মঞ্চায়িত হয়েছিল। বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি, যা ২০১১ সাল থেকে শুরু করে এখনও পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরও সর্বজনীন রূপ দান করি। রাধামাধব সনাতন সাংস্কৃতিক জোট ধর্মীয় বিনোদনের পাশাপাশি সামাজিক সংস্কারমূলক এবং সামাজিক দাতব্য বিভিন্ন কার্যক্রমও পরিচালনা করে থাকে।',
   history_text_en:
     'Since 2011, Radhamadhob Sanatan Cultural Alliance has been striving with glory to highlight the unknown mythological history of Sanatan Dharma and promote Sattvic religious entertainment. It is one of the oldest and most well-organized Sanatan Dharma propagating cultural organizations in Bangladesh. Every year, our organization stages Sanatani dramas at major venues across Dhaka and Bangladesh—including Shilpakala Academy, Shishu Academy, Krishibid Institution, Institution of Engineers (IEB), ISKCON Temple, and renowned Puja mandaps nationwide. Bangladesh’s first Vedic Fashion Show, as well as musical dramas (Geetinatya) like Vishwaroopa Darshan and Dashavatara, were premiered by this organization. Among Sanatan theatre groups in Bangladesh, we were the first to abandon conventional live microphone stage acting and pioneer drama staging using state-of-the-art digital sound recording systems—a practice continuing since 2011 to make Sanatan religious entertainment truly universal. Alongside religious entertainment, we also conduct social reform and charitable activities.',
   activities_text_bn:
-    'ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ—শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির ও স্বনামধন্য পূজা মন্ডপে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেমে পৌরাণিক নাটক, গীতিনাট্য, বৈদিক ফ্যাশন শো ও সামাজিক দাতব্য কার্যক্রম পরিচালনা করা হয়।',
+    'ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ—শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির ও স্বনামধন্য পূজা মণ্ডপে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেমে পৌরাণিক নাটক, গীতিনাট্য, বৈদিক ফ্যাশন শো ও সামাজিক দাতব্য কার্যক্রম পরিচালনা করা হয়।',
   activities_text_en:
     'Staging mythological dramas, Geetinatya, and Vedic cultural shows using state-of-the-art digital sound recording systems at Shilpakala Academy, Shishu Academy, Krishibid Institution, Engineering Institute, ISKCON Temple, and Puja mandaps across Bangladesh, alongside social reform and charity initiatives.',
   vision_text:
-    'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
+    'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
   vision_text_en:
     'Let entertainment be Sattvic, let culture be Sanatan—Awaken history, awaken consciousness. Dramatizing the history and mythological chronicles of Sanatan Dharma to inspire awareness across society.',
   mission_text:
-    'বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার ও প্রসার করা এবং পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+    'বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার ও প্রসার করা এবং পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র ও অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
   mission_text_en:
     'To propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment and build awareness against impure entertainment at Puja mandaps and sacred pilgrimage sites.',
   hero_title: 'রাধামাধব সনাতন সাংস্কৃতিক জোট',
@@ -236,7 +236,7 @@ export const INITIAL_SETTINGS_SEED: SiteSettingsRecord = {
   intro_title: 'আমাদের উদ্দেশ্য ও সাংস্কৃতিক যাত্রা (২০১১ হতে চলমান)',
   intro_title_en: 'Our Mission & Cultural Journey (Since 2011)',
   intro_text:
-    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা এবং সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে সকলের মাঝে সচেতনতা সৃষ্টি করা।',
+    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র ও অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা এবং সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে সকলের মাঝে সচেতনতা সৃষ্টি করা।',
   intro_text_en:
     'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, raise awareness against impure entertainment at Puja mandaps and sacred pilgrimage sites, and dramatize the history and mythological chronicles of Sanatan Dharma for all.',
   intro_expanded_quote_bn:
@@ -244,7 +244,7 @@ export const INITIAL_SETTINGS_SEED: SiteSettingsRecord = {
   intro_expanded_quote_en:
     '“Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness.”',
   intro_expanded_details_bn:
-    '২০১১ সাল হতে রাধামাধব সনাতন সাংস্কৃতিক জোট শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট ও ইসকন মন্দিরসহ দেশের স্বনামধন্য পূজা মন্ডপে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম ব্যবহার করে সনাতনী নাটক ও গীতিনাট্য মঞ্চায়ন করে আসছে। যোগাযোগ: ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
+    '২০১১ সাল হতে রাধামাধব সনাতন সাংস্কৃতিক জোট শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট ও ইসকন মন্দিরসহ দেশের স্বনামধন্য পূজা মণ্ডপে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম ব্যবহার করে সনাতনী নাটক ও গীতিনাট্য মঞ্চায়ন করে আসছে। যোগাযোগ: ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
   intro_expanded_details_en:
     'Since 2011, Radhamadhob Sanatan Cultural Alliance has been staging Sanatani dramas and Geetinatya using state-of-the-art digital sound recording systems at Shilpakala Academy, Shishu Academy, Krishibid Institution, Engineering Institute, ISKCON Temple, and renowned Puja mandaps nationwide. Contact: 01797059419 (WhatsApp).',
   address_bn: 'রাধামাধব সনাতন সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, ঢাকা, বাংলাদেশ',
@@ -267,7 +267,7 @@ export const INITIAL_SETTINGS_SEED: SiteSettingsRecord = {
   copyright_text: '© রাধামাধব সনাতন সাংস্কৃতিক জোট (প্রতিষ্ঠিত ২০১১)',
   copyright_text_en: '© Radhamadhob Sanatan Cultural Alliance (Est. 2011)',
   privacy_policy_intro_note:
-    'রাধামাধব সনাতন সাংস্কৃতিক জোটের অফিসিয়াল ওয়েবসাইটের গোপনীয়তা নীতিমালা, ছবি ব্যবহারের নিয়মাবলী এবং হোয়াটসঅ্যাপ যোগাযোগ পদ্ধতি নিচে বাংলা ও ইংরেজি উভয় ভাষায় বিস্তারিত তুলে ধরা হলো।',
+    'রাধামাধব সনাতন সাংস্কৃতিক জোটের অফিসিয়াল ওয়েবসাইটের গোপনীয়তা নীতিমালা, ছবি ব্যবহারের নিয়মাবলি এবং হোয়াটসঅ্যাপ যোগাযোগ পদ্ধতি নিচে বাংলা ও ইংরেজি উভয় ভাষায় বিস্তারিত তুলে ধরা হলো।',
   privacy_policy_intro_note_en:
     'Below is the official bilingual (Bengali + English) Privacy Policy of Radhamadhob Sanatan Cultural Alliance covering website information, original image usage, zero-form visitor privacy, and direct WhatsApp communication.',
   privacy_policy_sections: DEFAULT_PRIVACY_POLICY_SECTIONS,
@@ -310,16 +310,23 @@ export function buildTelUrl(phoneNumber: string): string {
 // INDEXEDDB + LOCALSTORAGE PERSISTENCE ENGINE FOR `settings` COLLECTION
 // ============================================================================
 
-const DB_NAME = 'RadhamadhobSettingsDatabase_bilingual_v4';
+const DB_NAME = 'RadhamadhobSettingsDatabase_bilingual_v5';
 const DB_VERSION = 1;
 const SETTINGS_STORE = 'settings';
-const SETTINGS_LS_KEY = 'radhamadhob_firebase_settings_bilingual_v4';
+const SETTINGS_LS_KEY = 'radhamadhob_firebase_settings_bilingual_v5';
 
 const LEGACY_DEFAULT_STRINGS = new Set([
   'রাধামাধব সাংস্কৃতিক জোট',
   'Radhamadhob Cultural Alliance',
   'সনাতনী সাংস্কৃতিক সংগঠন',
   'Sanatani Cultural Organization',
+  'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+  'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
+  'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। রাধামাধব সনাতন সাংস্কৃতিক জোট বাংলাদেশের অন্যতম প্রাচীন ও সুসংগঠিত একটি সনাতন ধর্ম প্রচারকারী সাংস্কৃতিক সংগঠন। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চ সমূহ যেমন শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দির সহ দেশের স্বনামধন্য বিভিন্ন পূজা মন্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে। বাংলাদেশের প্রথম বৈদিক ফ্যাশন শো, বিশ্বরূপ দর্শন এবং দশাবতারের মতো গীতিনাট্য এই সংগঠন থেকেই মঞ্চায়িত হয়েছিল। বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি, যা ২০১১ সাল থেকে শুরু করে এখনো পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরো সার্বজনীন রূপ দান করি। রাধামাধব সনাতন সাংস্কৃতিক জোট ধর্মীয় বিনোদনের পাশাপাশি সামাজিক সংস্কারমূলক এবং সামাজিক দাতব্য বিভিন্ন কার্যক্রমও পরিচালনা করে থাকে।',
+  'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
+  'বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার ও প্রসার করা এবং পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
+  'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মন্ডপ তথা পবিত্র তীর্থ স্থানগুলোতে অপবিত্র বিনোদন এবং ধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা এবং সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনা প্রবাহকে নাট্য রূপদান করে সকলের মাঝে সচেতনতা সৃষ্টি করা।',
+  '২০১১ সাল হতে রাধামাধব সনাতন সাংস্কৃতিক জোট শিল্পকলা একাডেমি, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট ও ইসকন মন্দিরসহ দেশের স্বনামধন্য পূজা মন্ডপে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম ব্যবহার করে সনাতনী নাটক ও গীতিনাট্য মঞ্চায়ন করে আসছে। যোগাযোগ: ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
   'রাধামাধব সাংস্কৃতিক জোট একটি সনাতনী সাংস্কৃতিক সংগঠন। সনাতনী সংস্কৃতি, শিল্প ও ঐতিহ্য সংরক্ষণ এবং প্রচারের উদ্দেশ্যে আমাদের এই পথচলা।',
   'Radhamadhob Cultural Alliance is a Sanatani cultural organization. Our journey is dedicated to preserving and promoting Sanatani culture, art, and timeless heritage.',
   'আমরা বিভিন্ন সাংস্কৃতিক কার্যক্রম, ধর্মীয় নাটক, পৌরাণিক নাটক, নৃত্য, সংগীত এবং গীতিনাট্য আয়োজন করে থাকি।',

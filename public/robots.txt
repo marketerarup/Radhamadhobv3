@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# Sitemap for রাধামাধব সাংস্কৃতিক জোট (Radhamadhob Cultural Alliance)
+Sitemap: https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/sitemap.xml

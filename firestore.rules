@@ -1,0 +1,213 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedAdmin() {
+      return isSignedIn() &&
+        (
+          (request.auth.token.email_verified == true &&
+            (request.auth.token.email == 'seo@cottagehomecare.com' ||
+             request.auth.token.email == 'mdleveragerm@gmail.com')) ||
+          request.auth.token.email == 'admin@radhamadhob.org' ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+        );
+    }
+
+    // Validation Blueprints for All 10 Collections
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'displayName', 'role', 'createdAt']) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 254 &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120 &&
+        data.role in ['admin', 'editor'] &&
+        data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['id', 'organization_name']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.organization_name is string && data.organization_name.size() >= 1 && data.organization_name.size() <= 300 &&
+        (!('logo' in data) || (data.logo is string && data.logo.size() <= 950000));
+    }
+
+    function isValidMember(data) {
+      return data.keys().hasAll(['id', 'name', 'photo', 'position']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 300 &&
+        data.photo is string && data.photo.size() >= 1 && data.photo.size() <= 950000 &&
+        data.position is string && data.position.size() >= 0 && data.position.size() <= 300;
+    }
+
+    function isValidDrama(data) {
+      return data.keys().hasAll(['id', 'title', 'category', 'poster', 'description']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 400 &&
+        data.category is string && data.category.size() >= 1 && data.category.size() <= 200 &&
+        data.poster is string && data.poster.size() >= 1 && data.poster.size() <= 950000 &&
+        data.description is string && data.description.size() >= 0 && data.description.size() <= 8000;
+    }
+
+    function isValidProgram(data) {
+      return data.keys().hasAll(['id', 'title', 'image', 'description', 'date', 'category']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 400 &&
+        data.image is string && data.image.size() >= 1 && data.image.size() <= 950000 &&
+        data.description is string && data.description.size() >= 0 && data.description.size() <= 6000 &&
+        data.date is string && data.date.size() <= 200 &&
+        data.category is string && data.category.size() <= 200;
+    }
+
+    function isValidEvent(data) {
+      return data.keys().hasAll(['id', 'event_name', 'date', 'location', 'description', 'cover_image']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.event_name is string && data.event_name.size() >= 1 && data.event_name.size() <= 400 &&
+        data.date is string && data.date.size() <= 200 &&
+        data.location is string && data.location.size() <= 400 &&
+        data.description is string && data.description.size() <= 8000 &&
+        data.cover_image is string && data.cover_image.size() <= 950000;
+    }
+
+    function isValidGalleryItem(data) {
+      return data.keys().hasAll(['id', 'image', 'title', 'category', 'description', 'date']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.image is string && data.image.size() >= 1 && data.image.size() <= 950000 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 400 &&
+        data.category is string && data.category.size() >= 1 && data.category.size() <= 200 &&
+        data.description is string && data.description.size() <= 5000 &&
+        data.date is string && data.date.size() <= 120;
+    }
+
+    function isValidVideo(data) {
+      return data.keys().hasAll(['id', 'youtube_link', 'title', 'description', 'thumbnail']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.youtube_link is string && data.youtube_link.size() >= 1 && data.youtube_link.size() <= 500 &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 400 &&
+        data.description is string && data.description.size() <= 5000 &&
+        data.thumbnail is string && data.thumbnail.size() <= 950000;
+    }
+
+    function isValidSeo(data) {
+      return data.keys().hasAll(['id', 'page_name', 'seo_title', 'meta_description', 'keywords', 'url_slug', 'og_image', 'schema_data']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.page_name is string && data.page_name.size() >= 1 && data.page_name.size() <= 120 &&
+        data.seo_title is string && data.seo_title.size() >= 1 && data.seo_title.size() <= 300 &&
+        data.meta_description is string && data.meta_description.size() >= 1 && data.meta_description.size() <= 600 &&
+        data.keywords is string && data.keywords.size() <= 1000 &&
+        data.url_slug is string && data.url_slug.size() <= 200 &&
+        data.og_image is string && data.og_image.size() <= 950000 &&
+        data.schema_data is string && data.schema_data.size() <= 15000;
+    }
+
+    function isValidPrivacyPolicy(data) {
+      return data.keys().hasAll(['id', 'bengali_policy', 'english_policy', 'updated_date']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.bengali_policy is string && data.bengali_policy.size() >= 1 && data.bengali_policy.size() <= 25000 &&
+        data.english_policy is string && data.english_policy.size() >= 1 && data.english_policy.size() <= 25000 &&
+        data.updated_date is string && data.updated_date.size() <= 64;
+    }
+
+    // Collection 1: users (PII Isolated - Only Owner or Verified Admin)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isSignedIn() && (request.auth.uid == userId || isVerifiedAdmin());
+      allow list: if isVerifiedAdmin();
+      allow create: if isValidId(userId) && isValidUser(incoming()) && isVerifiedAdmin();
+      allow update: if isValidId(userId) && isValidUser(incoming()) && isVerifiedAdmin() && incoming().uid == existing().uid;
+      allow delete: if isValidId(userId) && isVerifiedAdmin();
+    }
+
+    // Collection 2: settings
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(settingId) && isValidSettings(incoming());
+      allow delete: if isValidId(settingId);
+    }
+
+    // Collection 3: members
+    match /members/{memberId} {
+      allow get: if isValidId(memberId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(memberId) && isValidMember(incoming());
+      allow delete: if isValidId(memberId);
+    }
+
+    // Collection 4: dramas
+    match /dramas/{dramaId} {
+      allow get: if isValidId(dramaId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(dramaId) && isValidDrama(incoming());
+      allow delete: if isValidId(dramaId);
+    }
+
+    // Collection 5: programs
+    match /programs/{programId} {
+      allow get: if isValidId(programId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(programId) && isValidProgram(incoming());
+      allow delete: if isValidId(programId);
+    }
+
+    // Collection 6: events
+    match /events/{eventId} {
+      allow get: if isValidId(eventId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(eventId) && isValidEvent(incoming());
+      allow delete: if isValidId(eventId);
+    }
+
+    // Collection 7: gallery
+    match /gallery/{galleryId} {
+      allow get: if isValidId(galleryId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(galleryId) && isValidGalleryItem(incoming());
+      allow delete: if isValidId(galleryId);
+    }
+
+    // Collection 8: videos
+    match /videos/{videoId} {
+      allow get: if isValidId(videoId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(videoId) && isValidVideo(incoming());
+      allow delete: if isValidId(videoId);
+    }
+
+    // Collection 9: seo
+    match /seo/{seoId} {
+      allow get: if isValidId(seoId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(seoId) && isValidSeo(incoming());
+      allow delete: if isValidId(seoId);
+    }
+
+    // Collection 10: privacy_policy
+    match /privacy_policy/{policyId} {
+      allow get: if isValidId(policyId);
+      allow list: if resource.data.id is string;
+      allow create, update: if isValidId(policyId) && isValidPrivacyPolicy(incoming());
+      allow delete: if isValidId(policyId);
+    }
+  }
+}

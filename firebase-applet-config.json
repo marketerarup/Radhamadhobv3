@@ -1,0 +1,12 @@
+{
+  "projectId": "outbound-call-agent-n8n",
+  "appId": "1:765769088649:web:0a9d695f0014f7ce919058",
+  "apiKey": "AIzaSyD4PYkoK1fJixCHdIWZUGDQd3NtcyrKSAM",
+  "authDomain": "outbound-call-agent-n8n.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-brandidentitycul-d48d76ca-2cec-43f2-822a-e568e5fae0f5",
+  "storageBucket": "outbound-call-agent-n8n.firebasestorage.app",
+  "messagingSenderId": "765769088649",
+  "measurementId": "",
+  "oAuthClientId": "765769088649-jneevnib4kk19fnbdh564sah3inupjn3.apps.googleusercontent.com",
+  "recaptchaSiteKey": ""
+}

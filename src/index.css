@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Red, Golden & Green Traditional Bengali Cultural NGO Palette */
+    --brand-vermilion: #CC0000;
+    --brand-sindoor-deep: #990000;
+    --brand-alta-crimson: #6B0505;
+    --brand-temple-gold: #D4AF37;
+    --brand-gold-bright: #F59E0B;
+    --brand-gold-soft: #FDF6E2;
+    --brand-mango-green: #0F5132;
+    --brand-tulsi-green: #14532D;
+    --brand-green-tint: #ECFDF5;
+    --brand-alabaster-paper: #FAF7F0;
+    --brand-warm-stone: #F3EFE6;
+    --brand-border-hairline: #E5DEC9;
+    --brand-charcoal-prose: #1C1917;
+    --brand-muted-slate: #57534E;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
+    -webkit-tap-highlight-color: rgba(204, 0, 0, 0.12);
+  }
+
+  body {
+    background-color: var(--brand-alabaster-paper);
+    color: var(--brand-charcoal-prose);
+    font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  h1, h2, h3, .font-display-bn {
+    font-family: 'Noto Serif Bengali', 'Cormorant Garamond', serif;
+  }
+
+  .font-body-bn {
+    font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .font-mono-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-enter {
+  animation: fadeSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes whatsappPulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  70% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.animate-whatsapp-pulse {
+  animation: whatsappPulseRing 2.1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+/* Traditional Bengali Red-Gold-Green Sari / Temple Border Motif */
+.bengali-tri-border {
+  background: linear-gradient(
+    90deg,
+    #990000 0%,
+    #CC0000 25%,
+    #D4AF37 50%,
+    #0F5132 75%,
+    #990000 100%
+  );
+}

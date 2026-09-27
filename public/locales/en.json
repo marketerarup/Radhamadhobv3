@@ -1,0 +1,143 @@
+{
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "members": "Members",
+    "drama": "Drama",
+    "programs": "Programs",
+    "gallery": "Gallery",
+    "videos": "Videos",
+    "join": "Join Us",
+    "contact": "Contact",
+    "navigationMenu": "Navigation Menu",
+    "languageLabel": "Language:",
+    "whatsappCta": "Contact on WhatsApp"
+  },
+  "hero": {
+    "kicker": "Sacred Stage for Sanatani Culture, Art & Heritage",
+    "welcomePrefix": "Welcome to",
+    "defaultOrgName": "Radhamadhob Cultural Alliance",
+    "defaultSubtitle": "A cultural family dedicated to preserving Sanatani culture, drama, dance, and heritage",
+    "aboutBtn": "About Us",
+    "joinBtn": "Join With Us",
+    "prevSlide": "Previous Slide",
+    "nextSlide": "Next Slide",
+    "pauseAutoPlay": "Pause Auto-Play",
+    "resumeAutoPlay": "Resume Auto-Play"
+  },
+  "intro": {
+    "kicker": "Introduction · Radhamadhob Cultural Alliance",
+    "defaultTitle": "Our Cultural Journey",
+    "defaultText": "Radhamadhob Cultural Alliance works with the mission of preserving Sanatani culture, art, and heritage. Through drama, dance, music, and diverse cultural programs, we carry forward the timeless stream of our cultural tradition.",
+    "defaultQuote": "“Promoting Sanatan Dharma through Sattvic and Vedic cultural entertainment is the core mission of Radhamadhob Cultural Alliance”",
+    "defaultDetails": "Under the direction of Binoy Kumar Sen (Director & Instructor), we stage religious dramas, mythological plays, Vedic theatrical performances, musical dramas (Geetinatya), and classical dance programs. Contact: 01797-059419.",
+    "readMore": "Read More",
+    "showLess": "Show Less"
+  },
+  "about": {
+    "kicker": "About Our Cultural Organization",
+    "heading": "About Us",
+    "stageCaption": "Radhamadhob Cultural Alliance · Stage Performance",
+    "defaultParagraph1": "Radhamadhob Cultural Alliance is a Sanatani cultural organization. Our journey is dedicated to preserving and promoting Sanatani culture, art, and timeless heritage.",
+    "defaultParagraph2": "We regularly organize diverse cultural activities, religious dramas, mythological plays, classical & devotional dances, music, and musical dramas (Geetinatya).",
+    "visionKicker": "Our Long-Term Vision",
+    "visionHeading": "Our Vision",
+    "defaultVision": "To pass on Sanatani culture and timeless heritage to the new generation.",
+    "missionKicker": "Our Core Mission",
+    "missionHeading": "Our Mission",
+    "defaultMission": "To enhance cultural and moral values in society through drama, dance, and cultural activities."
+  },
+  "members": {
+    "kicker": "Our Dedicated Family of Artists & Performers",
+    "heading": "Our Honorable Members",
+    "description": "Behind every drama, dance, and cultural celebration of Radhamadhob Cultural Alliance stand our dedicated Director, Instructors, Advisors, Associates, and Executive Members.",
+    "totalMembers": "Total Members",
+    "leadership": "Leadership",
+    "associates": "Associates",
+    "executive": "Executive",
+    "searchPlaceholder": "Search member by name or position...",
+    "allPositions": "All Positions",
+    "joinedPrefix": "Joined:",
+    "viewProfile": "View Profile",
+    "modalSubtitle": "Radhamadhob Cultural Alliance · Honorable Member Profile",
+    "bioHeading": "Short Biography & Cultural Contribution",
+    "fatherName": "Father's Name",
+    "motherName": "Mother's Name",
+    "address": "Address",
+    "joiningDate": "Joining Date",
+    "mobileNumber": "Mobile Number",
+    "emailAddress": "Email Address",
+    "recorded": "Recorded",
+    "close": "Close"
+  },
+  "drama": {
+    "kicker": "Stage Dramas, Mythological Plays & Musical Theatre",
+    "heading": "Our Dramas & Stage Productions",
+    "description": "Our core mission is to spread Sanatani values and humanitarian consciousness through religious dramas, mythological plays, social dramas, and traditional musical theatre.",
+    "directorPrefix": "Director:",
+    "stagePhotosSuffix": "Stage Photos",
+    "viewDetails": "View Details",
+    "directorLabel": "Director & Instructor",
+    "yearLabel": "Production Year",
+    "castHeading": "Cast & Performers:",
+    "watchOnYoutube": "Watch Video on YouTube"
+  },
+  "videos": {
+    "kicker": "Official YouTube Channel & Stage Video Archive",
+    "heading": "Drama & Cultural Program Videos",
+    "description": "Watch recorded stage dramas, Vedic dance performances, and devotional programs of Radhamadhob Cultural Alliance on our official YouTube channel.",
+    "visitChannel": "Visit Official YouTube Channel",
+    "watchHere": "Watch Here",
+    "youtubeWatch": "Watch on YouTube",
+    "youtubeChannel": "YouTube Channel"
+  },
+  "programs": {
+    "kicker": "Religious Festivals, Vedic Dance & Cultural Celebrations",
+    "heading": "Cultural Programs & Regular Activities",
+    "description": "Our regular participation in Sanatani festivals, classical & folk dance performances, devotional Bhajan & Kirtan gatherings, and socially conscious cultural events.",
+    "regularStream": "Regular Cultural Stream",
+    "details": "Details",
+    "featuredEventsHeading": "Featured & Past Cultural Events",
+    "featuredEventsCountSuffix": "Featured Events",
+    "viewEventAlbum": "View Event Album",
+    "photosAndInfo": "Photos & Info"
+  },
+  "gallery": {
+    "kicker": "Original Stage & Cultural Program Photo Archive",
+    "heading": "Photo Gallery & Stage Memories",
+    "description": "Authentic moments from dramas, dance performances, and religious events of Radhamadhob Cultural Alliance. Click any photo to view in full screen."
+  },
+  "contact": {
+    "joinKicker": "Call for New Members & Artists",
+    "joinHeading": "Join Radhamadhob Cultural Alliance",
+    "joinDescription": "Are you passionate about stage drama, Vedic dance, devotional music, or Sanatani cultural activities? Contact us directly on WhatsApp today to join our cultural family.",
+    "membershipHeading": "Contact for Membership",
+    "membershipSub": "Talk directly via WhatsApp & Phone",
+    "hotlineLabel": "Official Hotline & WhatsApp:",
+    "connectWhatsapp": "Connect on WhatsApp",
+    "kicker": "Direct Contact · Get in Touch",
+    "heading": "Contact Us",
+    "description": "Click any of the cards below to invite Radhamadhob Cultural Alliance to religious festivals, theatre events, or cultural programs, or to inquire for information.",
+    "phoneLabel": "Phone Number",
+    "whatsappLabel": "WhatsApp",
+    "facebookLabel": "Facebook Page",
+    "facebookAction": "Visit Our Facebook Page",
+    "youtubeLabel": "YouTube Channel",
+    "youtubeAction": "Official YouTube Channel"
+  },
+  "privacy": {
+    "kicker": "Privacy & Copyright Policy",
+    "heading": "Radhamadhob Cultural Alliance — Privacy Policy",
+    "expandBtn": "Read Full Privacy Policy Clauses",
+    "collapseBtn": "Show Less Policy"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "contactChannels": "Contact Channels",
+    "phoneAndWhatsapp": "Phone & WhatsApp:",
+    "facebookPage": "Facebook Page:",
+    "youtubeChannel": "YouTube Channel:",
+    "adminLogin": "Admin Login",
+    "allRightsReserved": "All Rights Reserved"
+  }
+}

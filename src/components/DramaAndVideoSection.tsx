@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calendar,
-  ChevronDown,
-  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Drama,
   ExternalLink,
   Eye,
   Film,
+  Pause,
   Play,
   Sparkles,
   UserCheck,
@@ -49,12 +50,98 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
     ? videos.find((v) => v.id === activeVideoModalState.id) ||
       activeVideoModalState
     : null;
-  const [showAllDramasMobile, setShowAllDramasMobile] = useState(false);
+
+  // Responsive 4-Card Slider State for Drama Cards
+  const [cardsPerView, setCardsPerView] = useState<number>(() => {
+    if (typeof window === 'undefined') return 4;
+    if (window.innerWidth >= 1024) return 4;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+  });
+  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
+  const [isSliderHovered, setIsSliderHovered] = useState<boolean>(false);
+  const [isAutoSlidePlaying, setIsAutoSlidePlaying] = useState<boolean>(true);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const filteredDramas =
     selectedCategory === 'সব নাটক'
       ? dramas
       : dramas.filter((d) => d.category === selectedCategory);
+
+  const maxSlideIndex = Math.max(0, filteredDramas.length - cardsPerView);
+
+  useEffect(() => {
+    const updateCardsPerView = () => {
+      if (window.innerWidth >= 1024) {
+        setCardsPerView(4);
+      } else if (window.innerWidth >= 640) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(1);
+      }
+    };
+    updateCardsPerView();
+    window.addEventListener('resize', updateCardsPerView, { passive: true });
+    return () => window.removeEventListener('resize', updateCardsPerView);
+  }, []);
+
+  useEffect(() => {
+    setCurrentSlideIndex(0);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    if (currentSlideIndex > maxSlideIndex) {
+      setCurrentSlideIndex(maxSlideIndex);
+    }
+  }, [currentSlideIndex, maxSlideIndex]);
+
+  useEffect(() => {
+    if (
+      !isAutoSlidePlaying ||
+      isSliderHovered ||
+      Boolean(selectedDrama) ||
+      filteredDramas.length <= cardsPerView
+    ) {
+      return;
+    }
+    const timer = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
+    }, 4200);
+    return () => clearInterval(timer);
+  }, [
+    isAutoSlidePlaying,
+    isSliderHovered,
+    selectedDrama,
+    filteredDramas.length,
+    cardsPerView,
+    maxSlideIndex,
+  ]);
+
+  const handlePrevDramaSlide = () => {
+    setCurrentSlideIndex((prev) => (prev <= 0 ? maxSlideIndex : prev - 1));
+  };
+
+  const handleNextDramaSlide = () => {
+    setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0]?.clientX ?? null);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX;
+    const diff = touchStartX - endX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNextDramaSlide();
+      } else {
+        handlePrevDramaSlide();
+      }
+    }
+    setTouchStartX(null);
+  };
 
   const openDramaDetail = (drama: DramaRecord) => {
     setSelectedDrama(drama);
@@ -182,136 +269,263 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             </div>
           </div>
 
-          {/* Drama Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {filteredDramas.map((drama, idx) => {
-              const hiddenOnMobile = !showAllDramasMobile && idx >= 4;
-              const displayTitle = getDramaTitle(drama);
-              const displayDesc = getDramaDesc(drama);
-              const displayDirector = getDramaDirector(drama);
-              const displayCategory = tCategory(drama.category);
-              const displayYear = tDigits(drama.year);
+          {/* Drama Cards 4-Card Horizontal Slider */}
+          <div
+            className="space-y-4 relative"
+            onMouseEnter={() => setIsSliderHovered(true)}
+            onMouseLeave={() => setIsSliderHovered(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Slider Top Controls Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E5DEC9] text-xs font-bold text-[#1C1917] shadow-2xs">
+                  <Film className="w-3.5 h-3.5 text-[#CC0000]" />
+                  <span>
+                    {lang === 'bn'
+                      ? `প্রদর্শিত নাটক: ${tDigits(
+                          Math.min(currentSlideIndex + 1, filteredDramas.length)
+                        )}–${tDigits(
+                          Math.min(
+                            currentSlideIndex + cardsPerView,
+                            filteredDramas.length
+                          )
+                        )} (মোট ${tDigits(filteredDramas.length)}টি)`
+                      : `Showing ${Math.min(
+                          currentSlideIndex + 1,
+                          filteredDramas.length
+                        )}–${Math.min(
+                          currentSlideIndex + cardsPerView,
+                          filteredDramas.length
+                        )} of ${filteredDramas.length} Dramas`}
+                  </span>
+                </span>
 
-              return (
-                <article
-                  key={drama.id}
-                  onClick={() => openDramaDetail(drama)}
-                  className={`${
-                    hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                  } group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex-col justify-between cursor-pointer`}
-                >
-                  <div>
-                    {/* Stage Poster Image or Theatrical Playbill Header (zero duplicate photos) */}
-                    <div className="relative aspect-[16/10] bg-gradient-to-br from-[#2B0908] via-[#5C0B09] to-[#1A0807] overflow-hidden flex items-center justify-center">
-                      {drama.poster ? (
-                        <>
-                          <img
-                            src={drama.poster}
-                            alt={`${displayTitle} - ${displayCategory}`}
-                            loading="lazy"
-                            decoding="async"
-                            width={400}
-                            height={250}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        </>
-                      ) : (
-                        <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center relative">
-                          <div className="w-11 h-11 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#FDE68A] mb-2 group-hover:scale-110 transition-transform">
-                            <Drama className="w-5 h-5" />
-                          </div>
-                          <span className="text-sm sm:text-base font-bold text-[#FDE68A] font-display-bn line-clamp-1 px-2">
-                            {displayTitle}
-                          </span>
-                          <span className="text-[10px] text-amber-200/80 mt-0.5">
-                            {lang === 'bn'
-                              ? 'ডিজিটাল সাউন্ড মঞ্চ প্রযোজনা'
-                              : 'Digital Sound Stage Production'}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Category Badge */}
-                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#CC0000]/95 text-[#FDE68A] text-[11px] font-bold border border-[#D4AF37]/40 shadow-sm">
-                        {displayCategory}
-                      </span>
-
-                      {/* Year Badge */}
-                      <span className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-md bg-black/70 text-white text-[11px] font-bold border border-white/15">
-                        {displayYear}
-                      </span>
-                    </div>
-
-                    {/* Drama Content */}
-                    <div className="p-4 sm:p-5 space-y-2.5">
-                      <h3 className="text-lg sm:text-xl font-bold text-[#1C1917] font-display-bn group-hover:text-[#CC0000] transition-colors leading-snug">
-                        {displayTitle}
-                      </h3>
-
-                      <div className="text-xs font-semibold text-[#0F5132] flex items-center gap-1.5">
-                        <UserCheck className="w-3.5 h-3.5 shrink-0" />
-                        <span>
-                          {lang === 'bn'
-                            ? `নির্দেশনা: ${displayDirector}`
-                            : `Director: ${displayDirector}`}
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-[#57534E] line-clamp-2 sm:line-clamp-3 leading-relaxed">
-                        {displayDesc}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Read-Only Footer Action */}
-                  <div className="px-4 sm:px-5 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-[#78716C] flex items-center gap-1">
-                      <Film className="w-3.5 h-3.5 text-[#CC0000]" />
-                      <span>
-                        {lang === 'bn'
-                          ? 'পৌরাণিক ও ধর্মীয় মঞ্চনাটক'
-                          : 'Sanatan Stage Production'}
-                      </span>
+                {filteredDramas.length > cardsPerView && (
+                  <button
+                    type="button"
+                    onClick={() => setIsAutoSlidePlaying((prev) => !prev)}
+                    title={
+                      isAutoSlidePlaying
+                        ? lang === 'bn'
+                          ? 'অটো-স্লাইড বিরতি'
+                          : 'Pause Auto-Slide'
+                        : lang === 'bn'
+                        ? 'অটো-স্লাইড চালু'
+                        : 'Resume Auto-Slide'
+                    }
+                    className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#FFF5F5] border border-[#E5DEC9] hover:border-[#CC0000] text-xs font-bold text-[#57534E] hover:text-[#CC0000] inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                  >
+                    {isAutoSlidePlaying ? (
+                      <Pause className="w-3.5 h-3.5 text-[#CC0000]" />
+                    ) : (
+                      <Play className="w-3.5 h-3.5 text-[#0F5132]" />
+                    )}
+                    <span className="hidden sm:inline">
+                      {isAutoSlidePlaying
+                        ? lang === 'bn'
+                          ? 'অটো-স্লাইড চালু'
+                          : 'Auto-Slide On'
+                        : lang === 'bn'
+                        ? 'অটো-স্লাইড বন্ধ'
+                        : 'Auto-Slide Paused'}
                     </span>
-                    <span className="text-xs font-bold text-[#CC0000] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>
-                        {lang === 'bn' ? 'বিস্তারিত দেখুন' : 'View Details'}
-                      </span>
-                    </span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          {/* Mobile "আরও দেখুন" Expandable Button for Dramas */}
-          {filteredDramas.length > 2 && (
-            <div className="flex md:hidden justify-center pt-1">
-              <button
-                type="button"
-                onClick={() => setShowAllDramasMobile((prev) => !prev)}
-                className="px-6 py-3 rounded-xl bg-white hover:bg-[#FFF5F5] text-[#CC0000] border-2 border-[#CC0000]/30 font-bold text-xs inline-flex items-center gap-2 shadow-xs cursor-pointer"
-              >
-                {showAllDramasMobile ? (
-                  <>
-                    <span>{lang === 'bn' ? 'সংক্ষিপ্ত করুন' : 'Show Less'}</span>
-                    <ChevronUp className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    <span>
-                      {lang === 'bn'
-                        ? `আরও নাটক দেখুন (${tDigits(filteredDramas.length - 2)}+)`
-                        : `View More Dramas (${filteredDramas.length - 2}+)`}
-                    </span>
-                    <ChevronDown className="w-4 h-4" />
-                  </>
+                  </button>
                 )}
-              </button>
+              </div>
+
+              {/* Prev / Next Slide Buttons */}
+              {filteredDramas.length > cardsPerView && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrevDramaSlide}
+                    aria-label={lang === 'bn' ? 'পূর্ববর্তী নাটক' : 'Previous Drama'}
+                    className="px-3.5 py-2 rounded-xl bg-white hover:bg-[#CC0000] text-[#1C1917] hover:text-white border border-[#E5DEC9] hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextDramaSlide}
+                    aria-label={lang === 'bn' ? 'পরবর্তী নাটক' : 'Next Drama'}
+                    className="px-3.5 py-2 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white border border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+                  >
+                    <span>{lang === 'bn' ? 'পরবর্তী স্লাইড' : 'Next Slide'}</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* 4-Card Slider Viewport */}
+            <div className="relative">
+              {/* Left Floating Arrow */}
+              {filteredDramas.length > cardsPerView && (
+                <button
+                  type="button"
+                  onClick={handlePrevDramaSlide}
+                  aria-label={lang === 'bn' ? 'বামে স্লাইড করুন' : 'Slide Left'}
+                  className="hidden sm:flex absolute -left-3 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-white/95 hover:bg-[#CC0000] text-[#1C1917] hover:text-white border-2 border-[#D4AF37] shadow-lg items-center justify-center transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+              )}
+
+              {/* Right Floating Arrow */}
+              {filteredDramas.length > cardsPerView && (
+                <button
+                  type="button"
+                  onClick={handleNextDramaSlide}
+                  aria-label={lang === 'bn' ? 'ডানে স্লাইড করুন' : 'Slide Right'}
+                  className="hidden sm:flex absolute -right-3 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-white/95 hover:bg-[#CC0000] text-[#1C1917] hover:text-white border-2 border-[#D4AF37] shadow-lg items-center justify-center transition-all cursor-pointer"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              )}
+
+              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-1">
+                <div
+                  className="flex transition-transform duration-500 ease-out"
+                  style={{
+                    transform: `translateX(-${
+                      currentSlideIndex * (100 / cardsPerView)
+                    }%)`,
+                  }}
+                >
+                  {filteredDramas.map((drama) => {
+                    const displayTitle = getDramaTitle(drama);
+                    const displayDesc = getDramaDesc(drama);
+                    const displayDirector = getDramaDirector(drama);
+                    const displayCategory = tCategory(drama.category);
+                    const displayYear = tDigits(drama.year);
+
+                    return (
+                      <div
+                        key={drama.id}
+                        className="w-full sm:w-1/2 lg:w-1/4 shrink-0 px-2.5 sm:px-3"
+                      >
+                        <article
+                          onClick={() => openDramaDetail(drama)}
+                          className="h-full flex group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex-col justify-between cursor-pointer"
+                        >
+                          <div>
+                            {/* Stage Poster Image or Theatrical Playbill Header */}
+                            <div className="relative aspect-[16/10] bg-gradient-to-br from-[#2B0908] via-[#5C0B09] to-[#1A0807] overflow-hidden flex items-center justify-center">
+                              {drama.poster ? (
+                                <>
+                                  <img
+                                    src={drama.poster}
+                                    alt={`${displayTitle} - ${displayCategory}`}
+                                    loading="lazy"
+                                    decoding="async"
+                                    width={400}
+                                    height={250}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                </>
+                              ) : (
+                                <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center relative">
+                                  <div className="w-11 h-11 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#FDE68A] mb-2 group-hover:scale-110 transition-transform">
+                                    <Drama className="w-5 h-5" />
+                                  </div>
+                                  <span className="text-sm sm:text-base font-bold text-[#FDE68A] font-display-bn line-clamp-1 px-2">
+                                    {displayTitle}
+                                  </span>
+                                  <span className="text-[10px] text-amber-200/80 mt-0.5">
+                                    {lang === 'bn'
+                                      ? 'ডিজিটাল সাউন্ড মঞ্চ প্রযোজনা'
+                                      : 'Digital Sound Stage Production'}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Category Badge */}
+                              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#CC0000]/95 text-[#FDE68A] text-[11px] font-bold border border-[#D4AF37]/40 shadow-sm">
+                                {displayCategory}
+                              </span>
+
+                              {/* Year Badge */}
+                              <span className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-md bg-black/70 text-white text-[11px] font-bold border border-white/15">
+                                {displayYear}
+                              </span>
+                            </div>
+
+                            {/* Drama Content */}
+                            <div className="p-4 sm:p-5 space-y-2.5">
+                              <h3 className="text-lg sm:text-xl font-bold text-[#1C1917] font-display-bn group-hover:text-[#CC0000] transition-colors leading-snug line-clamp-1">
+                                {displayTitle}
+                              </h3>
+
+                              <div className="text-xs font-semibold text-[#0F5132] flex items-center gap-1.5">
+                                <UserCheck className="w-3.5 h-3.5 shrink-0" />
+                                <span>
+                                  {lang === 'bn'
+                                    ? `নির্দেশনা: ${displayDirector}`
+                                    : `Director: ${displayDirector}`}
+                                </span>
+                              </div>
+
+                              <p className="text-xs text-[#57534E] line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                                {displayDesc}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Read-Only Footer Action */}
+                          <div className="px-4 sm:px-5 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
+                            <span className="text-[11px] font-medium text-[#78716C] flex items-center gap-1">
+                              <Film className="w-3.5 h-3.5 text-[#CC0000]" />
+                              <span>
+                                {lang === 'bn'
+                                  ? 'পৌরাণিক ও ধর্মীয় মঞ্চনাটক'
+                                  : 'Sanatan Stage Production'}
+                              </span>
+                            </span>
+                            <span className="text-xs font-bold text-[#CC0000] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>
+                                {lang === 'bn' ? 'বিস্তারিত দেখুন' : 'View Details'}
+                              </span>
+                            </span>
+                          </div>
+                        </article>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Slide Indicator Dots */}
+            {filteredDramas.length > cardsPerView && (
+              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
+                {Array.from({ length: maxSlideIndex + 1 }).map((_, idx) => {
+                  const isActive = idx === currentSlideIndex;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setCurrentSlideIndex(idx)}
+                      aria-label={
+                        lang === 'bn'
+                          ? `স্লাইড ${tDigits(idx + 1)}`
+                          : `Slide ${idx + 1}`
+                      }
+                      className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        isActive
+                          ? 'w-8 bg-[#CC0000] ring-2 ring-[#D4AF37]'
+                          : 'w-2.5 bg-[#D6CEBF] hover:bg-[#CC0000]/60'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

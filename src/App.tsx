@@ -1544,9 +1544,9 @@ export default function App() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label={lang === 'bn' ? 'উপরে ফিরে যান' : 'Back to Top'}
           title={lang === 'bn' ? 'উপরে ফিরে যান' : 'Back to Top'}
-          className="fixed bottom-8 sm:bottom-10 left-4 sm:left-6 z-[55] w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#1C1917]/90 hover:bg-[#CC0000] text-[#FDE68A] border border-[#D4AF37] shadow-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          className="fixed bottom-14 sm:bottom-16 left-4 sm:left-6 z-[120] w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#1C1917]/95 hover:bg-[#CC0000] text-[#FDE68A] border-2 border-[#D4AF37] hover:border-[#FDE68A] shadow-[0_8px_30px_rgba(0,0,0,0.6)] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer ring-2 ring-black/40"
         >
-          <ArrowUp className="w-5 h-5" />
+          <ArrowUp className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       )}
 

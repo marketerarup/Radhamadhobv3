@@ -30,7 +30,7 @@ export const FloatingWhatsAppButton: React.FC<FloatingWhatsAppButtonProps> = ({
   return (
     <aside
       aria-label={labelText}
-      className="fixed bottom-8 sm:bottom-10 right-4 sm:right-6 z-[120] flex items-center group select-none"
+      className="fixed bottom-14 sm:bottom-16 right-4 sm:right-6 z-[120] flex items-center group select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

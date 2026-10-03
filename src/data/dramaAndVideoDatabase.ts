@@ -28,10 +28,10 @@ import {
  * RADHAMADHOB CULTURAL ALLIANCE — `dramas` & `videos` COLLECTIONS DATABASE
  * (রাধামাধব সাংস্কৃতিক জোট — নাটক ও ইউটিউব ভিডিও ডাটাবেস স্ট্রাকচার)
  * ============================================================================
- * Official YouTube Channel: https://www.youtube.com/@joyradhe9917
+ * Official YouTube Channel: https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9
  */
 
-export const OFFICIAL_YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@joyradhe9917';
+export const OFFICIAL_YOUTUBE_CHANNEL_URL = 'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9';
 
 export type DramaCategoryBn =
   | 'সব নাটক'
@@ -576,44 +576,224 @@ export const INITIAL_DRAMAS_SEED: DramaRecord[] = [
 
 /**
  * INITIAL SEED FOR `videos` COLLECTION
- * Connected to official YouTube channel: https://www.youtube.com/@joyradhe9917
+ * Connected to official YouTube channel: https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9
  */
 export const INITIAL_VIDEOS_SEED: VideoRecord[] = [
   {
-    id: 'video-001-mahishasuramardini',
-    youtube_link: 'https://www.youtube.com/@joyradhe9917',
-    title: 'শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী পৌরাণিক নাট্য পরিবেশনা — রাধামাধব সনাতন সাংস্কৃতিক জোট',
-    titleEn: 'Sri Sri Chandi & Mahishasuramardini Mythological Drama — Radhamadhob Sanatan Cultural Alliance',
+    id: 'video-001-janmashtami-2026',
+    youtube_link: 'https://www.youtube.com/watch?v=UjV2TXFSuJ8',
+    title: 'Janmashtami 2026 Time & Date । জন্মাষ্টমী সময়, তিথি। স্মার্ত ও বৈষ্ণব মতের পার্থক্য । পারন ব্রত',
+    title_bn: 'Janmashtami 2026 Time & Date । জন্মাষ্টমী সময়, তিথি। স্মার্ত ও বৈষ্ণব মতের পার্থক্য । পারন ব্রত',
+    titleEn: 'Janmashtami 2026 Time & Date: Auspicious Timings, Tithi & Sacred Observance',
+    title_en: 'Janmashtami 2026 Time & Date: Auspicious Timings, Tithi & Sacred Observance',
     description:
-      'পরিচালক ও নির্দেশক বিনয় কুমার সেনের নির্দেশনায় দশভুজা দেবী দুর্গার মহিষাসুর বধ পালার মঞ্চ ভিডিও ও বিশেষ মুহূর্তসমূহ। অফিশিয়াল ইউটিউব চ্যানেল (@joyradhe9917)।',
+      'জন্মাষ্টমী ব্রত পালনের সঠিক সময়, তিথি, স্মার্ত ও বৈষ্ণব মতের পার্থক্য এবং পারন ব্রতের পুণ্য বিধান সম্পর্কিত প্রামাণ্য আলোচনা। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'জন্মাষ্টমী ব্রত পালনের সঠিক সময়, তিথি, স্মার্ত ও বৈষ্ণব মতের পার্থক্য এবং পারন ব্রতের পুণ্য বিধান সম্পর্কিত প্রামাণ্য আলোচনা। জয় রাধে (@joyradhe1995)।',
     descriptionEn:
-      'Stage performance highlights of Ten-Armed Devi Durga vanquishing Mahishasura, directed by Binoy Kumar Sen on our official YouTube channel (@joyradhe9917).',
-    thumbnail: durgaStageSpotlightImg,
+      'Comprehensive guide to Janmashtami sacred observance, auspicious timings, Smarta vs Vaishnava traditions and Paran vrata rituals on Joy Radhe.',
+    description_en:
+      'Comprehensive guide to Janmashtami sacred observance, auspicious timings, Smarta vs Vaishnava traditions and Paran vrata rituals on Joy Radhe.',
+    thumbnail: 'https://img.youtube.com/vi/UjV2TXFSuJ8/hqdefault.jpg',
     created_date: '2026-09-26T10:00:00.000Z',
   },
   {
-    id: 'video-002-hara-parvati-dance',
-    youtube_link: 'https://www.youtube.com/@joyradhe9917',
-    title: 'হর-পার্বতী বৈদিক নৃত্যনাট্য ও বিশ্বরূপ দর্শন — মঞ্চ অনুষ্ঠান',
-    titleEn: 'Hara-Parvati Vedic Dance-Drama & Vishwaroopa Darshan — Stage Performance',
+    id: 'video-002-manasa-puja-2026',
+    youtube_link: 'https://www.youtube.com/watch?v=3KbsjpT1Zak',
+    title: 'মনসা পূজা এর তারিখ ও পুস্পাঞ্জলীর সময় । Manasa puja date and time । পঞ্জিকা ও নক্ষত্র',
+    title_bn: 'মনসা পূজা এর তারিখ ও পুস্পাঞ্জলীর সময় । Manasa puja date and time । পঞ্জিকা ও নক্ষত্র',
+    titleEn: 'Manasa Puja Date, Time & Pushpanjali Vidhi: Panjika & Astrological Calculations',
+    title_en: 'Manasa Puja Date, Time & Pushpanjali Vidhi: Panjika & Astrological Calculations',
     description:
-      'দেবাদিদেব মহাদেব ও দেবী পার্বতীর যুগল দর্শন এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনা। রাধামাধব সনাতন সাংস্কৃতিক জোটের অফিশিয়াল ইউটিউব চ্যানেল (@joyradhe9917)।',
+      'দেবী মনসা পূজার শুভ দিনক্ষণ, পুষ্পাঞ্জলি প্রদানের সঠিক সময় এবং মনসা দেবীর মাহাত্ম্য ও শাস্ত্রীয় নিয়মাবলী। জয় রাধে অফিশিয়াল চ্যানেল (@joyradhe1995)।',
+    description_bn:
+      'দেবী মনসা পূজার শুভ দিনক্ষণ, পুষ্পাঞ্জলি প্রদানের সঠিক সময় এবং মনসা দেবীর মাহাত্ম্য ও শাস্ত্রীয় নিয়মাবলী। জয় রাধে অফিশিয়াল চ্যানেল (@joyradhe1995)।',
     descriptionEn:
-      'Sacred stage presentation of Lord Shiva and Devi Parvati with Vedic dance mudras and devotional music (@joyradhe9917).',
-    thumbnail: pandalStageCastGroupImg,
+      'Sacred timings and astrological calculations for Devi Manasa Puja, pushpanjali rituals and devotional scriptural practices.',
+    description_en:
+      'Sacred timings and astrological calculations for Devi Manasa Puja, pushpanjali rituals and devotional scriptural practices.',
+    thumbnail: 'https://img.youtube.com/vi/3KbsjpT1Zak/hqdefault.jpg',
+    created_date: '2026-09-26T09:45:00.000Z',
+  },
+  {
+    id: 'video-003-afghan-hindu-king',
+    youtube_link: 'https://www.youtube.com/watch?v=xDadbAHwVgc',
+    title: 'আফগানিস্তানের শেষ হিন্দু রাজা কে ছিলেন? ১০০১ সালে শেষ হলো হাজার বছরের হিন্দু সাম্রাজ্য? রাজা জয়পাল',
+    title_bn: 'আফগানিস্তানের শেষ হিন্দু রাজা কে ছিলেন? ১০০১ সালে শেষ হলো হাজার বছরের হিন্দু সাম্রাজ্য? রাজা জয়পাল',
+    titleEn: 'Who Was Afghanistans Last Hindu King? The Thousand-Year Hindu Shahi Empire & King Jayapala',
+    title_en: 'Who Was Afghanistans Last Hindu King? The Thousand-Year Hindu Shahi Empire & King Jayapala',
+    description:
+      '১০০১ সালে কীভাবে সমাপ্ত হলো হাজার বছরের কাবুল শাহী হিন্দু রাজত্ব? বীর রাজা জয়পালের অজানা বীরত্বগাথা ও ইতিহাস। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      '১০০১ সালে কীভাবে সমাপ্ত হলো হাজার বছরের কাবুল শাহী হিন্দু রাজত্ব? বীর রাজা জয়পালের অজানা বীরত্বগাথা ও ইতিহাস। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'The forgotten historical chronicle of the Hindu Shahi dynasty of Kabul and the heroic resistance of King Jayapala against invasions.',
+    description_en:
+      'The forgotten historical chronicle of the Hindu Shahi dynasty of Kabul and the heroic resistance of King Jayapala against invasions.',
+    thumbnail: 'https://img.youtube.com/vi/xDadbAHwVgc/hqdefault.jpg',
     created_date: '2026-09-26T09:30:00.000Z',
   },
   {
-    id: 'video-003-maa-kali-pala',
-    youtube_link: 'https://www.youtube.com/@joyradhe9917',
-    title: 'মা কালীর রণচণ্ডী রূপ ও শুম্ভ-নিশুম্ভ বধ পালা — ধর্মীয় নাটক',
-    titleEn: 'Maa Kali Stage Tableau & Shumbha-Nishumbha Vadha — Religious Drama',
+    id: 'video-004-temple-bell-mystery',
+    youtube_link: 'https://www.youtube.com/watch?v=w0cC_Q90udA',
+    title: 'হিন্দু মন্দিরে ঘণ্টা বাজানো হয় কেন? | শাস্ত্রে কী বলা হয়েছে? | ঘণ্টাধ্বনির আসল রহস্য',
+    title_bn: 'হিন্দু মন্দিরে ঘণ্টা বাজানো হয় কেন? | শাস্ত্রে কী বলা হয়েছে? | ঘণ্টাধ্বনির আসল রহস্য',
+    titleEn: 'Why Are Bells Rung in Hindu Temples? Spiritual Science & Scriptural Secrets',
+    title_en: 'Why Are Bells Rung in Hindu Temples? Spiritual Science & Scriptural Secrets',
     description:
-      'মা দক্ষিণাকালীর জীবন্ত মঞ্চ ট্যাবলো এবং অসুর যুদ্ধের নাটকীয় পর্ব (@joyradhe9917)।',
+      'মন্দিরে ঘণ্টা বাজানোর পেছনে বৈজ্ঞানিক তরঙ্গ, মনের একাগ্রতা এবং বৈদিক শাস্ত্রীয় তাৎপর্যের গভীর রহস্য বিশ্লেষণ। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'মন্দিরে ঘণ্টা বাজানোর পেছনে বৈজ্ঞানিক তরঙ্গ, মনের একাগ্রতা এবং বৈদিক শাস্ত্রীয় তাৎপর্যের গভীর রহস্য বিশ্লেষণ। জয় রাধে (@joyradhe1995)।',
     descriptionEn:
-      'Dramatic religious stage performance featuring Maa Dakshinakali and Asura battle choreography (@joyradhe9917).',
-    thumbnail: asuraTrioStageImg,
+      'Spiritual science, vibrational acoustics, and scriptural significance of ringing brass bells in Hindu temples.',
+    description_en:
+      'Spiritual science, vibrational acoustics, and scriptural significance of ringing brass bells in Hindu temples.',
+    thumbnail: 'https://img.youtube.com/vi/w0cC_Q90udA/hqdefault.jpg',
+    created_date: '2026-09-26T09:15:00.000Z',
+  },
+  {
+    id: 'video-005-du-educationists-part2',
+    youtube_link: 'https://www.youtube.com/watch?v=RUrfjRIADyk',
+    title: 'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় হিন্দু শিক্ষাবিদের অবদান । Hindu educationists to the DU. Part- 2',
+    title_bn: 'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় হিন্দু শিক্ষাবিদের অবদান । Hindu educationists to the DU. Part- 2',
+    titleEn: 'Contribution of Hindu Educationists in Establishing Dhaka University (Part-2)',
+    title_en: 'Contribution of Hindu Educationists in Establishing Dhaka University (Part-2)',
+    description:
+      'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় যেসব প্রথিতযশা সনাতন শিক্ষাবিদ ও বুদ্ধিজীবী অবদান রেখেছিলেন তাঁদের ত্যাগ ও ইতিহাস। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় যেসব প্রথিতযশা সনাতন শিক্ষাবিদ ও বুদ্ধিজীবী অবদান রেখেছিলেন তাঁদের ত্যাগ ও ইতিহাস। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Historical research highlighting the distinguished Hindu scholars and educationists who built the foundation of Dhaka University.',
+    description_en:
+      'Historical research highlighting the distinguished Hindu scholars and educationists who built the foundation of Dhaka University.',
+    thumbnail: 'https://img.youtube.com/vi/RUrfjRIADyk/hqdefault.jpg',
     created_date: '2026-09-26T09:00:00.000Z',
+  },
+  {
+    id: 'video-006-du-history-part1',
+    youtube_link: 'https://www.youtube.com/watch?v=yg24TRABqk0',
+    title: 'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় হিন্দু ব্যক্তিদের অবদান | ইতিহাসের অজানা অধ্যায় | DU History',
+    title_bn: 'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠায় হিন্দু ব্যক্তিদের অবদান | ইতিহাসের অজানা অধ্যায় | DU History',
+    titleEn: 'Role of Hindu Benefactors in Establishing Dhaka University | Untold History',
+    title_en: 'Role of Hindu Benefactors in Establishing Dhaka University | Untold History',
+    description:
+      'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠার পটভূমি, সনাতনী সমাজসেবক ও দানশীল ব্যক্তিত্বদের অমূল্য অবদান ও ইতিহাস। জয় রাধে অফিশিয়াল চ্যানেল।',
+    description_bn:
+      'ঢাকা বিশ্ববিদ্যালয় প্রতিষ্ঠার পটভূমি, সনাতনী সমাজসেবক ও দানশীল ব্যক্তিত্বদের অমূল্য অবদান ও ইতিহাস। জয় রাধে অফিশিয়াল চ্যানেল।',
+    descriptionEn:
+      'The foundational history of the University of Dhaka and the indispensable financial and institutional patronage by Hindu pioneers.',
+    description_en:
+      'The foundational history of the University of Dhaka and the indispensable financial and institutional patronage by Hindu pioneers.',
+    thumbnail: 'https://img.youtube.com/vi/yg24TRABqk0/hqdefault.jpg',
+    created_date: '2026-09-26T08:45:00.000Z',
+  },
+  {
+    id: 'video-007-hindu-cosmology',
+    youtube_link: 'https://www.youtube.com/watch?v=THZEBUq0atM',
+    title: 'পৃথিবীর সৃষ্টি ও ধ্বংস কবে? | মন্বন্তর কী? | এখন কততম মনুর রাজত্ব চলছে? Hindu Cosmology in Bengali',
+    title_bn: 'পৃথিবীর সৃষ্টি ও ধ্বংস কবে? | মন্বন্তর কী? | এখন কততম মনুর রাজত্ব চলছে? Hindu Cosmology in Bengali',
+    titleEn: 'Hindu Cosmology: The Creation & Dissolution of Earth, Manvantara & Yuga Cycles',
+    title_en: 'Hindu Cosmology: The Creation & Dissolution of Earth, Manvantara & Yuga Cycles',
+    description:
+      'সনাতন বৈদিক জ্যোতির্বিজ্ঞান অনুসারে মহাবিশ্বের সৃষ্টি, কল্পকাল, মন্বন্তরের হিসাব এবং পৃথিবীর ধ্বংস ও নবসৃষ্টির রহস্য। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'সনাতন বৈদিক জ্যোতির্বিজ্ঞান অনুসারে মহাবিশ্বের সৃষ্টি, কল্পকাল, মন্বন্তরের হিসাব এবং পৃথিবীর ধ্বংস ও নবসৃষ্টির রহস্য। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Vedic cosmology, cosmic timelines of creation and pralaya, the 14 Manvantaras, and the current reign of Vaivasvata Manu.',
+    description_en:
+      'Vedic cosmology, cosmic timelines of creation and pralaya, the 14 Manvantaras, and the current reign of Vaivasvata Manu.',
+    thumbnail: 'https://img.youtube.com/vi/THZEBUq0atM/hqdefault.jpg',
+    created_date: '2026-09-26T08:30:00.000Z',
+  },
+  {
+    id: 'video-008-indra-dev-profile',
+    youtube_link: 'https://www.youtube.com/watch?v=4npzwNPTFf0',
+    title: 'দেবরাজ ইন্দ্র কে? কার পুত্র? কত বছর বেঁচেছিলেন? স্ত্রী, পুত্র, বাহন, অস্ত্র | সম্পূর্ণ পরিচয়',
+    title_bn: 'দেবরাজ ইন্দ্র কে? কার পুত্র? কত বছর বেঁচেছিলেন? স্ত্রী, পুত্র, বাহন, অস্ত্র | সম্পূর্ণ পরিচয়',
+    titleEn: 'Who is Devraj Indra? Divine Lineage, Lifespan, Weapons & Sacred Vedic Identity',
+    title_en: 'Who is Devraj Indra? Divine Lineage, Lifespan, Weapons & Sacred Vedic Identity',
+    description:
+      'স্বর্গাধিপতি ইন্দ্রদেবের উৎপত্তি, ঐরাবত বাহন, বজ্র অস্ত্র, শচীদেবী এবং বৈদিক দেবতাদের মধ্যে ইন্দ্রের অবস্থান ও মাহাত্ম্য। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'স্বর্গাধিপতি ইন্দ্রদেবের উৎপত্তি, ঐরাবত বাহন, বজ্র অস্ত্র, শচীদেবী এবং বৈদিক দেবতাদের মধ্যে ইন্দ্রের অবস্থান ও মাহাত্ম্য। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Complete mythological account of King of Devas Indra, his divine chariot, the thunderbolt Vajra, and his sacred cosmic role.',
+    description_en:
+      'Complete mythological account of King of Devas Indra, his divine chariot, the thunderbolt Vajra, and his sacred cosmic role.',
+    thumbnail: 'https://img.youtube.com/vi/4npzwNPTFf0/hqdefault.jpg',
+    created_date: '2026-09-26T08:15:00.000Z',
+  },
+  {
+    id: 'video-009-jamai-sasthi-rituals',
+    youtube_link: 'https://www.youtube.com/watch?v=wCnu-5gBEhY',
+    title: 'জামাই ষষ্ঠী | Jamai Sasthi Celebration | জামাই ষষ্ঠী পালনের নিয়ম । আষাঢ় মাসে জামাই ষষ্ঠী কেন ?',
+    title_bn: 'জামাই ষষ্ঠী | Jamai Sasthi Celebration | জামাই ষষ্ঠী পালনের নিয়ম । আষাঢ় মাসে জামাই ষষ্ঠী কেন ?',
+    titleEn: 'Jamai Sasthi Celebration & Rituals: Cultural Traditions & Auspicious Observance',
+    title_en: 'Jamai Sasthi Celebration & Rituals: Cultural Traditions & Auspicious Observance',
+    description:
+      'বাঙালি সনাতনী সমাজের অতি প্রাচীন পারিবারিক উৎসব জামাই ষষ্ঠীর আচার, মা ষষ্ঠীর পূজা এবং এর পৌরাণিক ও সামাজিক তাৎপর্য। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'বাঙালি সনাতনী সমাজের অতি প্রাচীন পারিবারিক উৎসব জামাই ষষ্ঠীর আচার, মা ষষ্ঠীর পূজা এবং এর পৌরাণিক ও সামাজিক তাৎপর্য। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Traditional rituals, blessings of Devi Sasthi, and cultural customs of the joyous Jamai Sasthi festival in Bengali Sanatan heritage.',
+    description_en:
+      'Traditional rituals, blessings of Devi Sasthi, and cultural customs of the joyous Jamai Sasthi festival in Bengali Sanatan heritage.',
+    thumbnail: 'https://img.youtube.com/vi/wCnu-5gBEhY/hqdefault.jpg',
+    created_date: '2026-09-26T08:00:00.000Z',
+  },
+  {
+    id: 'video-010-past-life-reincarnation',
+    youtube_link: 'https://www.youtube.com/watch?v=5VlnQ_Bjoqc',
+    title: 'পূর্বজন্ম কি সত্যি? তাহলে আমরা তা স্মরণ করতে পারি না কেন? Why Cant We Remember Our Past Lives?',
+    title_bn: 'পূর্বজন্ম কি সত্যি? তাহলে আমরা তা স্মরণ করতে পারি না কেন? Why Cant We Remember Our Past Lives?',
+    titleEn: 'Is Reincarnation Real? Why Cant We Remember Our Past Lives? Vedic Philosophy',
+    title_en: 'Is Reincarnation Real? Why Cant We Remember Our Past Lives? Vedic Philosophy',
+    description:
+      'সনাতন দর্শনে আত্মার অবিনশ্বরতা, কর্মফলবাদ, জন্মান্তর এবং অতীতের স্মৃতি কেন বিলুপ্ত হয় তার আধ্যাত্মিক ও বৈজ্ঞানিক বিশ্লেষণ। জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'সনাতন দর্শনে আত্মার অবিনশ্বরতা, কর্মফলবাদ, জন্মান্তর এবং অতীতের স্মৃতি কেন বিলুপ্ত হয় তার আধ্যাত্মিক ও বৈজ্ঞানিক বিশ্লেষণ। জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Deep exploration of the Law of Karma, immortality of the soul, rebirth cycles, and why cosmic memory veils past life recollections.',
+    description_en:
+      'Deep exploration of the Law of Karma, immortality of the soul, rebirth cycles, and why cosmic memory veils past life recollections.',
+    thumbnail: 'https://img.youtube.com/vi/5VlnQ_Bjoqc/hqdefault.jpg',
+    created_date: '2026-09-26T07:45:00.000Z',
+  },
+  {
+    id: 'video-011-can-atheists-go-to-heaven',
+    youtube_link: 'https://www.youtube.com/watch?v=9bGR6EVT8XA',
+    title: 'নাস্তিকরা কি স্বর্গে যেতে পারবে? Can atheists go to heaven? জয় রাধে ।',
+    title_bn: 'নাস্তিকরা কি স্বর্গে যেতে পারবে? Can atheists go to heaven? জয় রাধে ।',
+    titleEn: 'Can Atheists Attain Heaven? Karma, Righteous Deeds & Salvation in Sanatan Dharma',
+    title_en: 'Can Atheists Attain Heaven? Karma, Righteous Deeds & Salvation in Sanatan Dharma',
+    description:
+      'সনাতন ধর্মে সৎকর্ম, মানবসেবা ও অহিংসা বনাম অন্ধ বিশ্বাসের ভূমিকা—ভগবদ্গীতা ও বেদ অনুসারে স্বর্গে গমনের অধিকার কার? জয় রাধে (@joyradhe1995)।',
+    description_bn:
+      'সনাতন ধর্মে সৎকর্ম, মানবসেবা ও অহিংসা বনাম অন্ধ বিশ্বাসের ভূমিকা—ভগবদ্গীতা ও বেদ অনুসারে স্বর্গে গমনের অধিকার কার? জয় রাধে (@joyradhe1995)।',
+    descriptionEn:
+      'Scriptural analysis of righteous conduct, universal humanism, and whether moral goodness alone can lead to higher spiritual realms.',
+    description_en:
+      'Scriptural analysis of righteous conduct, universal humanism, and whether moral goodness alone can lead to higher spiritual realms.',
+    thumbnail: 'https://img.youtube.com/vi/9bGR6EVT8XA/hqdefault.jpg',
+    created_date: '2026-09-26T07:30:00.000Z',
+  },
+  {
+    id: 'video-012-luck-mantra-bhagya',
+    youtube_link: 'https://www.youtube.com/watch?v=ZiTx7S3kfLw',
+    title: 'ভাগ্য ফেরানোর মহা মন্ত্র। Great mantra to bring back luck. জয় রাধে',
+    title_bn: 'ভাগ্য ফেরানোর মহা মন্ত্র। Great mantra to bring back luck. জয় রাধে',
+    titleEn: 'Great Vedic Mantra to Bring Back Luck, Peace & Divine Fortune',
+    title_en: 'Great Vedic Mantra to Bring Back Luck, Peace & Divine Fortune',
+    description:
+      'দৈনন্দিন জীবনের দুর্গতি ও মানসিক অশান্তি থেকে মুক্তি পেতে বৈদিক মহামন্ত্রের মাহাত্ম্য ও সঠিক জপ প্রণালী। জয় রাধে অফিশিয়াল চ্যানেল (@joyradhe1995)।',
+    description_bn:
+      'দৈনন্দিন জীবনের দুর্গতি ও মানসিক অশান্তি থেকে মুক্তি পেতে বৈদিক মহামন্ত্রের মাহাত্ম্য ও সঠিক জপ প্রণালী। জয় রাধে অফিশিয়াল চ্যানেল (@joyradhe1995)।',
+    descriptionEn:
+      'Sacred chanting, spiritual mindfulness, and Vedic principles to dispel obstacles and welcome auspicious fortune into life.',
+    description_en:
+      'Sacred chanting, spiritual mindfulness, and Vedic principles to dispel obstacles and welcome auspicious fortune into life.',
+    thumbnail: 'https://img.youtube.com/vi/ZiTx7S3kfLw/hqdefault.jpg',
+    created_date: '2026-09-26T07:15:00.000Z',
   },
 ];
 
@@ -806,7 +986,9 @@ export function normalizeDramaRecords(records: DramaRecord[]): DramaRecord[] {
           (Array.isArray(item.gallery) && item.gallery.length > 0
             ? item.gallery
             : [resolvedPoster]),
-      youtube_link: item.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL,
+      youtube_link: (!item.youtube_link || item.youtube_link.includes('joyradhe9917'))
+        ? OFFICIAL_YOUTUBE_CHANNEL_URL
+        : item.youtube_link,
       created_date: item.created_date || new Date().toISOString(),
     };
   });
@@ -814,7 +996,23 @@ export function normalizeDramaRecords(records: DramaRecord[]): DramaRecord[] {
 
 export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
   const seedMap = new Map(INITIAL_VIDEOS_SEED.map((v) => [v.id, v]));
-  return records.map((item) => {
+  const existingMap = new Map<string, VideoRecord>();
+
+  // If records are empty or contain only old placeholders without real watch links, replace with seed
+  const hasOnlyOldPlaceholders =
+    records.length === 0 ||
+    records.every(
+      (r) =>
+        !r.youtube_link ||
+        !r.youtube_link.includes('watch?v=') ||
+        r.id === 'video-001-mahishasuramardini' ||
+        r.id === 'video-002-hara-parvati-dance' ||
+        r.id === 'video-003-maa-kali-pala'
+    );
+
+  const sourceRecords = hasOnlyOldPlaceholders ? INITIAL_VIDEOS_SEED : records;
+
+  for (const item of sourceRecords) {
     const seed = seedMap.get(item.id);
     const titleBn = (item.title_bn || item.title || seed?.title || '').trim();
     const rawTitleEn = (item.title_en || item.titleEn || '').trim();
@@ -822,7 +1020,7 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
       ? rawTitleEn
       : seed && (!rawTitleEn || rawTitleEn === titleBn)
       ? seed.titleEn || seed.title_en || titleBn
-      : rawTitleEn || titleBn || 'Stage Performance Video';
+      : rawTitleEn || titleBn || 'Official Channel Video';
 
     const descBn = (item.description_bn || item.description || seed?.description || '').trim();
     const rawDescEn = (item.description_en || item.descriptionEn || '').trim();
@@ -838,9 +1036,14 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
       ? item.thumbnail
       : seed?.thumbnail || item.thumbnail || heroEnsembleImg;
 
-    return {
+    const rawYt = (item.youtube_link || '').trim();
+    const resolvedYt = (!rawYt || rawYt.includes('joyradhe9917'))
+      ? (seed?.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL)
+      : rawYt;
+
+    existingMap.set(item.id, {
       ...item,
-      youtube_link: item.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL,
+      youtube_link: resolvedYt,
       title: titleBn,
       title_bn: titleBn,
       titleEn: titleEn,
@@ -850,12 +1053,21 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
       descriptionEn: descEn,
       description_en: descEn,
       thumbnail: getYouTubeThumbnailUrl(
-        item.youtube_link,
+        resolvedYt,
         resolvedThumb
       ),
-      created_date: item.created_date || new Date().toISOString(),
-    };
-  });
+      created_date: item.created_date || seed?.created_date || new Date().toISOString(),
+    });
+  }
+
+  // Ensure all seed videos from the official YouTube channel are present
+  for (const seed of INITIAL_VIDEOS_SEED) {
+    if (!existingMap.has(seed.id)) {
+      existingMap.set(seed.id, seed);
+    }
+  }
+
+  return Array.from(existingMap.values());
 }
 
 export async function loadDramasFromDatabase(): Promise<DramaRecord[]> {

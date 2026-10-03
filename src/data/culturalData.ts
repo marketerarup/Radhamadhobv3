@@ -201,7 +201,7 @@ export const ORGANIZATION_INFO: OrganizationIdentity = {
     phoneDisplayBn: '০১৭৯৭০৫৯৪১৯ (WhatsApp)',
     phoneDisplayEn: '01797059419 (WhatsApp)',
     phoneHref: 'tel:+8801797059419',
-    facebookUrl: 'https://www.facebook.com/share/1CAS3VWrHc/',
+    facebookUrl: 'https://www.facebook.com/share/1QBEotaEZq/',
     facebookHandleBn: 'রাধামাধব সনাতন সাংস্কৃতিক জোট (অফিশিয়াল ফেসবুক পেজ)',
     facebookHandleEn: 'Radhamadhob Sanatan Cultural Alliance (Official Facebook Page)',
     facebookStatsBn: 'প্রতিষ্ঠিত ২০১১ · শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট ও ইসকন মন্দির মঞ্চ',

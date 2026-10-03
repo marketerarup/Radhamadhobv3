@@ -251,7 +251,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [whatsappNum, setWhatsappNum] = useState(settings.whatsapp_number);
   const [facebookLink, setFacebookLink] = useState(settings.facebook_link);
   const [youtubeLink, setYoutubeLink] = useState(
-    settings.youtube_link || 'https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2'
+    settings.youtube_link || 'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9'
   );
   const [footerTextBn, setFooterTextBn] = useState(settings.footer_text);
   const [footerTextEn, setFooterTextEn] = useState(
@@ -288,7 +288,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     setWhatsappNum(settings.whatsapp_number || settings.whatsapp || '+880 1797-059419');
     setFacebookLink(settings.facebook_link || settings.facebook || '');
     setYoutubeLink(
-      settings.youtube_link || 'https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2'
+      settings.youtube_link || 'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9'
     );
     setFooterTextBn(settings.footer_text || '');
     setFooterTextEn(settings.footer_text_en || '');
@@ -347,7 +347,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [dDirectorEn, setDDirectorEn] = useState('Binoy Kumar Sen');
   const [dCast, setDCast] = useState('');
   const [dYoutube, setDYoutube] = useState(
-    'https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2'
+    'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9'
   );
   const [dGallery, setDGallery] = useState<string[]>([
     ORIGINAL_STAGE_PHOTO_OPTIONS[0].url,
@@ -1003,7 +1003,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     setDCast(
       'বিনয় কুমার সেন (নির্দেশক), অমিত দাস, তৃষ্ণা রায়, সামন্তী বিশ্বাস'
     );
-    setDYoutube('https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2');
+    setDYoutube('https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9');
     setDGallery([ORIGINAL_STAGE_PHOTO_OPTIONS[0].url]);
     setIsDramaModalOpen(true);
   };

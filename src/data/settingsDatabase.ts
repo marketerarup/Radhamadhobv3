@@ -13,7 +13,8 @@ import {
  * Editable Fields by Admin:
  * - phone_number (+880 1797-059419)
  * - whatsapp_number (+880 1797-059419)
- * - facebook_link (https://www.facebook.com/share/1CAS3VWrHc/)
+ * - facebook_link (https://www.facebook.com/share/1QBEotaEZq/)
+ * - youtube_link (https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9)
  * - footer_text
  * - privacy_policy_content (8 Bilingual Bengali + English sections)
  *
@@ -163,7 +164,7 @@ export const DEFAULT_PRIVACY_POLICY_SECTIONS: PrivacyPolicySectionData[] = [
       'To provide rich cultural media, social connectivity, and database management, this website integrates with the following third-party services:',
     bulletPointsBn: [
       'Facebook (ফেসবুক): আমাদের অফিসিয়াল ফেসবুক পেজে সরাসরি সংযোগের জন্য।',
-      'YouTube (ইউটিউব): আমাদের মঞ্চনাটক ও সাংস্কৃতিক অনুষ্ঠানের অফিসিয়াল ভিডিও প্রদর্শনের জন্য।',
+      'YouTube (ইউটিউব): আমাদের অফিসিয়াল ইউটিউব চ্যানেল (@joyradhe1995)-এর সনাতন ধর্মীয়, পৌরাণিক ও ঐতিহাসিক প্রামাণ্য ভিডিও প্রদর্শনের জন্য।',
       'Firebase (ফায়ারবেস / ডাটাবেস): সংগঠনের নাটক, ইভেন্ট, গ্যালারি, সদস্য ও সেটিংস তথ্য ব্যবস্থাপনার জন্য।',
     ],
     bulletPointsEn: [
@@ -251,15 +252,15 @@ export const INITIAL_SETTINGS_SEED: SiteSettingsRecord = {
   address_en: 'Radhamadhob Sanatan Cultural Alliance Central Office, Dhaka, Bangladesh',
   phone: '০১৭৯৭০৫৯৪১৯',
   whatsapp: '০১৭৯৭০৫৯৪১৯',
-  facebook: 'https://www.facebook.com/share/1CAS3VWrHc/',
+  facebook: 'https://www.facebook.com/share/1QBEotaEZq/',
   phone_number: '+880 1797-059419',
   whatsapp_number: '+880 1797-059419',
   whatsapp_prefill_message:
     'নমস্কার, আমি রাধামাধব সনাতন সাংস্কৃতিক জোটের সদস্য ও অভিনয়শিল্পী হিসেবে যুক্ত হতে আগ্রহী।',
   whatsapp_prefill_message_en:
     'Namaskar, I am interested in joining Radhamadhob Sanatan Cultural Alliance as a member and performer.',
-  facebook_link: 'https://www.facebook.com/share/1CAS3VWrHc/',
-  youtube_link: 'https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2',
+  facebook_link: 'https://www.facebook.com/share/1QBEotaEZq/',
+  youtube_link: 'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9',
   footer_text:
     '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।” ২০১১ সাল থেকে বৈদিক ও সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার, পৌরাণিক নাটক মঞ্চায়ন এবং সামাজিক সংস্কারমূলক ও দাতব্য কার্যক্রমে নিবেদিত।',
   footer_text_en:
@@ -386,8 +387,14 @@ export function normalizeSiteSettings(
   const seed = INITIAL_SETTINGS_SEED;
   const resolvedPhone = (raw.phone_number || raw.phone || seed.phone_number).trim();
   const resolvedWhatsapp = (raw.whatsapp_number || raw.whatsapp || seed.whatsapp_number).trim();
-  const resolvedFacebook = (raw.facebook_link || raw.facebook || seed.facebook_link).trim();
-  const resolvedYoutube = (raw.youtube_link || seed.youtube_link).trim();
+  let resolvedFacebook = (raw.facebook_link || raw.facebook || seed.facebook_link).trim();
+  if (!resolvedFacebook || resolvedFacebook.includes('1CAS3VWrHc')) {
+    resolvedFacebook = seed.facebook_link;
+  }
+  let resolvedYoutube = (raw.youtube_link || seed.youtube_link).trim();
+  if (!resolvedYoutube || resolvedYoutube.includes('joyradhe9917')) {
+    resolvedYoutube = seed.youtube_link;
+  }
 
   const merged: SiteSettingsRecord = {
     ...seed,

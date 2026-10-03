@@ -73,13 +73,13 @@ export const JoinContactPrivacyFooterSection: React.FC<
   const facebookPageUrl =
     settings.facebook_link && settings.facebook_link.startsWith('http')
       ? settings.facebook_link
-      : 'https://www.facebook.com/share/1CAS3VWrHc/';
+      : 'https://www.facebook.com/share/1QBEotaEZq/';
 
   // Official YouTube Channel Link (raw URL is NEVER shown in UI)
   const youtubeChannelUrl =
     settings.youtube_link && settings.youtube_link.startsWith('http')
       ? settings.youtube_link
-      : 'https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2';
+      : 'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9';
 
   const orgName = t(
     settings.organization_name || 'রাধামাধব সনাতন সাংস্কৃতিক জোট',
@@ -492,11 +492,6 @@ export const JoinContactPrivacyFooterSection: React.FC<
                     labelBn: 'নাটক',
                     labelEn: 'Drama',
                     id: 'drama-section',
-                  },
-                  {
-                    labelBn: 'কার্যক্রম',
-                    labelEn: 'Programs',
-                    id: 'cultural-program-section',
                   },
                   {
                     labelBn: 'গ্যালারি',

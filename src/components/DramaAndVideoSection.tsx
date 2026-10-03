@@ -69,21 +69,37 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
   const [isSliderHovered, setIsSliderHovered] = useState<boolean>(false);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
+  // Responsive Slider State for Video Cards (Mobile: 1, Tablet: 2, Desktop: 3)
+  const [videoCardsPerView, setVideoCardsPerView] = useState<number>(() => {
+    if (typeof window === 'undefined') return 3;
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 640) return 2;
+    return 1;
+  });
+  const [currentVideoSlideIndex, setCurrentVideoSlideIndex] = useState<number>(0);
+  const [isVideoSliderHovered, setIsVideoSliderHovered] = useState<boolean>(false);
+  const [isVideoAutoSlidePaused, setIsVideoAutoSlidePaused] = useState<boolean>(false);
+  const [videoTouchStartX, setVideoTouchStartX] = useState<number | null>(null);
+
   const filteredDramas =
     selectedCategory === 'সব নাটক'
       ? dramas
       : dramas.filter((d) => d.category === selectedCategory);
 
   const maxSlideIndex = Math.max(0, filteredDramas.length - cardsPerView);
+  const maxVideoSlideIndex = Math.max(0, videos.length - videoCardsPerView);
 
   useEffect(() => {
     const updateCardsPerView = () => {
       if (window.innerWidth >= 1024) {
         setCardsPerView(3);
+        setVideoCardsPerView(3);
       } else if (window.innerWidth >= 640) {
         setCardsPerView(2);
+        setVideoCardsPerView(2);
       } else {
         setCardsPerView(1);
+        setVideoCardsPerView(1);
       }
     };
     updateCardsPerView();
@@ -100,6 +116,32 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
       setCurrentSlideIndex(maxSlideIndex);
     }
   }, [currentSlideIndex, maxSlideIndex]);
+
+  useEffect(() => {
+    if (currentVideoSlideIndex > maxVideoSlideIndex) {
+      setCurrentVideoSlideIndex(maxVideoSlideIndex);
+    }
+  }, [currentVideoSlideIndex, maxVideoSlideIndex]);
+
+  // Auto-slide effect for Drama Cards
+  useEffect(() => {
+    if (isSliderHovered || maxSlideIndex <= 0) return;
+    const timer = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [isSliderHovered, maxSlideIndex]);
+
+  // Auto-slide effect for Video Cards ("1 row hby video er display size onushare 1/2/3 hby baki gulo silde hoty thakbe")
+  useEffect(() => {
+    if (isVideoSliderHovered || isVideoAutoSlidePaused || maxVideoSlideIndex <= 0) {
+      return;
+    }
+    const timer = setInterval(() => {
+      setCurrentVideoSlideIndex((prev) => (prev >= maxVideoSlideIndex ? 0 : prev + 1));
+    }, 3800);
+    return () => clearInterval(timer);
+  }, [isVideoSliderHovered, isVideoAutoSlidePaused, maxVideoSlideIndex]);
 
   const handlePrevDramaSlide = () => {
     setCurrentSlideIndex((prev) => (prev <= 0 ? maxSlideIndex : prev - 1));
@@ -125,6 +167,32 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
       }
     }
     setTouchStartX(null);
+  };
+
+  const handlePrevVideoSlide = () => {
+    setCurrentVideoSlideIndex((prev) => (prev <= 0 ? maxVideoSlideIndex : prev - 1));
+  };
+
+  const handleNextVideoSlide = () => {
+    setCurrentVideoSlideIndex((prev) => (prev >= maxVideoSlideIndex ? 0 : prev + 1));
+  };
+
+  const handleVideoTouchStart = (e: React.TouchEvent) => {
+    setVideoTouchStartX(e.touches[0]?.clientX ?? null);
+  };
+
+  const handleVideoTouchEnd = (e: React.TouchEvent) => {
+    if (videoTouchStartX === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? videoTouchStartX;
+    const diff = videoTouchStartX - endX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNextVideoSlide();
+      } else {
+        handlePrevVideoSlide();
+      }
+    }
+    setVideoTouchStartX(null);
   };
 
   const openDramaDetail = (drama: DramaRecord) => {
@@ -531,8 +599,8 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                 <Video className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
-                    ? 'মঞ্চ ভিডিও ও ডিজিটাল সম্প্রচার আর্কাইভ'
-                    : 'Stage Video & Digital Broadcast Archive'}
+                    ? 'সনাতন ধর্ম, ইতিহাস ও দর্শন আর্কাইভ'
+                    : 'Sanatan History, Philosophy & Devotional Archive'}
                 </span>
               </div>
 
@@ -542,19 +610,19 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
               >
                 {lang === 'bn' ? (
                   <>
-                    নাটক ও সাংস্কৃতিক অনুষ্ঠানের <span className="gold-text-gradient">ভিডিও সম্ভার</span>
+                    সনাতন ধর্মতত্ত্ব, পূজা ও ইতিহাসের <span className="gold-text-gradient">ভিডিও সম্ভার</span>
                   </>
                 ) : (
                   <>
-                    Stage Drama & <span className="gold-text-gradient">Video Archive</span>
+                    Sanatan Wisdom, History & <span className="gold-text-gradient">Video Archive</span>
                   </>
                 )}
               </h2>
 
               <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
                 {lang === 'bn'
-                  ? 'রাধামাধব সনাতন সাংস্কৃতিক জোটের মঞ্চনাটক, বৈদিক নৃত্য এবং ধর্মীয় অনুষ্ঠানের ধারণকৃত ভিডিওসমূহ দেখুন আমাদের অফিশিয়াল ইউটিউব চ্যানেলে।'
-                  : 'Experience high-definition recordings of live performances, divine theatrics, and cultural sagas directly in theater mode.'}
+                  ? 'জয় রাধে অফিশিয়াল ইউটিউব চ্যানেলে প্রচারিত সনাতন ধর্মতত্ত্ব, পূজার সঠিক দিনক্ষণ ও ব্রতের বিধান, অজানা ঐতিহাসিক ঘটনাবলি, বৈদিক সৃষ্টিতত্ত্ব ও আধ্যাত্মিক জিজ্ঞাসার প্রামাণ্য ভিডিওসমূহ দেখুন আমাদের এই আর্কাইভে।'
+                  : 'Explore authentic discourses on Sanatan philosophy, auspicious puja dates & sacred rituals, untold historical chronicles, Vedic cosmology, and spiritual reflections from our official Joy Radhe YouTube channel archive.'}
               </p>
             </div>
 
@@ -574,73 +642,200 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             </a>
           </div>
 
-          {/* Videos Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {videos.map((vid) => {
-              const ytId = extractYouTubeId(vid.youtube_link);
-              const displayVidTitle = getVideoTitle(vid);
-              const displayVidDesc = getVideoDesc(vid);
-              const resolvedThumb =
-                vid.thumbnail ||
-                (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
-              return (
-                <CinematicCard3D
-                  key={vid.id}
-                  onClick={() => setActiveVideoModal(vid)}
-                  className="rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
-                  maxTilt={6}
+          {/* Video 1-Row Responsive Carousel Slider (Display size: Mobile 1, Tablet 2, Desktop 3; Auto-slide enabled) */}
+          <div
+            className="space-y-4 relative"
+            onMouseEnter={() => setIsVideoSliderHovered(true)}
+            onMouseLeave={() => setIsVideoSliderHovered(false)}
+            onTouchStart={handleVideoTouchStart}
+            onTouchEnd={handleVideoTouchEnd}
+          >
+            {/* Slider Top Controls: Status badge & Prev/Next navigation */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-stone-300 text-xs font-mono-code shadow-md">
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      isVideoSliderHovered || isVideoAutoSlidePaused
+                        ? 'bg-amber-400'
+                        : 'bg-emerald-400 animate-pulse'
+                    }`}
+                  />
+                  <span className="font-bold text-[#FDE68A]">
+                    {lang === 'bn'
+                      ? `ভিডিও ${tDigits(currentVideoSlideIndex + 1)}-${tDigits(
+                          Math.min(
+                            currentVideoSlideIndex + videoCardsPerView,
+                            videos.length
+                          )
+                        )} / মোট ${tDigits(videos.length)}টি`
+                      : `Video ${currentVideoSlideIndex + 1}-${Math.min(
+                          currentVideoSlideIndex + videoCardsPerView,
+                          videos.length
+                        )} of ${videos.length}`}
+                  </span>
+                </span>
+
+                <span className="hidden md:inline-block text-[11px] text-stone-400">
+                  {isVideoSliderHovered
+                    ? (lang === 'bn' ? 'কার্সার রেখে থামানো আছে' : 'Paused on hover')
+                    : isVideoAutoSlidePaused
+                    ? (lang === 'bn' ? 'অটো-স্লাইড স্থগিত' : 'Auto-slide paused')
+                    : (lang === 'bn' ? 'স্বয়ংক্রিয় স্লাইড চলমান' : 'Auto-sliding active')}
+                </span>
+              </div>
+
+              {videos.length > videoCardsPerView && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsVideoAutoSlidePaused((p) => !p)}
+                    title={
+                      isVideoAutoSlidePaused
+                        ? (lang === 'bn' ? 'অটো-স্লাইড চালু করুন' : 'Resume Auto-slide')
+                        : (lang === 'bn' ? 'অটো-স্লাইড থামান' : 'Pause Auto-slide')
+                    }
+                    aria-label={isVideoAutoSlidePaused ? 'Resume Auto-slide' : 'Pause Auto-slide'}
+                    className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                  >
+                    {isVideoAutoSlidePaused ? (
+                      <>
+                        <Play className="w-3.5 h-3.5 text-[#FDE68A] fill-current" />
+                        <span className="hidden sm:inline">{lang === 'bn' ? 'চালু' : 'Play'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Pause className="w-3.5 h-3.5 text-[#D4AF37]" />
+                        <span className="hidden sm:inline">{lang === 'bn' ? 'পজ' : 'Pause'}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handlePrevVideoSlide}
+                    aria-label={lang === 'bn' ? 'পূর্ববর্তী ভিডিও' : 'Previous Video'}
+                    className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNextVideoSlide}
+                    aria-label={lang === 'bn' ? 'পরবর্তী ভিডিও' : 'Next Video'}
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
+                  >
+                    <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                    <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 1 Row Carousel Viewport */}
+            <div className="relative">
+              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
+                <div
+                  className="flex transition-transform duration-500 ease-out"
+                  style={{
+                    transform: `translateX(-${
+                      currentVideoSlideIndex * (100 / videoCardsPerView)
+                    }%)`,
+                  }}
                 >
-                  <div>
-                    {/* Video Thumbnail Frame */}
-                    <div className="relative aspect-video bg-black overflow-hidden cursor-pointer group">
-                      {resolvedThumb && (
-                        <img
-                          src={resolvedThumb}
-                          alt={displayVidTitle}
-                          loading="lazy"
-                          decoding="async"
-                          width={400}
-                          height={225}
-                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-2 p-4 text-center">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#990000] to-[#CC0000] text-white border-2 border-[#FDE68A] flex items-center justify-center shadow-[0_0_30px_rgba(204,0,0,0.6)] group-hover:scale-110 transition-transform">
-                          <Play className="w-6 h-6 fill-current ml-0.5 text-[#FDE68A]" />
-                        </div>
-                        {!resolvedThumb && (
-                          <span className="text-[11px] font-bold text-[#FDE68A] tracking-wide font-mono-code">
-                            @joyradhe9917 · YouTube Stage
-                          </span>
-                        )}
+                  {videos.map((vid) => {
+                    const ytId = extractYouTubeId(vid.youtube_link);
+                    const displayVidTitle = getVideoTitle(vid);
+                    const displayVidDesc = getVideoDesc(vid);
+                    const resolvedThumb =
+                      (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '') ||
+                      vid.thumbnail;
+                    return (
+                      <div
+                        key={vid.id}
+                        className="w-full sm:w-1/2 lg:w-1/3 shrink-0 px-2.5 sm:px-3"
+                      >
+                        <CinematicCard3D
+                          onClick={() => setActiveVideoModal(vid)}
+                          className="h-full rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
+                          maxTilt={6}
+                        >
+                          <div>
+                            {/* Video Thumbnail Frame */}
+                            <div className="relative aspect-video bg-black overflow-hidden cursor-pointer group">
+                              {resolvedThumb && (
+                                <img
+                                  src={resolvedThumb}
+                                  alt={displayVidTitle}
+                                  loading="lazy"
+                                  decoding="async"
+                                  width={400}
+                                  height={225}
+                                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90"
+                                />
+                              )}
+                              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-2 p-4 text-center">
+                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#990000] to-[#CC0000] text-white border-2 border-[#FDE68A] flex items-center justify-center shadow-[0_0_30px_rgba(204,0,0,0.6)] group-hover:scale-110 transition-transform">
+                                  <Play className="w-6 h-6 fill-current ml-0.5 text-[#FDE68A]" />
+                                </div>
+                                {!resolvedThumb && (
+                                  <span className="text-[11px] font-bold text-[#FDE68A] tracking-wide font-mono-code">
+                                    @joyradhe1995 · YouTube Stage
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Video Info */}
+                            <div className="p-4 sm:p-5 space-y-2">
+                              <h3 className="text-base sm:text-lg font-bold text-white font-display-bn leading-snug group-hover:text-[#FDE68A] transition-colors line-clamp-2 min-h-[3rem]">
+                                {displayVidTitle}
+                              </h3>
+                              <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">
+                                {displayVidDesc}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Watch Link */}
+                          <div className="px-4 sm:px-5 py-3 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-between text-xs mt-auto">
+                            <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1.5 cursor-pointer">
+                              <Play className="w-3.5 h-3.5 fill-current" />
+                              <span>{lang === 'bn' ? 'থিয়েটারে দেখুন' : 'Watch in Theater'}</span>
+                            </span>
+
+                            <span className="text-xs text-stone-400 font-mono-code">
+                              {lang === 'bn' ? 'ইউটিউব ভিডিও' : 'OFFICIAL VIDEO'}
+                            </span>
+                          </div>
+                        </CinematicCard3D>
                       </div>
-                    </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-                    {/* Video Info */}
-                    <div className="p-4 sm:p-5 space-y-2">
-                      <h3 className="text-base sm:text-lg font-bold text-white font-display-bn leading-snug group-hover:text-[#FDE68A] transition-colors line-clamp-1">
-                        {displayVidTitle}
-                      </h3>
-                      <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">
-                        {displayVidDesc}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Watch Link */}
-                  <div className="px-4 sm:px-5 py-3 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1.5 cursor-pointer">
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>{lang === 'bn' ? 'থিয়েটারে দেখুন' : 'Watch in Theater'}</span>
-                    </span>
-
-                    <span className="text-xs text-stone-400 font-mono-code">
-                      {lang === 'bn' ? 'মঞ্চ ভিডিও' : 'CINEMATIC'}
-                    </span>
-                  </div>
-                </CinematicCard3D>
-              );
-            })}
+            {/* Video Pagination Dots */}
+            {maxVideoSlideIndex > 0 && (
+              <div className="flex items-center justify-center gap-1.5 pt-2">
+                {Array.from({ length: maxVideoSlideIndex + 1 }).map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setCurrentVideoSlideIndex(i)}
+                    aria-label={`Video Slide ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      currentVideoSlideIndex === i
+                        ? 'w-7 bg-gradient-to-r from-[#D4AF37] to-[#FDE68A] shadow-[0_0_10px_rgba(212,175,55,0.7)]'
+                        : 'w-2 bg-[#D4AF37]/30 hover:bg-[#D4AF37]/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -15,6 +15,7 @@ import hrishikeshDasSuitPortraitImg from '../assets/images/hrishikesh_das_suit_p
 import synthiaRanjanPortraitImg from '../assets/images/synthia_ranjan_portrait_1791053316807.jpg';
 import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054258043.jpg';
 import arpitaDasPortraitImg from '../assets/images/arpita_das_portrait_1791054283177.jpg';
+import ankitaBhattacharyaPortraitImg from '../assets/images/ankita_bhattacharya_portrait_1791067244850.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -746,6 +747,47 @@ export const INITIAL_MEMBERS_SEED: MemberRecord[] = [
     status: 'active',
     createdAt: '2026-10-03T12:02:00.000Z',
     updatedAt: '2026-10-03T12:02:00.000Z',
+  },
+  {
+    id: 'member-016-ankita-bhattacharya',
+    name: 'অঙ্কিতা ভট্টাচার্য',
+    name_bn: 'অঙ্কিতা ভট্টাচার্য',
+    nameEn: 'Ankita Bhattacharya',
+    name_en: 'Ankita Bhattacharya',
+    fullName: 'Ankita Bhattacharya',
+    fullNameBn: 'অঙ্কিতা ভট্টাচার্য',
+    photo: ankitaBhattacharyaPortraitImg,
+    originalPhotoFileName: 'ankita_bhattacharya_portrait_1791067244850.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'অঙ্কিতা ভট্টাচার্য রাধামাধব সনাতন সাংস্কৃতিক জোটের নবীন ও প্রতিভাবান অভিনয় ও নৃত্যশিল্পী। সম্প্রতি তিনি এই সাংস্কৃতিক পরিবারের সাথে যুক্ত হয়েছেন। পৌরাণিক নাটক এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনায় তাঁর আন্তরিক নিষ্ঠা ও শৈল্পিক নৈপুণ্য জোটের সাংস্কৃতিক কার্যক্রমকে আরও সমৃদ্ধ ও গতিশীল করে তুলেছে।',
+    bio_bn:
+      'অঙ্কিতা ভট্টাচার্য রাধামাধব সনাতন সাংস্কৃতিক জোটের নবীন ও প্রতিভাবান অভিনয় ও নৃত্যশিল্পী। সম্প্রতি তিনি এই সাংস্কৃতিক পরিবারের সাথে যুক্ত হয়েছেন। পৌরাণিক নাটক এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনায় তাঁর আন্তরিক নিষ্ঠা ও শৈল্পিক নৈপুণ্য জোটের সাংস্কৃতিক কার্যক্রমকে আরও সমৃদ্ধ ও গতিশীল করে তুলেছে।',
+    biographyEn:
+      'Ankita Bhattacharya is a talented newly joined stage actress and classical dancer of Radhamadhob Sanatan Cultural Alliance. Dedicated to sacred mythological theatre and Vedic dance, she enriches the cultural family with her artistic grace, passion, and performance skills.',
+    bio_en:
+      'Ankita Bhattacharya is a talented newly joined stage actress and classical dancer of Radhamadhob Sanatan Cultural Alliance. Dedicated to sacred mythological theatre and Vedic dance, she enriches the cultural family with her artistic grace, passion, and performance skills.',
+    joining_date: '2026-01-10',
+    joiningDateEn: 'January 10, 2026',
+    isOriginalPhotoOnly: true,
+    displayOrder: 16,
+    status: 'active',
+    createdAt: '2026-10-03T15:40:00.000Z',
+    updatedAt: '2026-10-03T15:40:00.000Z',
   },
 ];
 

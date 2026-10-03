@@ -294,8 +294,8 @@ export const INITIAL_SEO_SEED: SeoPageRecord[] = [
         },
         telephone: '+8801797059419',
         sameAs: [
-          'https://www.facebook.com/share/1CAS3VWrHc/',
-          'https://youtube.com/@joyradhe9917',
+          'https://www.facebook.com/share/1QBEotaEZq/',
+          'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9',
         ],
         description:
           'সনাতনী সংস্কৃতি, নাটক, নৃত্য ও ঐতিহ্য সংরক্ষণের একটি সাংস্কৃতিক পরিবার।',

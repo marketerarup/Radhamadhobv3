@@ -19,7 +19,6 @@ import { CulturalHighlightsSection } from './components/CulturalHighlightsSectio
 import { MemberDirectorySection } from './components/MemberDirectorySection';
 import { PhotoGallerySection } from './components/PhotoGallerySection';
 import { DramaAndVideoSection } from './components/DramaAndVideoSection';
-import { CulturalProgramAndGallerySection } from './components/CulturalProgramAndGallerySection';
 import { JoinContactPrivacyFooterSection } from './components/JoinContactPrivacyFooterSection';
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
 import { AdminDashboardCMS } from './components/AdminDashboardCMS';
@@ -544,18 +543,12 @@ export default function App() {
         {
           '@type': 'ListItem',
           position: 6,
-          name: 'সাংস্কৃতিক অনুষ্ঠান (Programs)',
-          item: `${siteOrigin}/#cultural-program-section`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 7,
           name: 'ভিডিও (Videos)',
           item: `${siteOrigin}/#video-section`,
         },
         {
           '@type': 'ListItem',
-          position: 8,
+          position: 7,
           name: 'যোগাযোগ (Contact)',
           item: `${siteOrigin}/#contact-section`,
         },
@@ -583,8 +576,8 @@ export default function App() {
           },
           sameAs: [
             siteSettings.facebook_link ||
-              'https://www.facebook.com/share/1CAS3VWrHc/',
-            'https://www.youtube.com/@joyradhe9917',
+              'https://www.facebook.com/share/1QBEotaEZq/',
+            'https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9',
             'https://wa.me/8801797059419',
           ],
         },
@@ -661,14 +654,6 @@ export default function App() {
           subBn: '১৩+ পূর্ণাঙ্গ মৌলিক শাস্ত্রীয় প্রযোজনা',
           subEn: '13+ Original Stage Dramas',
           href: '#drama-section',
-        },
-        {
-          id: 'cultural',
-          labelBn: 'মহোৎসব ও অনুষ্ঠান',
-          labelEn: 'Festivals & Programs',
-          subBn: 'সাংস্কৃতিক আয়োজন ও বিশেষ ইভেন্ট',
-          subEn: 'Grand Festivals & Signature Events',
-          href: '#cultural-program-section',
         },
       ],
     },
@@ -763,13 +748,6 @@ export default function App() {
       shortBn: 'নাটক',
       labelEn: 'Stage Dramas',
       href: '#drama-section',
-    },
-    {
-      id: 'cultural',
-      labelBn: 'সাংস্কৃতিক অনুষ্ঠান',
-      shortBn: 'অনুষ্ঠান',
-      labelEn: 'Cultural Programs',
-      href: '#cultural-program-section',
     },
     {
       id: 'video',
@@ -1505,16 +1483,6 @@ export default function App() {
       {/* 7. DRAMA SHOWCASE & YOUTUBE VIDEOS SECTION (Read-Only)              */}
       {/* =================================================================== */}
       <DramaAndVideoSection dramas={dramas} videos={videos} />
-
-      {/* =================================================================== */}
-      {/* 8. CULTURAL PROGRAMS & SPECIAL EVENTS SECTION (Read-Only)           */}
-      {/* =================================================================== */}
-      <CulturalProgramAndGallerySection
-        programs={programs}
-        events={events}
-        gallery={gallery}
-        categories={galleryCategories}
-      />
 
       {/* =================================================================== */}
       {/* 8. JOIN US, CONTACT, PRIVACY POLICY & FOOTER (Read-Only)            */}

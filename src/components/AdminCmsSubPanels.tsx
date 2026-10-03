@@ -1697,7 +1697,7 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
 
   const openAdd = () => {
     setEditingId(null);
-    setVideoUrl('https://youtube.com/@joyradhe9917?si=dAE722Jc6-6,E0H2');
+    setVideoUrl('https://youtube.com/@joyradhe1995?si=M9TPUzbZfpAq9cw9');
     setTitleBn('');
     setTitleEn('');
     setDescriptionBn('');

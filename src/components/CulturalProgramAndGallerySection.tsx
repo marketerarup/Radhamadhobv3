@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calendar,
   ChevronDown,
+  ChevronUp,
   ChevronLeft,
   ChevronRight,
-  ChevronUp,
   Eye,
-  Image as ImageIcon,
   MapPin,
   Sparkles,
   X,
-  ZoomIn,
 } from 'lucide-react';
 import { CulturalProgramRecord } from '../data/cmsDatabase';
 import {
@@ -18,17 +16,18 @@ import {
   GalleryRecord,
 } from '../data/culturalProgramAndGalleryDatabase';
 import { useLanguage } from '../context/LanguageContext';
+import { CinematicCard3D } from './CinematicCard3D';
 
 interface CulturalProgramAndGallerySectionProps {
   programs: CulturalProgramRecord[];
   events: EventRecord[];
-  gallery: GalleryRecord[];
-  categories: string[];
+  gallery?: GalleryRecord[];
+  categories?: string[];
 }
 
 export const CulturalProgramAndGallerySection: React.FC<
   CulturalProgramAndGallerySectionProps
-> = ({ programs, events, gallery, categories }) => {
+> = ({ programs, events }) => {
   const { lang, t, tCategory, tDigits } = useLanguage();
   const [selectedProgramState, setSelectedProgram] =
     useState<CulturalProgramRecord | null>(null);
@@ -43,21 +42,71 @@ export const CulturalProgramAndGallerySection: React.FC<
     ? events.find((e) => e.id === selectedEventState.id) || selectedEventState
     : null;
   const [activeEventImg, setActiveEventImg] = useState<string>('');
-  const [selectedGalleryCategory, setSelectedGalleryCategory] =
-    useState<string>('সব ছবি');
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [showAllGalleryMobile, setShowAllGalleryMobile] = useState(false);
-  const [showAllProgramsMobile, setShowAllProgramsMobile] = useState(false);
 
-  const filteredGallery =
-    selectedGalleryCategory === 'সব ছবি'
-      ? gallery
-      : gallery.filter((item) => item.category === selectedGalleryCategory);
+  // Responsive Cards Per View: Mobile: 1, Small Tablet: 2, Large Tablet: 3, Desktop: 4
+  const [cardsPerView, setCardsPerView] = useState<number>(() => {
+    if (typeof window === 'undefined') return 4;
+    const w = window.innerWidth;
+    if (w >= 1024) return 4;
+    if (w >= 768) return 3;
+    if (w >= 640) return 2;
+    return 1;
+  });
 
-  const MOBILE_GALLERY_INITIAL = 4;
-  const displayedGalleryMobile = showAllGalleryMobile
-    ? filteredGallery
-    : filteredGallery.slice(0, MOBILE_GALLERY_INITIAL);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w >= 1024) {
+        setCardsPerView(4);
+      } else if (w >= 768) {
+        setCardsPerView(3);
+      } else if (w >= 640) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(1);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxSlideIndex = Math.max(0, programs.length - cardsPerView);
+
+  useEffect(() => {
+    if (currentSlideIndex > maxSlideIndex) {
+      setCurrentSlideIndex(maxSlideIndex);
+    }
+  }, [currentSlideIndex, maxSlideIndex]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlideIndex((prev) => (prev <= 0 ? maxSlideIndex : prev - 1));
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNextSlide();
+      } else {
+        handlePrevSlide();
+      }
+    }
+    setTouchStartX(null);
+  };
 
   const getProgramTitle = (p: CulturalProgramRecord) =>
     t(p.title_bn || p.title, p.title_en || p.titleEn || p.title);
@@ -68,285 +117,289 @@ export const CulturalProgramAndGallerySection: React.FC<
       p.description_en || p.descriptionEn || p.description
     );
 
-  const getProgramDate = (p: CulturalProgramRecord) =>
-    t(p.date, p.date_en || tDigits(p.date));
+  const getProgramCategory = (p: CulturalProgramRecord) =>
+    t(p.category, p.category);
 
-  const getEventName = (ev: EventRecord) =>
-    t(ev.event_name_bn || ev.event_name, ev.event_name_en || ev.event_name);
+  const getEventName = (e: EventRecord) =>
+    t(e.event_name_bn || e.event_name, e.event_name_en || e.event_name);
 
-  const getEventDesc = (ev: EventRecord) =>
-    t(ev.description_bn || ev.description, ev.description_en || ev.description);
-
-  const getEventLocation = (ev: EventRecord) =>
-    t(ev.location_bn || ev.location, ev.location_en || ev.location);
-
-  const getEventDate = (ev: EventRecord) =>
-    t(ev.date, ev.date_en || tDigits(ev.date));
-
-  const getGalleryTitle = (g: GalleryRecord) =>
-    t(g.title_bn || g.title, g.title_en || g.titleEn || g.title);
-
-  const getGalleryDesc = (g: GalleryRecord) =>
-    t(g.description_bn || g.description, g.description_en || g.description);
-
-  const openLightbox = (index: number) => {
-    setLightboxIndex(index);
-  };
-
-  const closeLightbox = () => {
-    setLightboxIndex(null);
-  };
-
-  const showPrevPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex === null) return;
-    setLightboxIndex(
-      (lightboxIndex - 1 + filteredGallery.length) % filteredGallery.length
+  const getEventDesc = (e: EventRecord) =>
+    t(
+      e.description_bn || e.description,
+      e.description_en || e.description
     );
-  };
 
-  const showNextPhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex === null) return;
-    setLightboxIndex((lightboxIndex + 1) % filteredGallery.length);
-  };
+  const getEventVenue = (e: EventRecord) =>
+    t(e.location_bn || e.location, e.location_en || e.location);
 
   return (
     <>
       {/* =================================================================== */}
-      {/* 1. CULTURAL PROGRAMS & EVENTS SECTION (সাংস্কৃতিক কার্যক্রম — Read-Only) */}
+      {/* CULTURAL PROGRAMS & SPECIAL EVENTS (মহোৎসব ও বিশেষ আয়োজন)           */}
       {/* =================================================================== */}
       <section
         id="cultural-program-section"
         aria-labelledby="programs-heading"
-        className="py-10 sm:py-16 md:py-24 bg-[#FAF7F0] border-b border-[#E5DEC9] relative overflow-hidden"
+        className="py-14 sm:py-20 md:py-28 bg-[#090404] text-white border-b border-[#D4AF37]/20 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
-          {/* Header */}
-          <div className="space-y-2 sm:space-y-3 max-w-3xl border-b border-[#E5DEC9] pb-5 sm:pb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#ECFDF5] border border-[#0F5132]/25 text-[#0F5132] text-[11px] sm:text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-[#0F5132]" />
-              <span>
-                {lang === 'bn'
-                  ? 'ধর্মীয় উৎসব, বৈদিক নৃত্য ও সাংস্কৃতিক আয়োজন'
-                  : 'Religious Festivals, Vedic Dance & Cultural Celebrations'}
-              </span>
-            </div>
+        {/* Ambient Glow */}
+        <div
+          className="pointer-events-none absolute -top-40 right-1/4 w-[500px] h-[500px] rounded-full bg-[#D4AF37]/10 blur-[140px]"
+          aria-hidden="true"
+        />
 
-            <h2
-              id="programs-heading"
-              className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] font-display-bn tracking-tight leading-tight"
-            >
-              {lang === 'bn'
-                ? 'সাংস্কৃতিক অনুষ্ঠান ও নিয়মিত কার্যক্রম'
-                : 'Cultural Programs & Regular Activities'}
-            </h2>
-
-            <p className="text-[#57534E] text-xs sm:text-base leading-relaxed">
-              {lang === 'bn'
-                ? 'সনাতনী উৎসব, শাস্ত্রীয় ও লোকজ নৃত্যানুষ্ঠান, ভজন ও কীর্তন আসর এবং সমাজ সচেতনতামূলক সাংস্কৃতিক অনুষ্ঠানে আমাদের নিয়মিত অংশগ্রহণ।'
-                : 'Our regular participation in Sanatani festivals, classical & folk dance performances, devotional Bhajan & Kirtan gatherings, and socially conscious cultural events.'}
-            </p>
-          </div>
-
-          {/* 4 Core Cultural Program Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {programs.map((prog, idx) => {
-              const hiddenOnMobile = !showAllProgramsMobile && idx >= 2;
-              const displayTitle = getProgramTitle(prog);
-              const displayDesc = getProgramDesc(prog);
-              const displayDate = getProgramDate(prog);
-              const displayCategory = tCategory(prog.category);
-
-              return (
-                <article
-                  key={prog.id}
-                  onClick={() => setSelectedProgram(prog)}
-                  className={`${
-                    hiddenOnMobile ? 'hidden md:flex' : 'flex'
-                  } group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex-col justify-between cursor-pointer`}
-                >
-                  <div>
-                    <div className="relative aspect-[16/10] bg-gradient-to-br from-[#0F5132] via-[#143826] to-[#2B0908] overflow-hidden flex items-center justify-center">
-                      {prog.image ? (
-                        <>
-                          <img
-                            src={prog.image}
-                            alt={displayTitle}
-                            loading="lazy"
-                            decoding="async"
-                            width={380}
-                            height={240}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                        </>
-                      ) : (
-                        <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center">
-                          <div className="w-11 h-11 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#FDE68A] mb-2">
-                            <Sparkles className="w-5 h-5" />
-                          </div>
-                          <span className="text-sm sm:text-base font-bold text-[#FDE68A] font-display-bn line-clamp-1">
-                            {displayTitle}
-                          </span>
-                        </div>
-                      )}
-                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#0F5132]/95 text-[#FDE68A] text-[11px] font-bold border border-[#D4AF37]/40">
-                        {displayCategory}
-                      </span>
-                    </div>
-
-                    <div className="p-4 sm:p-5 space-y-2">
-                      <div className="text-[11px] font-bold text-[#CC0000] flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" />
-                        <span>{displayDate}</span>
-                      </div>
-                      <h3 className="text-lg sm:text-xl font-bold text-[#1C1917] font-display-bn group-hover:text-[#CC0000] transition-colors">
-                        {displayTitle}
-                      </h3>
-                      <p className="text-xs text-[#57534E] line-clamp-2 sm:line-clamp-3 leading-relaxed">
-                        {displayDesc}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="px-4 sm:px-5 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-[#0F5132]">
-                      {lang === 'bn'
-                        ? 'নিয়মিত সাংস্কৃতিক ধারা'
-                        : 'Regular Cultural Stream'}
-                    </span>
-                    <span className="text-xs font-bold text-[#CC0000] inline-flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>{lang === 'bn' ? 'বিস্তারিত' : 'Details'}</span>
-                    </span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          {/* Mobile "আরও দেখুন" for Programs */}
-          {programs.length > 2 && (
-            <div className="flex md:hidden justify-center">
-              <button
-                type="button"
-                onClick={() => setShowAllProgramsMobile((prev) => !prev)}
-                className="px-6 py-2.5 rounded-xl bg-white text-[#0F5132] border-2 border-[#0F5132]/30 font-bold text-xs inline-flex items-center gap-2 shadow-xs cursor-pointer"
-              >
-                {showAllProgramsMobile ? (
-                  <>
-                    <span>{lang === 'bn' ? 'সংক্ষিপ্ত করুন' : 'Show Less'}</span>
-                    <ChevronUp className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    <span>
-                      {lang === 'bn'
-                        ? `আরও কার্যক্রম দেখুন (${tDigits(programs.length - 2)}+)`
-                        : `View More Activities (${programs.length - 2}+)`}
-                    </span>
-                    <ChevronDown className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* Previous Events Highlight Cards */}
-          {events.length > 0 && (
-            <div className="pt-4 sm:pt-6 space-y-5">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#1C1917] font-display-bn">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
+          {/* Header with Navigation Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D4AF37]/20 pb-5">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>
                   {lang === 'bn'
-                    ? 'বিগত ও বিশেষ সাংস্কৃতিক উৎসবসমূহ'
-                    : 'Featured & Past Cultural Events'}
-                </h3>
-                <span className="text-xs font-bold text-[#0F5132] bg-[#ECFDF5] px-3 py-1 rounded-full border border-[#0F5132]/20">
-                  {lang === 'bn'
-                    ? `${tDigits(events.length)}টি বিশেষ আয়োজন`
-                    : `${events.length} Featured Events`}
+                    ? 'বৈদিক সংস্কৃতি, গীতিনাট্য ও বিশেষ উৎসব'
+                    : 'Vedic Culture, Sacred Theatre & Grand Festivals'}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-                {events.map((ev) => {
-                  const displayName = getEventName(ev);
-                  const displayDesc = getEventDesc(ev);
-                  const displayLoc = getEventLocation(ev);
-                  const displayDate = getEventDate(ev);
+              <h2
+                id="programs-heading"
+                className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display-bn text-white tracking-tight leading-tight"
+              >
+                {lang === 'bn' ? (
+                  <>
+                    সাংস্কৃতিক অনুষ্ঠান ও <span className="gold-text-gradient">বিশেষ আয়োজন</span>
+                  </>
+                ) : (
+                  <>
+                    Cultural Programs & <span className="gold-text-gradient">Special Events</span>
+                  </>
+                )}
+              </h2>
+
+              <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
+                {lang === 'bn'
+                  ? 'রাধামাধব সনাতন সাংস্কৃতিক জোটের বৈদিক ফ্যাশন শো, বিশ্বরূপ দর্শন, দশাবতার গীতিনাট্য এবং সার্বজনীন ভক্তিমূলক পরিবেশনাসমূহ।'
+                  : 'Sacred chronicles, devotional dance ensembles, and scripture dramatizations staged across national auditoriums.'}
+              </p>
+            </div>
+
+            {/* Slider Navigation Buttons */}
+            {maxSlideIndex > 0 && (
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handlePrevSlide}
+                  aria-label={lang === 'bn' ? 'পূর্ববর্তী' : 'Previous'}
+                  className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                  <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextSlide}
+                  aria-label={lang === 'bn' ? 'পরবর্তী' : 'Next'}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
+                >
+                  <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                  <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Programs 1-Row Responsive Slider (Mobile: 1, Tablet: 2/3, Desktop: 4) */}
+          <div
+            className="space-y-4 relative"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
+              <div
+                className="flex transition-transform duration-200 ease-out"
+                style={{
+                  transform: `translateX(-${currentSlideIndex * (100 / cardsPerView)}%)`,
+                }}
+              >
+                {programs.map((prog) => {
+                  const displayTitle = getProgramTitle(prog);
+                  const displayDesc = getProgramDesc(prog);
+                  const displayCategory = getProgramCategory(prog);
+                  const displayDate =
+                    lang === 'en'
+                      ? prog.date_en || tDigits(prog.date)
+                      : prog.date;
+
                   return (
-                    <article
+                    <div
+                      key={prog.id}
+                      className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 shrink-0 px-2.5 sm:px-3"
+                    >
+                      <CinematicCard3D
+                        onClick={() => setSelectedProgram(prog)}
+                        className="group rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between h-full cursor-pointer"
+                        maxTilt={6}
+                      >
+                        <div>
+                          {/* Photo / Poster Frame */}
+                          <div className="relative aspect-[16/10] bg-[#070303] overflow-hidden">
+                            {prog.image ? (
+                              <img
+                                src={prog.image}
+                                alt={displayTitle}
+                                loading="lazy"
+                                decoding="async"
+                                width={400}
+                                height={250}
+                                className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center p-6 text-center text-white/80 bg-gradient-to-br from-[#2B0908] to-[#120706]">
+                                <span className="font-display-bn font-bold text-lg text-[#FDE68A]">
+                                  {displayTitle}
+                                </span>
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0E0605] via-[#0E0605]/30 to-transparent" />
+
+                            {/* Category Tag */}
+                            <div className="absolute top-3 left-3">
+                              <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md text-[#FDE68A] text-xs font-bold border border-[#D4AF37]/40 shadow-sm inline-flex items-center gap-1.5 whitespace-nowrap shrink-0">
+                                <span>{tCategory(prog.category)}</span>
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Content */}
+                          <div className="p-4 sm:p-5 space-y-2.5">
+                            <div className="flex items-center justify-between gap-2 text-xs">
+                              <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 font-mono-code">
+                                <Calendar className="w-3.5 h-3.5 text-[#D4AF37]" />
+                                <span>{displayDate}</span>
+                              </span>
+                              <span className="text-stone-300 inline-flex items-center gap-1 truncate max-w-[170px]">
+                                <MapPin className="w-3.5 h-3.5 shrink-0 text-[#D4AF37]" />
+                                <span className="truncate">{displayCategory}</span>
+                              </span>
+                            </div>
+
+                            <h3 className="text-lg sm:text-xl font-bold text-white font-display-bn group-hover:text-[#FDE68A] transition-colors leading-snug line-clamp-1">
+                              {displayTitle}
+                            </h3>
+
+                            <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
+                              {displayDesc}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Action Strip */}
+                        <div className="px-4 sm:px-5 py-3 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-between text-xs">
+                          <span className="text-[11px] font-semibold text-[#D4AF37] font-mono-code">
+                            {lang === 'bn' ? 'মহোৎসব' : 'FESTIVAL'}
+                          </span>
+                          <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>
+                              {lang === 'bn' ? 'বিস্তারিত দেখুন' : 'View Details'}
+                            </span>
+                          </span>
+                        </div>
+                      </CinematicCard3D>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Indicator Dots on Mobile/Tablet */}
+            {maxSlideIndex > 0 && (
+              <div className="flex items-center justify-center gap-2 pt-2">
+                {Array.from({ length: maxSlideIndex + 1 }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setCurrentSlideIndex(idx)}
+                    aria-label={lang === 'bn' ? `অনুষ্ঠান স্লাইড ${tDigits(idx + 1)}` : `Program Slide ${idx + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      currentSlideIndex === idx
+                        ? 'w-7 bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] shadow-[0_0_10px_rgba(212,175,55,0.6)]'
+                        : 'w-2 bg-white/30 hover:bg-white/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Events Spotlight Section (ইভেন্ট অ্যালবাম ও বিশেষ উৎসব) */}
+          {events.length > 0 && (
+            <div id="events-section" className="pt-8 sm:pt-12 border-t border-[#D4AF37]/20 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#D4AF37] uppercase tracking-wider font-mono-code">
+                    <span>
+                      {lang === 'bn'
+                        ? 'বিশেষ ইভেন্ট ও মহোৎসব'
+                        : 'Special Alliance Events & Festivals'}
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-3xl font-bold font-display-bn text-white">
+                    {lang === 'bn'
+                      ? 'আসন্ন ও চলমান বিশেষ ইভেন্ট'
+                      : 'Upcoming & Recent Signature Events'}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {events.map((ev) => {
+                  const evName = getEventName(ev);
+                  const evDesc = getEventDesc(ev);
+                  const evVenue = getEventVenue(ev);
+                  const evDate =
+                    lang === 'en'
+                      ? ev.date_en || tDigits(ev.date)
+                      : ev.date;
+
+                  return (
+                    <CinematicCard3D
                       key={ev.id}
                       onClick={() => {
                         setSelectedEvent(ev);
-                        setActiveEventImg(ev.cover_image);
+                        setActiveEventImg(
+                          ev.gallery_images && ev.gallery_images.length > 0
+                            ? ev.gallery_images[0]
+                            : ev.cover_image || ''
+                        );
                       }}
-                      className="group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all flex flex-col justify-between cursor-pointer"
+                      className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/30 hover:border-[#D4AF37]/60 shadow-xl space-y-4"
+                      maxTilt={5}
                     >
-                      <div>
-                        <div className="relative aspect-[16/10] bg-gradient-to-br from-[#4A0807] via-[#2B0908] to-[#0F5132] overflow-hidden flex items-center justify-center">
-                          {ev.cover_image ? (
-                            <img
-                              src={ev.cover_image}
-                              alt={displayName}
-                              loading="lazy"
-                              decoding="async"
-                              width={400}
-                              height={250}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center">
-                              <div className="w-11 h-11 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#FDE68A] mb-2">
-                                <Calendar className="w-5 h-5" />
-                              </div>
-                              <span className="text-sm font-bold text-[#FDE68A] font-display-bn line-clamp-1 px-2">
-                                {displayName}
-                              </span>
-                            </div>
-                          )}
-                          <span className="absolute bottom-2.5 right-2.5 px-2.5 py-0.5 rounded-md bg-black/75 text-[#FDE68A] text-[11px] font-bold">
-                            {lang === 'bn'
-                              ? 'বিশেষ মঞ্চ উৎসব'
-                              : 'Featured Festival'}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-1">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#1F0C0B] border border-[#D4AF37]/40 text-[#FDE68A] text-xs font-mono-code font-bold">
+                            {evDate}
                           </span>
-                        </div>
-
-                        <div className="p-4 sm:p-5 space-y-2">
-                          <div className="text-xs font-bold text-[#CC0000] flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5" />
-                            <span>{displayDate}</span>
-                          </div>
-                          <h4 className="text-lg sm:text-xl font-bold text-[#1C1917] font-display-bn group-hover:text-[#CC0000] transition-colors">
-                            {displayName}
+                          <h4 className="text-lg sm:text-xl font-bold text-white font-display-bn">
+                            {evName}
                           </h4>
-                          <div className="text-xs font-semibold text-[#0F5132] flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5 shrink-0" />
-                            <span className="truncate">{displayLoc}</span>
-                          </div>
-                          <p className="text-xs text-[#57534E] line-clamp-2 leading-relaxed">
-                            {displayDesc}
-                          </p>
                         </div>
+                        <span className="text-xs font-bold text-[#FDE68A] inline-flex items-center gap-1 font-mono-code shrink-0">
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>{lang === 'bn' ? 'অ্যালবাম' : 'Gallery'}</span>
+                        </span>
                       </div>
 
-                      <div className="px-4 sm:px-5 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
-                        <span className="text-[11px] text-[#78716C] font-medium">
-                          {lang === 'bn'
-                            ? 'ইভেন্ট অ্যালবাম দেখুন'
-                            : 'View Event Album'}
-                        </span>
-                        <span className="text-xs font-bold text-[#CC0000] inline-flex items-center gap-1">
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>
-                            {lang === 'bn'
-                              ? 'ছবি ও বিবরণ'
-                              : 'Photos & Info'}
-                          </span>
-                        </span>
+                      <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
+                        {evDesc}
+                      </p>
+
+                      <div className="flex items-center gap-1.5 text-xs text-stone-300 border-t border-[#D4AF37]/15 pt-3">
+                        <MapPin className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                        <span className="truncate">{evVenue}</span>
                       </div>
-                    </article>
+                    </CinematicCard3D>
                   );
                 })}
               </div>
@@ -355,233 +408,55 @@ export const CulturalProgramAndGallerySection: React.FC<
         </div>
       </section>
 
-      {/* =================================================================== */}
-      {/* 2. PHOTO GALLERY SECTION (ফটো গ্যালারি — Read-Only Original Photos) */}
-      {/* =================================================================== */}
-      <section
-        id="gallery-section"
-        aria-labelledby="gallery-heading"
-        className="py-10 sm:py-16 md:py-24 bg-[#F3EFE6] border-b border-[#E5DEC9] relative overflow-hidden"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
-          {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 border-b border-[#E5DEC9] pb-5 sm:pb-8">
-            <div className="space-y-2 sm:space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#FFF5F5] border border-[#CC0000]/25 text-[#990000] text-[11px] sm:text-xs font-bold tracking-wide">
-                <ImageIcon className="w-3.5 h-3.5 text-[#CC0000]" />
-                <span>
-                  {lang === 'bn'
-                    ? 'সংগঠনের আসল মঞ্চ ও অনুষ্ঠানের আলোকচিত্র আর্কাইভ'
-                    : 'Original Stage & Cultural Program Photo Archive'}
-                </span>
-              </div>
-
-              <h2
-                id="gallery-heading"
-                className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] font-display-bn tracking-tight leading-tight"
-              >
-                {lang === 'bn'
-                  ? 'ফটো গ্যালারি ও মঞ্চের স্মৃতিচারণ'
-                  : 'Photo Gallery & Stage Memories'}
-              </h2>
-
-              <p className="text-[#57534E] text-xs sm:text-base leading-relaxed">
-                {lang === 'bn'
-                  ? 'রাধামাধব সাংস্কৃতিক জোটের নাটক, নৃত্য এবং ধর্মীয় অনুষ্ঠানের অকৃত্রিম মুহূর্তসমূহ। যেকোনো ছবিতে ক্লিক করে বড় পর্দায় দেখুন।'
-                  : 'Authentic moments from dramas, dance performances, and religious events of Radhamadhob Cultural Alliance. Click any photo to view in full screen.'}
-              </p>
-            </div>
-
-            {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedGalleryCategory(cat)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                    selectedGalleryCategory === cat
-                      ? 'bg-[#CC0000] text-white border-[#D4AF37] shadow-xs'
-                      : 'bg-white text-[#1C1917] border-[#E5DEC9] hover:border-[#CC0000]'
-                  }`}
-                >
-                  {tCategory(cat)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile Gallery Grid (Compact with Read More) */}
-          <div className="md:hidden space-y-5">
-            <div className="grid grid-cols-2 gap-3">
-              {displayedGalleryMobile.map((item, index) => {
-                const displayTitle = getGalleryTitle(item);
-                const displayCat = tCategory(item.category);
-                return (
-                  <figure
-                    key={item.id}
-                    onClick={() => openLightbox(index)}
-                    className="group bg-white rounded-2xl border border-[#E5DEC9] overflow-hidden shadow-xs cursor-pointer"
-                  >
-                    <div className="relative aspect-[4/3] bg-black overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.alt_text || displayTitle}
-                        loading="lazy"
-                        decoding="async"
-                        width={300}
-                        height={225}
-                        className="w-full h-full object-cover"
-                      />
-                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[#FDE68A] text-[10px] font-bold">
-                        {displayCat}
-                      </span>
-                    </div>
-                    <figcaption className="p-2.5">
-                      <div className="text-xs font-bold text-[#1C1917] font-display-bn line-clamp-1">
-                        {displayTitle}
-                      </div>
-                    </figcaption>
-                  </figure>
-                );
-              })}
-            </div>
-
-            {filteredGallery.length > MOBILE_GALLERY_INITIAL && (
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setShowAllGalleryMobile((prev) => !prev)}
-                  className="px-6 py-3 rounded-xl bg-white text-[#CC0000] border-2 border-[#CC0000]/30 font-bold text-xs inline-flex items-center gap-2 shadow-xs cursor-pointer"
-                >
-                  {showAllGalleryMobile ? (
-                    <>
-                      <span>{lang === 'bn' ? 'সংক্ষিপ্ত করুন' : 'Show Less'}</span>
-                      <ChevronUp className="w-4 h-4" />
-                    </>
-                  ) : (
-                    <>
-                      <span>
-                        {lang === 'bn'
-                          ? `আরও ছবি দেখুন (${tDigits(
-                              filteredGallery.length - MOBILE_GALLERY_INITIAL
-                            )}+)`
-                          : `View More Photos (${
-                              filteredGallery.length - MOBILE_GALLERY_INITIAL
-                            }+)`}
-                      </span>
-                      <ChevronDown className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Desktop Gallery Grid */}
-          <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {filteredGallery.map((item, index) => {
-              const displayTitle = getGalleryTitle(item);
-              const displayDesc = getGalleryDesc(item);
-              const displayCat = tCategory(item.category);
-              return (
-                <figure
-                  key={item.id}
-                  onClick={() => openLightbox(index)}
-                  className="group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
-                >
-                  <div className="relative aspect-[16/11] bg-black overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.alt_text || displayTitle}
-                      loading="lazy"
-                      decoding="async"
-                      width={380}
-                      height={260}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
-
-                    <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/75 text-[#FDE68A] text-[11px] font-bold border border-[#D4AF37]/40">
-                      {displayCat}
-                    </span>
-
-                    <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/90 text-[#1C1917] flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ZoomIn className="w-4 h-4 text-[#CC0000]" />
-                    </div>
-                  </div>
-
-                  <figcaption className="p-4 space-y-1">
-                    <h3 className="text-sm font-bold text-[#1C1917] font-display-bn line-clamp-1 group-hover:text-[#CC0000] transition-colors">
-                      {displayTitle}
-                    </h3>
-                    <p className="text-xs text-[#57534E] line-clamp-2">
-                      {displayDesc}
-                    </p>
-                  </figcaption>
-                </figure>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* =================================================================== */}
-      {/* READ-ONLY PROGRAM DETAIL MODAL                                      */}
-      {/* =================================================================== */}
+      {/* Program Detail Modal */}
       {selectedProgram && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-page-enter"
           onClick={() => setSelectedProgram(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-xl w-full overflow-hidden border-2 border-[#D4AF37] shadow-2xl animate-page-enter"
+            className="bg-[#120706] text-white rounded-3xl max-w-2xl w-full overflow-hidden border-2 border-[#D4AF37]/60 shadow-2xl my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-[16/10] bg-gradient-to-br from-[#0F5132] via-[#143826] to-[#2B0908] flex items-center justify-center">
-              {selectedProgram.image ? (
+            {selectedProgram.image && (
+              <div className="relative aspect-[16/9] bg-black">
                 <img
                   src={selectedProgram.image}
                   alt={getProgramTitle(selectedProgram)}
                   className="w-full h-full object-cover"
                 />
-              ) : (
-                <div className="p-6 text-center space-y-2">
-                  <Sparkles className="w-8 h-8 text-[#FDE68A] mx-auto" />
-                  <div className="text-xl font-bold text-[#FDE68A] font-display-bn">
-                    {getProgramTitle(selectedProgram)}
-                  </div>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setSelectedProgram(null)}
-                aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/55 hover:bg-[#CC0000] text-white flex items-center justify-center cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between text-xs font-bold">
-                <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#0F5132]">
-                  {tCategory(selectedProgram.category)}
-                </span>
-                <span className="text-[#CC0000]">
-                  {getProgramDate(selectedProgram)}
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-[#1C1917] font-display-bn">
-                {getProgramTitle(selectedProgram)}
-              </h3>
-              <p className="text-sm text-[#57534E] leading-relaxed">
-                {getProgramDesc(selectedProgram)}
-              </p>
-              <div className="pt-2 flex justify-end">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120706] via-transparent to-transparent" />
                 <button
                   type="button"
                   onClick={() => setSelectedProgram(null)}
-                  className="px-5 py-2.5 rounded-xl bg-[#1C1917] text-white text-xs font-bold cursor-pointer"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-[#CC0000] text-white border border-[#D4AF37]/40 flex items-center justify-center cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+
+            <div className="p-6 space-y-4">
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-[#D4AF37] font-mono-code uppercase">
+                  {tCategory(selectedProgram.category)} · {selectedProgram.date}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-display-bn gold-text-gradient">
+                  {getProgramTitle(selectedProgram)}
+                </h3>
+              </div>
+
+              <p className="text-sm text-stone-300 leading-relaxed">
+                {getProgramDesc(selectedProgram)}
+              </p>
+
+              <div className="pt-3 border-t border-[#D4AF37]/20 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setSelectedProgram(null)}
+                  className="px-6 py-2.5 rounded-xl bg-[#1A0A09] hover:bg-[#CC0000] text-white text-xs font-bold cursor-pointer border border-[#D4AF37]/40"
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>
@@ -591,176 +466,77 @@ export const CulturalProgramAndGallerySection: React.FC<
         </div>
       )}
 
-      {/* =================================================================== */}
-      {/* READ-ONLY EVENT DETAIL MODAL                                        */}
-      {/* =================================================================== */}
+      {/* Event Detail Modal */}
       {selectedEvent && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-page-enter"
           onClick={() => setSelectedEvent(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden border-2 border-[#D4AF37] shadow-2xl my-auto animate-page-enter"
+            className="bg-[#120706] text-white rounded-3xl max-w-3xl w-full overflow-hidden border-2 border-[#D4AF37]/60 shadow-2xl my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-[16/9] bg-gradient-to-br from-[#4A0807] via-[#2B0908] to-[#0F5132] flex items-center justify-center">
-              {activeEventImg || selectedEvent.cover_image ? (
+            {(activeEventImg || selectedEvent.cover_image) && (
+              <div className="relative aspect-[16/9] bg-black">
                 <img
                   src={activeEventImg || selectedEvent.cover_image}
                   alt={getEventName(selectedEvent)}
                   className="w-full h-full object-cover"
                 />
-              ) : (
-                <div className="p-6 text-center space-y-2">
-                  <Calendar className="w-8 h-8 text-[#FDE68A] mx-auto" />
-                  <div className="text-xl font-bold text-[#FDE68A] font-display-bn">
-                    {getEventName(selectedEvent)}
-                  </div>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setSelectedEvent(null)}
-                aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/55 hover:bg-[#CC0000] text-white flex items-center justify-center cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              {selectedEvent.gallery_images &&
-                selectedEvent.gallery_images.length > 1 && (
-                  <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                    {selectedEvent.gallery_images.map((imgUrl, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setActiveEventImg(imgUrl)}
-                        className={`w-18 h-12 rounded-lg overflow-hidden border-2 shrink-0 cursor-pointer ${
-                          activeEventImg === imgUrl
-                            ? 'border-[#CC0000]'
-                            : 'border-[#E5DEC9] opacity-70'
-                        }`}
-                      >
-                        <img
-                          src={imgUrl}
-                          alt={`${getEventName(selectedEvent)} ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-              <div className="flex flex-wrap items-center gap-3 text-xs font-bold">
-                <span className="text-[#CC0000] flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{getEventDate(selectedEvent)}</span>
-                </span>
-                <span className="text-[#0F5132] flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span>{getEventLocation(selectedEvent)}</span>
-                </span>
-              </div>
-
-              <h3 className="text-2xl font-bold text-[#1C1917] font-display-bn">
-                {getEventName(selectedEvent)}
-              </h3>
-
-              <p className="text-sm text-[#57534E] leading-relaxed">
-                {getEventDesc(selectedEvent)}
-              </p>
-
-              <div className="pt-2 flex justify-end">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120706] via-transparent to-transparent" />
                 <button
                   type="button"
                   onClick={() => setSelectedEvent(null)}
-                  className="px-5 py-2.5 rounded-xl bg-[#1C1917] text-white text-xs font-bold cursor-pointer"
+                  aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-[#CC0000] text-white border border-[#D4AF37]/40 flex items-center justify-center cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+
+            <div className="p-6 space-y-4">
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-[#D4AF37] font-mono-code uppercase">
+                  {selectedEvent.date} · {getEventVenue(selectedEvent)}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-display-bn gold-text-gradient">
+                  {getEventName(selectedEvent)}
+                </h3>
+              </div>
+
+              <p className="text-sm text-stone-300 leading-relaxed">
+                {getEventDesc(selectedEvent)}
+              </p>
+
+              {/* Event Gallery switcher */}
+              {selectedEvent.gallery_images && selectedEvent.gallery_images.length > 1 && (
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {selectedEvent.gallery_images.map((img: string, i: number) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setActiveEventImg(img)}
+                      className={`w-20 h-14 rounded-xl overflow-hidden border-2 shrink-0 cursor-pointer ${
+                        activeEventImg === img ? 'border-[#D4AF37]' : 'border-white/20'
+                      }`}
+                    >
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="pt-3 border-t border-[#D4AF37]/20 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setSelectedEvent(null)}
+                  className="px-6 py-2.5 rounded-xl bg-[#1A0A09] hover:bg-[#CC0000] text-white text-xs font-bold cursor-pointer border border-[#D4AF37]/40"
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =================================================================== */}
-      {/* READ-ONLY PHOTO LIGHTBOX MODAL                                      */}
-      {/* =================================================================== */}
-      {lightboxIndex !== null && filteredGallery[lightboxIndex] && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xs flex items-center justify-center p-4"
-          onClick={closeLightbox}
-        >
-          <div
-            className="relative max-w-4xl w-full bg-[#1C1917] text-white rounded-3xl overflow-hidden border-2 border-[#D4AF37] shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-[16/10] bg-black flex items-center justify-center">
-              <img
-                src={filteredGallery[lightboxIndex].image}
-                alt={
-                  filteredGallery[lightboxIndex].alt_text ||
-                  getGalleryTitle(filteredGallery[lightboxIndex])
-                }
-                className="max-w-full max-h-full object-contain"
-              />
-
-              <button
-                type="button"
-                onClick={closeLightbox}
-                aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-[#CC0000] text-white flex items-center justify-center cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {filteredGallery.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={showPrevPhoto}
-                    aria-label={
-                      lang === 'bn' ? 'পূর্ববর্তী ছবি' : 'Previous Photo'
-                    }
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#CC0000] text-white flex items-center justify-center cursor-pointer"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={showNextPhoto}
-                    aria-label={lang === 'bn' ? 'পরবর্তী ছবি' : 'Next Photo'}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#CC0000] text-white flex items-center justify-center cursor-pointer"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </>
-              )}
-            </div>
-
-            <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#140807]">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#CC0000] text-[#FDE68A] text-[11px] font-bold">
-                    {tCategory(filteredGallery[lightboxIndex].category)}
-                  </span>
-                  <span className="text-xs text-stone-400">
-                    {tDigits(lightboxIndex + 1)} / {tDigits(filteredGallery.length)}
-                  </span>
-                  {filteredGallery[lightboxIndex].date && (
-                    <span className="text-xs text-[#FDE68A]/80">
-                      · {tDigits(filteredGallery[lightboxIndex].date)}
-                    </span>
-                  )}
-                </div>
-                <h3 className="text-lg font-bold font-display-bn">
-                  {getGalleryTitle(filteredGallery[lightboxIndex])}
-                </h3>
-                <p className="text-xs text-stone-300">
-                  {getGalleryDesc(filteredGallery[lightboxIndex])}
-                </p>
               </div>
             </div>
           </div>

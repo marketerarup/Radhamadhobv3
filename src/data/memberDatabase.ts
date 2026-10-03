@@ -1,7 +1,20 @@
 import binoySenPortraitImg from '../assets/images/binoy_sen_director_portrait_1790455480817.jpg';
-import amitDasPortraitImg from '../assets/images/amit_das_instructor_portrait_1790455925622.jpg';
+import amitDasPortraitImg from '../assets/images/amit_das_portrait_1791053126528.jpg';
 import trishnaRoyPortraitImg from '../assets/images/trishna_roy_instructor_portrait_1790456089667.jpg';
+import trishnaRaniDasPortraitImg from '../assets/images/trishna_rani_das_portrait_1791052436502.jpg';
 import samontiBiswasPortraitImg from '../assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078.jpg';
+import sumaDasPortraitImg from '../assets/images/suma_das_portrait_1791051380739.jpg';
+import apurbaSagarPortraitImg from '../assets/images/apurba_sagar_portrait_1791051802295.jpg';
+import dibakarDasPortraitImg from '../assets/images/dibakar_das_portrait_1791051877921.jpg';
+import badhonMondolPortraitImg from '../assets/images/badhon_mondol_portrait_1791052095695.jpg';
+import nayanDasPortraitImg from '../assets/images/nayan_das_portrait_1791052239800.jpg';
+import arpanSarkarPortraitImg from '../assets/images/arpan_sarkar_portrait_1791052321407.jpg';
+import shubhankarDasPortraitImg from '../assets/images/shubhankar_das_portrait_1791052532983.jpg';
+import rishikeshDasPortraitImg from '../assets/images/rishikesh_das_portrait_1791052647395.jpg';
+import hrishikeshDasSuitPortraitImg from '../assets/images/hrishikesh_das_suit_portrait_1791054301299.jpg';
+import synthiaRanjanPortraitImg from '../assets/images/synthia_ranjan_portrait_1791053316807.jpg';
+import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054258043.jpg';
+import arpitaDasPortraitImg from '../assets/images/arpita_das_portrait_1791054283177.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -91,6 +104,9 @@ export interface MemberRecord {
   /** Joining Date (যোগদানের তারিখ) */
   joining_date?: string;
   joiningDateEn?: string;
+  /** Date of Birth (জন্ম তারিখ) */
+  date_of_birth?: string;
+  dateOfBirth?: string;
   /** Flag confirming the photo is an original member photograph (no AI/mock avatars) */
   isOriginalPhotoOnly: boolean;
   /** Display priority in the directory (1 = Director, 2+ = Instructors & Members) */
@@ -127,30 +143,31 @@ export const INITIAL_MEMBERS_SEED: MemberRecord[] = [
     position_bn: 'পরিচালক ও নির্দেশক',
     positionEn: 'Director & Instructor',
     position_en: 'Director & Instructor',
-    father_name: 'স্বর্গীয় রবীন্দ্রনাথ সেন',
-    father_name_en: 'Late Rabindranath Sen',
-    mother_name: 'শ্রীমতী কমলা রানী সেন',
-    mother_name_en: 'Srimati Kamala Rani Sen',
-    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
-    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
-    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
-    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    father_name: 'শ্রী চন্দন কুমার সেন',
+    father_name_en: 'Sri Chandan Kumar Sen',
+    mother_name: 'শ্রীমতী বকুল রানী ভৌমিক',
+    mother_name_en: 'Srimati Bakul Rani Bhowmik',
+    address: 'রাজারবাগ, বাসাবো, ঢাকা-১২১৪; রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাজারবাগ, বাসাবো, ঢাকা-১২১৪; রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Rajarbagh, Basabo, Dhaka-1214; Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Rajarbagh, Basabo, Dhaka-1214; Radhamadhob Cultural Alliance Central Office, Bangladesh',
     phone: '+880 1797-059419',
     email: 'director@radhamadhob.org',
     biography:
-      'রাধামাধব সাংস্কৃতিক জোটের প্রতিষ্ঠাতা পরিচালক ও প্রধান নাট্য নির্দেশক বিনয় কুমার সেন দীর্ঘ সময় ধরে সনাতনী নাট্যকলা, ধর্মীয় ও পৌরাণিক নাটক, বৈদিক নৃত্য এবং গীতিনাট্য নির্দেশনা দিয়ে আসছেন। তাঁর প্রত্যক্ষ তত্ত্বাবধানে নবীন শিল্পীরা নিখুঁত পৌরাণিক চরিত্রাভিনয় ও সাত্ত্বিক মঞ্চকলায় প্রশিক্ষিত হচ্ছেন।',
+      '২০১১ সাল হতে রাধামাধব সনাতন সাংস্কৃতিক জোটের প্রতিষ্ঠাতা পরিচালক ও প্রধান নাট্য নির্দেশক হিসেবে বিনয় কুমার সেন অনন্য নেতৃত্ব দিয়ে আসছেন। উনি নিজে নির্দেশক ও পরিচালকের দায়িত্ব পালনের পাশাপাশি পৌরাণিক বিভিন্ন মহিমান্বিত চরিত্রে সবার হাত ধরে মঞ্চে প্রাণবন্ত অভিনয় করে আসছেন। দীর্ঘ এক দশকেরও বেশি সময় ধরে তিনি নিজের মেধা, প্রজ্ঞা ও নিরলস শ্রম দিয়ে সনাতন কৃষ্টি, ধর্মীয় নাটক, বৈদিক নৃত্য ও ঐতিহ্যবাহী সংস্কৃতিকে এগিয়ে নিতে অসামান্য ও কালজয়ী অবদান রেখে চলেছেন।',
     bio_bn:
-      'রাধামাধব সাংস্কৃতিক জোটের প্রতিষ্ঠাতা পরিচালক ও প্রধান নাট্য নির্দেশক বিনয় কুমার সেন দীর্ঘ সময় ধরে সনাতনী নাট্যকলা, ধর্মীয় ও পৌরাণিক নাটক, বৈদিক নৃত্য এবং গীতিনাট্য নির্দেশনা দিয়ে আসছেন। তাঁর প্রত্যক্ষ তত্ত্বাবধানে নবীন শিল্পীরা নিখুঁত পৌরাণিক চরিত্রাভিনয় ও সাত্ত্বিক মঞ্চকলায় প্রশিক্ষিত হচ্ছেন।',
+      '২০১১ সাল হতে রাধামাধব সনাতন সাংস্কৃতিক জোটের প্রতিষ্ঠাতা পরিচালক ও প্রধান নাট্য নির্দেশক হিসেবে বিনয় কুমার সেন অনন্য নেতৃত্ব দিয়ে আসছেন। উনি নিজে নির্দেশক ও পরিচালকের দায়িত্ব পালনের পাশাপাশি পৌরাণিক বিভিন্ন মহিমান্বিত চরিত্রে সবার হাত ধরে মঞ্চে প্রাণবন্ত অভিনয় করে আসছেন। দীর্ঘ এক দশকেরও বেশি সময় ধরে তিনি নিজের মেধা, প্রজ্ঞা ও নিরলস শ্রম দিয়ে সনাতন কৃষ্টি, ধর্মীয় নাটক, বৈদিক নৃত্য ও ঐতিহ্যবাহী সংস্কৃতিকে এগিয়ে নিতে অসামান্য ও কালজয়ী অবদান রেখে চলেছেন।',
     biographyEn:
-      'Binoy Kumar Sen is the Founder Director and Principal Stage Instructor of Radhamadhob Cultural Alliance. Under his artistic direction and mentorship, artists are trained in religious and mythological dramas, Vedic dance, and devotional musical theatre (Geetinatya).',
+      'Since 2011, Binoy Kumar Sen has served as the visionary Founder Director and Principal Stage Instructor of Radhamadhob Sanatan Cultural Alliance. Alongside leading directorship and stagecraft, he actively portrays legendary mythological characters on stage, walking hand-in-hand with every artist. For over a decade, his profound artistic dedication, intellect, and relentless hard work have made an indelible contribution to elevating and preserving Sanatan cultural heritage.',
     bio_en:
-      'Binoy Kumar Sen is the Founder Director and Principal Stage Instructor of Radhamadhob Cultural Alliance. Under his artistic direction and mentorship, artists are trained in religious and mythological dramas, Vedic dance, and devotional musical theatre (Geetinatya).',
-    joining_date: '2018-01-01',
+      'Since 2011, Binoy Kumar Sen has served as the visionary Founder Director and Principal Stage Instructor of Radhamadhob Sanatan Cultural Alliance. Alongside leading directorship and stagecraft, he actively portrays legendary mythological characters on stage, walking hand-in-hand with every artist. For over a decade, his profound artistic dedication, intellect, and relentless hard work have made an indelible contribution to elevating and preserving Sanatan cultural heritage.',
+    joining_date: '2011-01-01',
+    joiningDateEn: 'January 01, 2011',
     isOriginalPhotoOnly: true,
     displayOrder: 1,
     status: 'active',
     createdAt: '2026-09-26T20:38:47.000Z',
-    updatedAt: '2026-09-26T20:38:47.000Z',
+    updatedAt: '2026-10-03T11:53:00.000Z',
   },
   {
     id: 'member-002-amit-das',
@@ -161,116 +178,574 @@ export const INITIAL_MEMBERS_SEED: MemberRecord[] = [
     fullName: 'Amit Das',
     fullNameBn: 'অমিত দাস',
     photo: amitDasPortraitImg,
-    originalPhotoFileName: 'WhatsApp Image 2026-09-27 at 2.38.46 AM.jpeg',
-    position: 'প্রশিক্ষক',
-    positionBn: 'প্রশিক্ষক',
-    position_bn: 'প্রশিক্ষক',
-    positionEn: 'Instructor',
-    position_en: 'Instructor',
-    father_name: 'শ্রী অশোক কুমার দাস',
-    father_name_en: 'Sri Ashok Kumar Das',
-    mother_name: 'শ্রীমতী অঞ্জলি দাস',
-    mother_name_en: 'Srimati Anjali Das',
+    originalPhotoFileName: 'amit_das_portrait_1791053126528.jpg',
+    position: 'সহকারী পরিচালক ও নির্দেশক',
+    positionBn: 'সহকারী পরিচালক ও নির্দেশক',
+    position_bn: 'সহকারী পরিচালক ও নির্দেশক',
+    positionEn: 'Assistant Director & Instructor',
+    position_en: 'Assistant Director & Instructor',
+    father_name: 'শ্রী সুভাষ দাস',
+    father_name_en: 'Sri Suvash Das',
+    mother_name: 'শ্রীমতী মনিকা রানী দাস',
+    mother_name_en: 'Srimati Monika Rani Das',
     address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
     address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
-    phone: '+880 1797-059419',
-    email: 'amit.das@radhamadhob.org',
+    phone: '',
+    email: '',
     biography:
-      'রাধামাধব সাংস্কৃতিক জোটের অন্যতম প্রশিক্ষক হিসেবে নাট্য মহড়া, চরিত্রাভিনয় এবং মঞ্চ পরিবেশনা পরিচালনায় সক্রিয় ভূমিকা পালন করছেন।',
+      'অমিত দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
     bio_bn:
-      'রাধামাধব সাংস্কৃতিক জোটের অন্যতম প্রশিক্ষক হিসেবে নাট্য মহড়া, চরিত্রাভিনয় এবং মঞ্চ পরিবেশনা পরিচালনায় সক্রিয় ভূমিকা পালন করছেন।',
+      'অমিত দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
     biographyEn:
-      'Serving as an Instructor at Radhamadhob Cultural Alliance, actively mentoring theatrical rehearsals, character acting, and stage performances.',
+      'Amit Das is an active member, assistant director, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
     bio_en:
-      'Serving as an Instructor at Radhamadhob Cultural Alliance, actively mentoring theatrical rehearsals, character acting, and stage performances.',
-    joining_date: '2019-03-15',
+      'Amit Das is an active member, assistant director, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
+    joining_date: '2013-08-07',
+    joiningDateEn: 'August 07, 2013',
+    date_of_birth: '22-08-2004',
+    dateOfBirth: 'August 22, 2004',
     isOriginalPhotoOnly: true,
     displayOrder: 2,
     status: 'active',
     createdAt: '2026-09-26T20:51:20.000Z',
-    updatedAt: '2026-09-26T20:51:20.000Z',
+    updatedAt: '2026-10-03T11:45:00.000Z',
   },
   {
     id: 'member-003-trishna-roy',
-    name: 'তৃষ্ণা রায়',
-    name_bn: 'তৃষ্ণা রায়',
-    nameEn: 'Trishna Roy',
-    name_en: 'Trishna Roy',
-    fullName: 'Trishna Roy',
-    fullNameBn: 'তৃষ্ণা রায়',
-    photo: trishnaRoyPortraitImg,
-    originalPhotoFileName: 'WhatsApp Image 2026-09-27 at 2.38.47 AM (1).jpeg',
-    position: 'প্রশিক্ষক',
-    positionBn: 'প্রশিক্ষক',
-    position_bn: 'প্রশিক্ষক',
-    positionEn: 'Instructor',
-    position_en: 'Instructor',
-    father_name: 'শ্রী তপন কুমার রায়',
-    father_name_en: 'Sri Tapan Kumar Roy',
-    mother_name: 'শ্রীমতী মাধবী রায়',
-    mother_name_en: 'Srimati Madhabi Roy',
+    name: 'তৃষ্ণা রানী দাস',
+    name_bn: 'তৃষ্ণা রানী দাস',
+    nameEn: 'Trishna Rani Das',
+    name_en: 'Trishna Rani Das',
+    fullName: 'Trishna Rani Das',
+    fullNameBn: 'তৃষ্ণা রানী দাস',
+    photo: trishnaRaniDasPortraitImg,
+    originalPhotoFileName: 'trishna_rani_das_portrait_1791052436502.jpg',
+    position: 'সহকারী পরিচালক ও নির্দেশক',
+    positionBn: 'সহকারী পরিচালক ও নির্দেশক',
+    position_bn: 'সহকারী পরিচালক ও নির্দেশক',
+    positionEn: 'Assistant Director & Instructor',
+    position_en: 'Assistant Director & Instructor',
+    father_name: 'শ্রী নির্মল দাস',
+    father_name_en: 'Sri Nirmol Das',
+    mother_name: 'শ্রীমতী নমিতা দাস',
+    mother_name_en: 'Srimati Namita Das',
     address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
     address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
-    phone: '+880 1797-059419',
-    email: 'trishna.roy@radhamadhob.org',
+    phone: '',
+    email: '',
     biography:
-      'রাধামাধব সাংস্কৃতিক জোটের প্রশিক্ষক হিসেবে সনাতনী ও বৈদিক নৃত্য, গীতিনাট্য এবং সাংস্কৃতিক চর্চায় নবীন শিল্পীদের নিয়মিত প্রশিক্ষণ প্রদান করছেন।',
+      'রাধামাধব সনাতন সাংস্কৃতিক জোটের সহকারী পরিচালক ও নির্দেশক হিসেবে সনাতনী নাট্যকলা, বৈদিক নৃত্য, গীতিনাট্য এবং সাংস্কৃতিক চর্চায় নবীন ও প্রবীণ শিল্পীদের নিয়মিত নির্দেশনা ও মহড়া পরিচালনা করছেন।',
     bio_bn:
-      'রাধামাধব সাংস্কৃতিক জোটের প্রশিক্ষক হিসেবে সনাতনী ও বৈদিক নৃত্য, গীতিনাট্য এবং সাংস্কৃতিক চর্চায় নবীন শিল্পীদের নিয়মিত প্রশিক্ষণ প্রদান করছেন।',
+      'রাধামাধব সনাতন সাংস্কৃতিক জোটের সহকারী পরিচালক ও নির্দেশক হিসেবে সনাতনী নাট্যকলা, বৈদিক নৃত্য, গীতিনাট্য এবং সাংস্কৃতিক চর্চায় নবীন ও প্রবীণ শিল্পীদের নিয়মিত নির্দেশনা ও মহড়া পরিচালনা করছেন।',
     biographyEn:
-      'Serving as an Instructor at Radhamadhob Cultural Alliance, training artists in traditional Vedic dance, Geetinatya, and cultural stagecraft.',
+      'Serving as Assistant Director & Instructor at Radhamadhob Sanatan Cultural Alliance, leading theatrical directing, Vedic dance, Geetinatya, and rehearsals.',
     bio_en:
-      'Serving as an Instructor at Radhamadhob Cultural Alliance, training artists in traditional Vedic dance, Geetinatya, and cultural stagecraft.',
-    joining_date: '2020-02-10',
+      'Serving as Assistant Director & Instructor at Radhamadhob Sanatan Cultural Alliance, leading theatrical directing, Vedic dance, Geetinatya, and rehearsals.',
+    joining_date: '2012-12-12',
+    joiningDateEn: 'December 12, 2012',
     isOriginalPhotoOnly: true,
     displayOrder: 3,
     status: 'active',
     createdAt: '2026-09-26T20:54:25.000Z',
-    updatedAt: '2026-09-26T20:54:25.000Z',
+    updatedAt: '2026-10-03T11:56:00.000Z',
   },
   {
     id: 'member-004-samonti-biswas',
-    name: 'সামন্তী বিশ্বাস',
-    name_bn: 'সামন্তী বিশ্বাস',
-    nameEn: 'Samonti Biswas',
-    name_en: 'Samonti Biswas',
-    fullName: 'Samonti Biswas',
-    fullNameBn: 'সামন্তী বিশ্বাস',
+    name: 'সামন্তী বিশ্বাস তুলি',
+    name_bn: 'সামন্তী বিশ্বাস তুলি',
+    nameEn: 'Samonti Biswas Tuli',
+    name_en: 'Samonti Biswas Tuli',
+    fullName: 'Samonti Biswas Tuli',
+    fullNameBn: 'সামন্তী বিশ্বাস তুলি',
     photo: samontiBiswasPortraitImg,
     originalPhotoFileName: 'samonti.jpeg',
-    position: 'সহকারী প্রশিক্ষক',
-    positionBn: 'সহকারী প্রশিক্ষক',
-    position_bn: 'সহকারী প্রশিক্ষক',
-    positionEn: 'Assistant Instructor',
-    position_en: 'Assistant Instructor',
-    father_name: 'শ্রী সুভাষ চন্দ্র বিশ্বাস',
-    father_name_en: 'Sri Subhash Chandra Biswas',
-    mother_name: 'শ্রীমতী প্রতিমা বিশ্বাস',
-    mother_name_en: 'Srimati Pratima Biswas',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: 'শ্রী আনন্দ বিশ্বাস',
+    father_name_en: 'Sri Ananda Biswas',
+    mother_name: 'শ্রীমতী কৃষ্ণা বিশ্বাস',
+    mother_name_en: 'Srimati Krishna Biswas',
     address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
     addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
     address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
-    phone: '+880 1797-059419',
-    email: 'samonti.biswas@radhamadhob.org',
+    phone: '',
+    email: '',
     biography:
-      'রাধামাধব সাংস্কৃতিক জোটের সহকারী প্রশিক্ষক হিসেবে নৃত্য ও সাংস্কৃতিক আয়োজনের মহড়া এবং শিল্পীদের প্রস্তুতিতে গুরুত্বপূর্ণ অবদান রাখছেন।',
+      'রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী হিসেবে নৃত্য ও সাংস্কৃতিক আয়োজনের মহড়া, চরিত্রাভিনয় এবং শিল্পীদের প্রস্তুতিতে গুরুত্বপূর্ণ অবদান রাখছেন।',
     bio_bn:
-      'রাধামাধব সাংস্কৃতিক জোটের সহকারী প্রশিক্ষক হিসেবে নৃত্য ও সাংস্কৃতিক আয়োজনের মহড়া এবং শিল্পীদের প্রস্তুতিতে গুরুত্বপূর্ণ অবদান রাখছেন।',
+      'রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী হিসেবে নৃত্য ও সাংস্কৃতিক আয়োজনের মহড়া, চরিত্রাভিনয় এবং শিল্পীদের প্রস্তুতিতে গুরুত্বপূর্ণ অবদান রাখছেন।',
     biographyEn:
-      'Serving as an Assistant Instructor at Radhamadhob Cultural Alliance, supporting dance rehearsals and artist preparation for cultural events.',
+      'Active member, stage actress, and dancer of Radhamadhob Sanatan Cultural Alliance, performing in character roles and supporting dance rehearsals and cultural productions.',
     bio_en:
-      'Serving as an Assistant Instructor at Radhamadhob Cultural Alliance, supporting dance rehearsals and artist preparation for cultural events.',
+      'Active member, stage actress, and dancer of Radhamadhob Sanatan Cultural Alliance, performing in character roles and supporting dance rehearsals and cultural productions.',
     joining_date: '2021-05-20',
+    joiningDateEn: 'May 20, 2021',
     isOriginalPhotoOnly: true,
     displayOrder: 4,
     status: 'active',
     createdAt: '2026-09-26T21:00:34.000Z',
-    updatedAt: '2026-09-26T21:00:34.000Z',
+    updatedAt: '2026-10-03T11:42:00.000Z',
+  },
+  {
+    id: 'member-005-suma-das',
+    name: 'সুমা দাস',
+    name_bn: 'সুমা দাস',
+    nameEn: 'Suma Das',
+    name_en: 'Suma Das',
+    fullName: 'Suma Das',
+    fullNameBn: 'সুমা দাস',
+    photo: sumaDasPortraitImg,
+    originalPhotoFileName: 'suma_das_portrait_1791051380739.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: 'শ্রী রঞ্জিত কুমার দাস',
+    father_name_en: 'Sri Ranjit Kumar Das',
+    mother_name: 'শ্রীমতী মিতা দাস',
+    mother_name_en: 'Srimati Mita Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'সুমা দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    bio_bn:
+      'সুমা দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    biographyEn:
+      'Suma Das is an active member, stage actress, and classical dancer of Radhamadhob Sanatan Cultural Alliance. She has portrayed diverse mythological roles on stage. She has dedicated her talent and artistic effort over the years to advancing Sanatan heritage and cultural arts.',
+    bio_en:
+      'Suma Das is an active member, stage actress, and classical dancer of Radhamadhob Sanatan Cultural Alliance. She has portrayed diverse mythological roles on stage. She has dedicated her talent and artistic effort over the years to advancing Sanatan heritage and cultural arts.',
+    joining_date: '2021-08-15',
+    joiningDateEn: 'August 15, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 5,
+    status: 'active',
+    createdAt: '2026-10-03T11:14:00.000Z',
+    updatedAt: '2026-10-03T11:14:00.000Z',
+  },
+  {
+    id: 'member-006-apurba-sagar',
+    name: 'অপূর্ব সাগর নিবাস',
+    name_bn: 'অপূর্ব সাগর নিবাস',
+    nameEn: 'Apurba Sagar Nibash',
+    name_en: 'Apurba Sagar Nibash',
+    fullName: 'Apurba Sagar Nibash',
+    fullNameBn: 'অপূর্ব সাগর নিবাস',
+    photo: apurbaSagarPortraitImg,
+    originalPhotoFileName: 'apurba_sagar_portrait_1791051802295.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actor & Dancer',
+    position_en: 'Stage Actor & Dancer',
+    father_name: 'শ্রী নিখিল চন্দ্র হালদার',
+    father_name_en: 'Sri Nikhil Chandra Haldar',
+    mother_name: 'শ্রীমতী ছবি রানী হালদার',
+    mother_name_en: 'Srimati Chhabi Rani Haldar',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'অপূর্ব সাগর নিবাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন এবং নিষ্ঠার সাথে সংগঠনের সাংস্কৃতিক অনুষ্ঠান পরিচালনায় অবদান রাখছেন।',
+    bio_bn:
+      'অপূর্ব সাগর নিবাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন এবং নিষ্ঠার সাথে সংগঠনের সাংস্কৃতিক অনুষ্ঠান পরিচালনায় অবদান রাখছেন।',
+    biographyEn:
+      'Apurba Sagar Nibash is an active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He portrays diverse mythological characters and contributes dedicatedly to cultural stage performances.',
+    bio_en:
+      'Apurba Sagar Nibash is an active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He portrays diverse mythological characters and contributes dedicatedly to cultural stage performances.',
+    joining_date: '2021-11-20',
+    joiningDateEn: 'November 20, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 6,
+    status: 'active',
+    createdAt: '2026-10-03T11:22:00.000Z',
+    updatedAt: '2026-10-03T11:22:00.000Z',
+  },
+  {
+    id: 'member-007-dibakar-das',
+    name: 'দিবাকর দাস রাতুল',
+    name_bn: 'দিবাকর দাস রাতুল',
+    nameEn: 'Dibakar Das Ratul',
+    name_en: 'Dibakar Das Ratul',
+    fullName: 'Dibakar Das Ratul',
+    fullNameBn: 'দিবাকর দাস রাতুল',
+    photo: dibakarDasPortraitImg,
+    originalPhotoFileName: 'dibakar_das_portrait_1791051877921.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actor & Dancer',
+    position_en: 'Stage Actor & Dancer',
+    father_name: 'শ্রী উত্তম দাস',
+    father_name_en: 'Sri Uttam Das',
+    mother_name: 'শ্রীমতী লিপি দাস',
+    mother_name_en: 'Srimati Lipi Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'দিবাকর দাস রাতুল রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম তরুণ ও উদ্যমী অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক ও ধর্মীয় বিভিন্ন চরিত্রে অভিনয় ও নৃত্য পরিবেশনার মাধ্যমে সনাতন সংস্কৃতির বিকাশে নিয়মিত অবদান রাখছেন।',
+    bio_bn:
+      'দিবাকর দাস রাতুল রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম তরুণ ও উদ্যমী অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক ও ধর্মীয় বিভিন্ন চরিত্রে অভিনয় ও নৃত্য পরিবেশনার মাধ্যমে সনাতন সংস্কৃতির বিকাশে নিয়মিত অবদান রাখছেন।',
+    biographyEn:
+      'Dibakar Das Ratul is an energetic young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly participates in mythological dramas and dance performances to promote Sanatan heritage.',
+    bio_en:
+      'Dibakar Das Ratul is an energetic young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly participates in mythological dramas and dance performances to promote Sanatan heritage.',
+    joining_date: '2022-02-14',
+    joiningDateEn: 'February 14, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 7,
+    status: 'active',
+    createdAt: '2026-10-03T11:24:00.000Z',
+    updatedAt: '2026-10-03T11:24:00.000Z',
+  },
+  {
+    id: 'member-008-badhon-mondol',
+    name: 'বাঁধন মন্ডল',
+    name_bn: 'বাঁধন মন্ডল',
+    nameEn: 'Badhon Mondol',
+    name_en: 'Badhon Mondol',
+    fullName: 'Badhon Mondol',
+    fullNameBn: 'বাঁধন মন্ডল',
+    photo: badhonMondolPortraitImg,
+    originalPhotoFileName: 'badhon_mondol_portrait_1791052095695.jpg',
+    position: 'সহকারী পরিচালক',
+    positionBn: 'সহকারী পরিচালক',
+    position_bn: 'সহকারী পরিচালক',
+    positionEn: 'Assistant Director',
+    position_en: 'Assistant Director',
+    father_name: 'শ্রী রামকৃষ্ণ মন্ডল',
+    father_name_en: 'Sri Ram Krishna Mondol',
+    mother_name: 'শ্রীমতী ববিতা মন্ডল',
+    mother_name_en: 'Srimati Bobita Mondol',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'বাঁধন মন্ডল রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    bio_bn:
+      'বাঁধন মন্ডল রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    biographyEn:
+      'Badhon Mondol is an active member, assistant director, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and effort over the years to advancing Sanatan cultural heritage.',
+    bio_en:
+      'Badhon Mondol is an active member, assistant director, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and effort over the years to advancing Sanatan cultural heritage.',
+    joining_date: '2021-03-10',
+    joiningDateEn: 'March 10, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 8,
+    status: 'active',
+    createdAt: '2026-10-03T11:27:00.000Z',
+    updatedAt: '2026-10-03T11:27:00.000Z',
+  },
+  {
+    id: 'member-009-nayan-das-topu',
+    name: 'নয়ন দাস তপু',
+    name_bn: 'নয়ন দাস তপু',
+    nameEn: 'Nayan Das Topu',
+    name_en: 'Nayan Das Topu',
+    fullName: 'Nayan Das Topu',
+    fullNameBn: 'নয়ন দাস তপু',
+    photo: nayanDasPortraitImg,
+    originalPhotoFileName: 'nayan_das_portrait_1791052239800.jpg',
+    position: 'উপদেষ্টা',
+    positionBn: 'উপদেষ্টা',
+    position_bn: 'উপদেষ্টা',
+    positionEn: 'Advisor',
+    position_en: 'Advisor',
+    father_name: 'শ্রী শ্রীবাস দাস',
+    father_name_en: 'Sri Sribas Das',
+    mother_name: 'শ্রীমতী অঞ্জলি দাস',
+    mother_name_en: 'Srimati Anjali Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'নয়ন দাস তপু রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সম্মানিত উপদেষ্টা, সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    bio_bn:
+      'নয়ন দাস তপু রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সম্মানিত উপদেষ্টা, সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    biographyEn:
+      'Nayan Das Topu is a respected advisor, active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
+    bio_en:
+      'Nayan Das Topu is a respected advisor, active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
+    joining_date: '2021-04-15',
+    joiningDateEn: 'April 15, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 9,
+    status: 'active',
+    createdAt: '2026-10-03T11:30:00.000Z',
+    updatedAt: '2026-10-03T11:30:00.000Z',
+  },
+  {
+    id: 'member-010-arpan-sarkar',
+    name: 'অর্পণ সরকার',
+    name_bn: 'অর্পণ সরকার',
+    nameEn: 'Arpan Sarkar',
+    name_en: 'Arpan Sarkar',
+    fullName: 'Arpan Sarkar',
+    fullNameBn: 'অর্পণ সরকার',
+    photo: arpanSarkarPortraitImg,
+    originalPhotoFileName: 'arpan_sarkar_portrait_1791052321407.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actor & Dancer',
+    position_en: 'Stage Actor & Dancer',
+    father_name: 'শ্রী স্বপন সরকার',
+    father_name_en: 'Sri Swapan Sarkar',
+    mother_name: 'শ্রীমতী স্মৃতি সরকার',
+    mother_name_en: 'Srimati Smriti Sarkar',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'অর্পণ সরকার রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    bio_bn:
+      'অর্পণ সরকার রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি পৌরাণিক বিভিন্ন চরিত্রে অভিনয় করে আসছেন। উনি রাধামাধব সনাতন সাংস্কৃতিক জোটে দীর্ঘদিন ধরে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য অবদান রেখেছেন।',
+    biographyEn:
+      'Arpan Sarkar is an active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
+    bio_en:
+      'Arpan Sarkar is an active member, stage actor, and dancer of Radhamadhob Sanatan Cultural Alliance. He has portrayed diverse mythological roles on stage. He has dedicated his talent and artistic effort over the years to advancing Sanatan cultural heritage.',
+    joining_date: '2022-05-18',
+    joiningDateEn: 'May 18, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 10,
+    status: 'active',
+    createdAt: '2026-10-03T11:32:00.000Z',
+    updatedAt: '2026-10-03T11:32:00.000Z',
+  },
+  {
+    id: 'member-011-shubhankar-das-arnab',
+    name: 'শুভংকর দাস অর্নব',
+    name_bn: 'শুভংকর দাস অর্নব',
+    nameEn: 'Shubhankar Das Arnab',
+    name_en: 'Shubhankar Das Arnab',
+    fullName: 'Shubhankar Das Arnab',
+    fullNameBn: 'শুভংকর দাস অর্নব',
+    photo: shubhankarDasPortraitImg,
+    originalPhotoFileName: 'shubhankar_das_portrait_1791052532983.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actor & Dancer',
+    position_en: 'Stage Actor & Dancer',
+    father_name: 'শ্রী উত্তম দাস',
+    father_name_en: 'Sri Uttam Das',
+    mother_name: 'শ্রীমতী লিপি দাস',
+    mother_name_en: 'Srimati Lipi Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'শুভংকর দাস অর্নব রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম কনিষ্ঠ ও প্রতিভাবান অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি বিভিন্ন পৌরাণিক ও সাংস্কৃতিক নাটকে শিশু চরিত্রে অভিনয় ও নৃত্যে নিয়মিত অংশগ্রহণ করে আসছেন। মেধা ও নিষ্ঠার সাথে সনাতন কৃষ্টি-সংস্কৃতি চর্চায় গুরুত্বপূর্ণ ভূমিকা পালন করছেন।',
+    bio_bn:
+      'শুভংকর দাস অর্নব রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম কনিষ্ঠ ও প্রতিভাবান অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি বিভিন্ন পৌরাণিক ও সাংস্কৃতিক নাটকে শিশু চরিত্রে অভিনয় ও নৃত্যে নিয়মিত অংশগ্রহণ করে আসছেন। মেধা ও নিষ্ঠার সাথে সনাতন কৃষ্টি-সংস্কৃতি চর্চায় গুরুত্বপূর্ণ ভূমিকা পালন করছেন।',
+    biographyEn:
+      'Shubhankar Das Arnab is a talented young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly participates in mythological dramas and cultural dance performances in youth roles, contributing with great dedication to Sanatan cultural arts.',
+    bio_en:
+      'Shubhankar Das Arnab is a talented young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly participates in mythological dramas and cultural dance performances in youth roles, contributing with great dedication to Sanatan cultural arts.',
+    joining_date: '2022-08-10',
+    joiningDateEn: 'August 10, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 11,
+    status: 'active',
+    createdAt: '2026-10-03T11:35:00.000Z',
+    updatedAt: '2026-10-03T11:35:00.000Z',
+  },
+  {
+    id: 'member-012-rishikesh-das-purna',
+    name: 'ঋষিকেশ দাস পূর্ণ',
+    name_bn: 'ঋষিকেশ দাস পূর্ণ',
+    nameEn: 'Hrishikesh Das Purno',
+    name_en: 'Hrishikesh Das Purno',
+    fullName: 'Hrishikesh Das Purno',
+    fullNameBn: 'ঋষিকেশ দাস পূর্ণ',
+    photo: hrishikeshDasSuitPortraitImg,
+    originalPhotoFileName: 'hrishikesh_das_suit_portrait_1791054301299.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actor & Dancer',
+    position_en: 'Stage Actor & Dancer',
+    father_name: 'শ্রী প্রদীপ চন্দ্র দাস',
+    father_name_en: 'Sri Prodip Chandra Das',
+    mother_name: 'শ্রীমতী মুক্তা রাণী দাস',
+    mother_name_en: 'Srimati Mukta Rani Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'ঋষিকেশ দাস পূর্ণ রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম কনিষ্ঠ ও প্রতিশ্রুতিশীল অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি বৈদিক নৃত্য, ভক্তিগীতি ও পৌরাণিক বিভিন্ন নাটকে শিশু চরিত্রে নিয়মিত অভিনয় করে আসছেন। নিষ্ঠার সাথে সনাতনী কৃষ্টি ও সংস্কৃতি চর্চায় ভূমিকা রাখছেন।',
+    bio_bn:
+      'ঋষিকেশ দাস পূর্ণ রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম কনিষ্ঠ ও প্রতিশ্রুতিশীল অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি বৈদিক নৃত্য, ভক্তিগীতি ও পৌরাণিক বিভিন্ন নাটকে শিশু চরিত্রে নিয়মিত অভিনয় করে আসছেন। নিষ্ঠার সাথে সনাতনী কৃষ্টি ও সংস্কৃতি চর্চায় ভূমিকা রাখছেন।',
+    biographyEn:
+      'Hrishikesh Das Purno is a promising young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly portrays youth roles in devotional dramas and Vedic dance performances, contributing dedicatedly to Sanatan cultural arts.',
+    bio_en:
+      'Hrishikesh Das Purno is a promising young stage actor and dancer of Radhamadhob Sanatan Cultural Alliance. He regularly portrays youth roles in devotional dramas and Vedic dance performances, contributing dedicatedly to Sanatan cultural arts.',
+    joining_date: '2022-09-01',
+    joiningDateEn: 'September 01, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 12,
+    status: 'active',
+    createdAt: '2026-10-03T11:37:00.000Z',
+    updatedAt: '2026-10-03T12:04:00.000Z',
+  },
+  {
+    id: 'member-013-synthia-ranjan-srishti',
+    name: 'সিনথিয়া রঞ্জন সৃষ্টি',
+    name_bn: 'সিনথিয়া রঞ্জন সৃষ্টি',
+    nameEn: 'Synthia Ranjan Srishti',
+    name_en: 'Synthia Ranjan Srishti',
+    fullName: 'Synthia Ranjan Srishti',
+    fullNameBn: 'সিনথিয়া রঞ্জন সৃষ্টি',
+    photo: synthiaRanjanPortraitImg,
+    originalPhotoFileName: 'synthia_ranjan_portrait_1791053316807.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Classical Dancer',
+    position_en: 'Stage Actress & Classical Dancer',
+    father_name: 'শ্রী শিশির রঞ্জন',
+    father_name_en: 'Sri Shishir Ranjan',
+    mother_name: 'শ্রীমতী সবিতা বিশ্বাস',
+    mother_name_en: 'Srimati Sabita Biswas',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'সিনথিয়া রঞ্জন সৃষ্টি রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম প্রতিভাবান ও সক্রিয় অভিনয় ও নৃত্যশিল্পী। উনি টেলিভিশন ও জাতীয় সাংস্কৃতিক মঞ্চে একাধিকবার পুরস্কৃত একজন প্রশংসিত নৃত্যশিল্পী। পৌরাণিক চরিত্রাভিনয় এবং শাস্ত্রীয় নৃত্যে তাঁর অসাধারণ প্রতিভা ও নিয়মিত সাধনা রাধামাধব সাংস্কৃতিক জোটের কৃষ্টি চর্চাকে সমৃদ্ধ করে চলেছে।',
+    bio_bn:
+      'সিনথিয়া রঞ্জন সৃষ্টি রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম প্রতিভাবান ও সক্রিয় অভিনয় ও নৃত্যশিল্পী। উনি টেলিভিশন ও জাতীয় সাংস্কৃতিক মঞ্চে একাধিকবার পুরস্কৃত একজন প্রশংসিত নৃত্যশিল্পী। পৌরাণিক চরিত্রাভিনয় এবং শাস্ত্রীয় নৃত্যে তাঁর অসাধারণ প্রতিভা ও নিয়মিত সাধনা রাধামাধব সাংস্কৃতিক জোটের কৃষ্টি চর্চাকে সমৃদ্ধ করে চলেছে।',
+    biographyEn:
+      'Synthia Ranjan Srishti is an exceptionally talented stage actress and award-winning classical dancer of Radhamadhob Sanatan Cultural Alliance. Recognized on national cultural stages and television, she has portrayed diverse mythological roles with finesse, dedicating her talent and passion to advancing Sanatan cultural heritage.',
+    bio_en:
+      'Synthia Ranjan Srishti is an exceptionally talented stage actress and award-winning classical dancer of Radhamadhob Sanatan Cultural Alliance. Recognized on national cultural stages and television, she has portrayed diverse mythological roles with finesse, dedicating her talent and passion to advancing Sanatan cultural heritage.',
+    joining_date: '2022-01-10',
+    joiningDateEn: 'January 10, 2022',
+    date_of_birth: '25-04-2009',
+    dateOfBirth: 'April 25, 2009',
+    isOriginalPhotoOnly: true,
+    displayOrder: 13,
+    status: 'active',
+    createdAt: '2026-10-03T11:48:00.000Z',
+    updatedAt: '2026-10-03T11:48:00.000Z',
+  },
+  {
+    id: 'member-014-riti-ranjan',
+    name: 'ঋতি রঞ্জন',
+    name_bn: 'ঋতি রঞ্জন',
+    nameEn: 'Riti Ranjan',
+    name_en: 'Riti Ranjan',
+    fullName: 'Riti Ranjan',
+    fullNameBn: 'ঋতি রঞ্জন',
+    photo: ritiRanjanPortraitImg,
+    originalPhotoFileName: 'riti_ranjan_portrait_1791054258043.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: 'শ্রী শিশির রঞ্জন',
+    father_name_en: 'Sri Shishir Ranjan',
+    mother_name: 'শ্রীমতী সবিতা বিশ্বাস',
+    mother_name_en: 'Srimati Sabita Biswas',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'ঋতি রঞ্জন রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় ও প্রতিশ্রুতিশীল অভিনয় ও নৃত্যশিল্পী। উনি বিভিন্ন পৌরাণিক নাটক এবং বৈদিক নৃত্য পরিবেশনায় নিয়মিত অংশগ্রহণ করে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অবদান রাখছেন।',
+    bio_bn:
+      'ঋতি রঞ্জন রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় ও প্রতিশ্রুতিশীল অভিনয় ও নৃত্যশিল্পী। উনি বিভিন্ন পৌরাণিক নাটক এবং বৈদিক নৃত্য পরিবেশনায় নিয়মিত অংশগ্রহণ করে মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অবদান রাখছেন।',
+    biographyEn:
+      'Riti Ranjan is an active and promising young stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. She regularly participates in mythological dramas and traditional Vedic dance performances, contributing with great devotion to Sanatan cultural arts.',
+    bio_en:
+      'Riti Ranjan is an active and promising young stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. She regularly participates in mythological dramas and traditional Vedic dance performances, contributing with great devotion to Sanatan cultural arts.',
+    joining_date: '2022-04-12',
+    joiningDateEn: 'April 12, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 14,
+    status: 'active',
+    createdAt: '2026-10-03T12:01:00.000Z',
+    updatedAt: '2026-10-03T12:01:00.000Z',
+  },
+  {
+    id: 'member-015-arpita-rani-das',
+    name: 'অর্পিতা রানী দাস',
+    name_bn: 'অর্পিতা রানী দাস',
+    nameEn: 'Arpita Rani Das',
+    name_en: 'Arpita Rani Das',
+    fullName: 'Arpita Rani Das',
+    fullNameBn: 'অর্পিতা রানী দাস',
+    photo: arpitaDasPortraitImg,
+    originalPhotoFileName: 'arpita_das_portrait_1791054283177.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: 'শ্রী সুকুমার দাস',
+    father_name_en: 'Sri Sukumar Das',
+    mother_name: 'শ্রীমতী রত্না রানী দাস',
+    mother_name_en: 'Srimati Ratna Rani Das',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'অর্পিতা রানী দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি মঞ্চ নাটকে ঐতিহ্যবাহী পৌরাণিক চরিত্রে রূপদান ও ভক্তিপূর্ণ নৃত্য পরিবেশনায় নিয়মিত মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য ভূমিকা রেখে আসছেন।',
+    bio_bn:
+      'অর্পিতা রানী দাস রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সক্রিয় সদস্য, অভিনয়শিল্পী এবং নৃত্যশিল্পী। উনি মঞ্চ নাটকে ঐতিহ্যবাহী পৌরাণিক চরিত্রে রূপদান ও ভক্তিপূর্ণ নৃত্য পরিবেশনায় নিয়মিত মেধা ও শ্রম দিয়ে সনাতন কৃষ্টি-সংস্কৃতিকে এগিয়ে নিতে অসামান্য ভূমিকা রেখে আসছেন।',
+    biographyEn:
+      'Arpita Rani Das is an active member, stage actress, and classical dancer of Radhamadhob Sanatan Cultural Alliance. Adorned in traditional mythological characters, she portrays diverse roles on stage and performs devotional dances, contributing dedicatedly to Sanatan cultural heritage.',
+    bio_en:
+      'Arpita Rani Das is an active member, stage actress, and classical dancer of Radhamadhob Sanatan Cultural Alliance. Adorned in traditional mythological characters, she portrays diverse roles on stage and performs devotional dances, contributing dedicatedly to Sanatan cultural heritage.',
+    joining_date: '2021-11-15',
+    joiningDateEn: 'November 15, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 15,
+    status: 'active',
+    createdAt: '2026-10-03T12:02:00.000Z',
+    updatedAt: '2026-10-03T12:02:00.000Z',
   },
 ];
 
@@ -305,10 +780,10 @@ CREATE TABLE members (
  * PERSISTENT STORAGE ENGINE (`members` collection in IndexedDB + localStorage)
  * ============================================================================
  */
-const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v3';
+const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v13';
 const DB_VERSION = 1;
 const STORE_NAME = 'members';
-const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v3';
+const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v13';
 
 const isPureEn = (val?: string | null): boolean =>
   Boolean(val && val.trim().length > 0 && !/[\u0980-\u09FF]/.test(val));
@@ -329,6 +804,22 @@ function normalizeAndMergeRecords(stored: Partial<MemberRecord>[]): {
     if (!item || !item.id) continue;
     // Match seed strictly by ID so new members sharing a default photo never inherit seed fields
     const seedFallback = seedMap.get(item.id);
+
+    // Official Designation Update: Nayan Das Topu is now Advisor (উপদেষ্টা)
+    if (
+      item.id === 'member-009-nayan-das-topu' &&
+      (item.position === 'সহকারী পরিচালক' ||
+        item.positionBn === 'সহকারী পরিচালক' ||
+        item.position_bn === 'সহকারী পরিচালক' ||
+        !item.position)
+    ) {
+      item.position = 'উপদেষ্টা';
+      item.positionBn = 'উপদেষ্টা';
+      item.position_bn = 'উপদেষ্টা';
+      item.positionEn = 'Advisor';
+      item.position_en = 'Advisor';
+      changed = true;
+    }
 
     const resolvedNameBn =
       (item.name_bn || item.name || item.fullNameBn || seedFallback?.name || item.fullName || '').trim();
@@ -363,7 +854,19 @@ function normalizeAndMergeRecords(stored: Partial<MemberRecord>[]): {
         ? seedFallback.addressEn
         : rawAddressEn || resolvedAddress;
 
-    const resolvedPhone = (item.phone || seedFallback?.phone || '+880 1797-059419').trim();
+    const isBinoy =
+      item.id === 'member-001-binoy-sen' ||
+      (item.name_bn || item.name || '').includes('বিনয়') ||
+      (item.name_en || item.nameEn || '').toLowerCase().includes('binoy');
+
+    // Only Binoy Sen has public phone & email address per organization policy
+    const resolvedPhone = isBinoy
+      ? (item.phone || seedFallback?.phone || '+880 1797-059419').trim()
+      : '';
+
+    const resolvedEmail = isBinoy
+      ? (item.email ?? seedFallback?.email ?? 'director@radhamadhob.org').trim()
+      : '';
 
     const resolvedBio =
       (
@@ -412,18 +915,35 @@ function normalizeAndMergeRecords(stored: Partial<MemberRecord>[]): {
       addressEn: resolvedAddressEn,
       address_en: resolvedAddressEn,
       phone: resolvedPhone,
-      email: item.email ?? seedFallback?.email ?? '',
+      email: resolvedEmail,
       biography: resolvedBio,
       bio_bn: resolvedBio,
+      bio: resolvedBio,
       biographyEn: resolvedBioEn,
       bio_en: resolvedBioEn,
+      bioEn: resolvedBioEn,
       joining_date: item.joining_date ?? seedFallback?.joining_date ?? '2024-01-01',
+      joiningDateEn: item.joiningDateEn ?? seedFallback?.joiningDateEn ?? '',
+      date_of_birth: item.date_of_birth ?? seedFallback?.date_of_birth ?? '',
+      dateOfBirth: item.dateOfBirth ?? seedFallback?.dateOfBirth ?? '',
       isOriginalPhotoOnly: true,
       displayOrder: item.displayOrder ?? seedFallback?.displayOrder ?? existingMap.size + 1,
       status: item.status || 'active',
       createdAt: item.createdAt || seedFallback?.createdAt || new Date().toISOString(),
       updatedAt: item.updatedAt || new Date().toISOString(),
     });
+  }
+
+  // Ensure all seed members are always included if missing from stored
+  for (const seed of INITIAL_MEMBERS_SEED) {
+    if (!existingMap.has(seed.id)) {
+      existingMap.set(seed.id, {
+        ...seed,
+        bio: seed.bio || seed.biography,
+        bioEn: seed.bioEn || seed.biographyEn,
+      });
+      changed = true;
+    }
   }
 
   const merged = Array.from(existingMap.values()).sort(

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
   Calendar,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Clock,
   Drama,
   ExternalLink,
   Eye,
   Film,
+  Maximize2,
   Pause,
   Play,
   Sparkles,
@@ -24,6 +27,7 @@ import {
   extractYouTubeId,
 } from '../data/dramaAndVideoDatabase';
 import { useLanguage } from '../context/LanguageContext';
+import { CinematicCard3D } from './CinematicCard3D';
 
 interface DramaAndVideoSectionProps {
   dramas: DramaRecord[];
@@ -50,17 +54,19 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
     ? videos.find((v) => v.id === activeVideoModalState.id) ||
       activeVideoModalState
     : null;
+  const [isDramaDropdownOpen, setIsDramaDropdownOpen] = useState(false);
+  const [selectedDropdownDramaId, setSelectedDropdownDramaId] =
+    useState<string>('');
 
-  // Responsive 4-Card Slider State for Drama Cards
+  // Responsive Slider State for Drama Cards (Mobile: 1, Tablet: 2, Desktop: 3)
   const [cardsPerView, setCardsPerView] = useState<number>(() => {
-    if (typeof window === 'undefined') return 4;
-    if (window.innerWidth >= 1024) return 4;
+    if (typeof window === 'undefined') return 3;
+    if (window.innerWidth >= 1024) return 3;
     if (window.innerWidth >= 640) return 2;
     return 1;
   });
   const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
   const [isSliderHovered, setIsSliderHovered] = useState<boolean>(false);
-  const [isAutoSlidePlaying, setIsAutoSlidePlaying] = useState<boolean>(true);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const filteredDramas =
@@ -73,7 +79,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
   useEffect(() => {
     const updateCardsPerView = () => {
       if (window.innerWidth >= 1024) {
-        setCardsPerView(4);
+        setCardsPerView(3);
       } else if (window.innerWidth >= 640) {
         setCardsPerView(2);
       } else {
@@ -94,28 +100,6 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
       setCurrentSlideIndex(maxSlideIndex);
     }
   }, [currentSlideIndex, maxSlideIndex]);
-
-  useEffect(() => {
-    if (
-      !isAutoSlidePlaying ||
-      isSliderHovered ||
-      Boolean(selectedDrama) ||
-      filteredDramas.length <= cardsPerView
-    ) {
-      return;
-    }
-    const timer = setInterval(() => {
-      setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
-    }, 4200);
-    return () => clearInterval(timer);
-  }, [
-    isAutoSlidePlaying,
-    isSliderHovered,
-    selectedDrama,
-    filteredDramas.length,
-    cardsPerView,
-    maxSlideIndex,
-  ]);
 
   const handlePrevDramaSlide = () => {
     setCurrentSlideIndex((prev) => (prev <= 0 ? maxSlideIndex : prev - 1));
@@ -145,127 +129,241 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
 
   const openDramaDetail = (drama: DramaRecord) => {
     setSelectedDrama(drama);
-    setActiveGalleryImg(drama.poster);
+    setActiveGalleryImg(
+      drama.gallery && drama.gallery.length > 0
+        ? drama.gallery[0]
+        : drama.poster || ''
+    );
   };
 
-  const getDramaTitle = (d: DramaRecord) =>
-    t(d.title_bn || d.title, d.title_en || d.titleEn || d.title);
-
-  const getDramaDesc = (d: DramaRecord) =>
+  const getDramaTitle = (drama: DramaRecord) =>
     t(
-      d.description_bn || d.description,
-      d.description_en || d.descriptionEn || d.description
+      drama.title_bn || drama.title,
+      drama.title_en || drama.titleEn || drama.title
     );
 
-  const getDramaDirector = (d: DramaRecord) =>
+  const getDramaDesc = (drama: DramaRecord) =>
     t(
-      d.director_bn || d.director,
-      d.director_en || d.director || 'Binoy Kumar Sen'
+      drama.description_bn || drama.description,
+      drama.description_en || drama.descriptionEn || drama.description
     );
 
-  const getVideoTitle = (v: VideoRecord) =>
-    t(v.title_bn || v.title, v.title_en || v.title);
+  const getDramaDirector = (drama: DramaRecord) =>
+    t(
+      drama.director_bn || drama.director,
+      drama.director_en || drama.directorEn || drama.director
+    );
 
-  const getVideoDesc = (v: VideoRecord) =>
-    t(v.description_bn || v.description, v.description_en || v.description);
+  const getVideoTitle = (vid: VideoRecord) =>
+    t(vid.title_bn || vid.title, vid.title_en || vid.titleEn || vid.title);
+
+  const getVideoDesc = (vid: VideoRecord) =>
+    t(
+      vid.description_bn || vid.description,
+      vid.description_en || vid.descriptionEn || vid.description
+    );
 
   return (
     <>
       {/* =================================================================== */}
-      {/* 1. OUR DRAMA SECTION (আমাদের নাটক — Read-Only Public Showcase)       */}
+      {/* 1. CINEMATIC DRAMA SHOWCASE SECTION (মঞ্চনাটক ও পৌরাণিক পালা)        */}
       {/* =================================================================== */}
       <section
         id="drama-section"
         aria-labelledby="drama-heading"
-        className="py-10 sm:py-16 md:py-24 bg-[#F3EFE6] border-b border-[#E5DEC9] relative overflow-hidden"
+        className="py-14 sm:py-20 md:py-28 bg-[#090404] text-white border-b border-[#D4AF37]/20 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
+        {/* Theatrical Ambient Glow */}
+        <div
+          className="pointer-events-none absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-[#990000]/15 blur-[150px]"
+          aria-hidden="true"
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
           {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 border-b border-[#E5DEC9] pb-5 sm:pb-8">
-            <div className="space-y-2 sm:space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#FFF5F5] border border-[#CC0000]/25 text-[#990000] text-[11px] sm:text-xs font-bold tracking-wide">
-                <Drama className="w-3.5 h-3.5 text-[#CC0000]" />
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#D4AF37]/20 pb-6 sm:pb-8">
+            <div className="space-y-3 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
-                    ? 'মঞ্চনাটক, পৌরাণিক পালা ও গীতিনাট্য সম্ভার'
-                    : 'Stage Dramas, Mythological Plays & Musical Theatre'}
+                    ? 'মঞ্চনাটক ও পৌরাণিক পালা সম্ভার'
+                    : 'Epic Stage Dramas & Mythological Productions'}
                 </span>
               </div>
 
               <h2
                 id="drama-heading"
-                className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] font-display-bn tracking-tight leading-tight"
+                className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display-bn text-white tracking-tight leading-tight"
               >
-                {lang === 'bn'
-                  ? 'আমাদের নাটক ও মঞ্চ প্রযোজনা'
-                  : 'Our Dramas & Stage Productions'}
+                {lang === 'bn' ? (
+                  <>
+                    আমাদের নাটক ও <span className="gold-text-gradient">মঞ্চ প্রযোজনা</span>
+                  </>
+                ) : (
+                  <>
+                    Our Dramas & <span className="gold-text-gradient">Theatrical Productions</span>
+                  </>
+                )}
               </h2>
 
-              <p className="text-[#57534E] text-xs sm:text-base leading-relaxed">
+              <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
                 {lang === 'bn'
-                  ? 'ধর্মীয় নাটক, পৌরাণিক নাটক, সামাজিক নাটক ও ঐতিহ্যবাহী গীতিনাট্যের মাধ্যমে সনাতনী মূল্যবোধ ও মানবিক চেতনা ছড়িয়ে দেওয়াই আমাদের মূল লক্ষ্য।'
-                  : 'Our core mission is to spread Sanatani values and humanitarian consciousness through religious dramas, mythological plays, social dramas, and traditional musical theatre.'}
+                  ? 'ধর্মীয় নাটক, পৌরাণিক নাটক, সামাজিক নাটক ও ঐতিহ্যবাহী গীতিনাট্যের মাধ্যমে সনাতনী মূল্যবোধ ও মানবিক চেতনা ছড়িয়ে দেওয়াই আমাদের মূল লক্ষ্য।'
+                  : 'Staging ancient scriptures, historic legends, and profound spiritual dramas across Bangladesh with digital multi-track acoustics.'}
               </p>
             </div>
 
-            {/* Category Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              {DRAMA_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                    selectedCategory === cat.id
-                      ? 'bg-[#CC0000] text-white border-[#D4AF37] shadow-xs'
-                      : 'bg-white text-[#1C1917] border-[#E5DEC9] hover:border-[#CC0000]'
-                  }`}
-                >
-                  {lang === 'bn' ? cat.labelBn : cat.labelEn}
-                </button>
-              ))}
+            {/* Segmented Category Filter Tabs - Single Row with Horizontal Scroll / Swipe */}
+            <div className="w-full sm:w-auto overflow-x-auto no-scrollbar py-1">
+              <div className="inline-flex items-center p-1 bg-[#140807] rounded-xl border border-[#D4AF37]/30 gap-1.5 flex-nowrap shadow-xl shrink-0">
+                {DRAMA_CATEGORIES.map((cat) => {
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`whitespace-nowrap px-3.5 sm:px-4 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all duration-300 cursor-pointer shrink-0 ${
+                        isSelected
+                          ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] shadow-md border border-[#D4AF37]/60'
+                          : 'text-stone-400 hover:text-white hover:bg-white/5 border border-transparent'
+                      }`}
+                    >
+                      {lang === 'bn' ? cat.labelBn : cat.labelEn}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Official 13 Stage Dramas Repertoire Showcase ("আমাদের নাটকসমূহ: ১–১৩") */}
-          <div className="bg-white rounded-2xl border-2 border-[#D4AF37]/60 p-4 sm:p-6 shadow-sm space-y-3.5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5DEC9] pb-3">
+          {/* Official 13 Stage Dramas Repertoire Dropdown ("আমাদের নাটকসমূহ: ১৩টি পূর্ণাঙ্গ মঞ্চ প্রযোজনা") */}
+          <div className="bg-[#120706] rounded-2xl border border-[#D4AF37]/40 p-4 sm:p-5 shadow-2xl space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D4AF37]/20 pb-3">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#CC0000] shrink-0" />
-                <h3 className="text-base sm:text-lg font-bold text-[#1C1917] font-display-bn">
+                <Drama className="w-5 h-5 text-[#D4AF37]" />
+                <h3 className="text-base sm:text-lg font-bold text-white font-display-bn">
                   {lang === 'bn'
-                    ? 'আমাদের নাটকসমূহ (১৩টি পূর্ণাঙ্গ মঞ্চ প্রযোজনা):'
-                    : 'Our Official Stage Dramas (13 Productions):'}
+                    ? 'আমাদের নাটকসমূহ (১৩টি পূর্ণাঙ্গ মঞ্চ প্রযোজনা)'
+                    : 'Our Official Repertoire (13 Stage Productions)'}
                 </h3>
               </div>
-              <span className="text-[11px] sm:text-xs font-semibold text-[#990000] bg-[#FFF5F5] px-3 py-1 rounded-full border border-[#CC0000]/20">
+              <span className="text-[11px] sm:text-xs font-semibold text-[#FDE68A] bg-[#1F0C0B] px-3 py-1 rounded-md border border-[#D4AF37]/35 font-mono-code">
                 {lang === 'bn'
                   ? 'সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেমে মঞ্চায়িত'
                   : 'Staged with State-of-the-Art Digital Sound Recording'}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-2.5">
-              {dramas.map((drama, index) => {
-                const numLabel =
-                  lang === 'bn' ? tDigits(index + 1) : String(index + 1);
-                const dramaTitle = getDramaTitle(drama);
-                return (
-                  <button
-                    key={drama.id}
-                    type="button"
-                    onClick={() => openDramaDetail(drama)}
-                    className="text-left px-3 py-2 rounded-xl bg-[#FAF8F5] hover:bg-[#FFF5F5] border border-[#E5DEC9] hover:border-[#CC0000] transition-all flex items-center gap-2.5 group cursor-pointer"
-                  >
-                    <span className="w-6 h-6 rounded-full bg-[#CC0000] text-white text-xs font-bold flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                      {numLabel}
+            {/* Dropdown Selector */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsDramaDropdownOpen((prev) => !prev)}
+                className="w-full px-4 py-3 sm:py-3.5 rounded-xl bg-[#1A0A09] hover:bg-[#220E0D] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-left flex items-center justify-between gap-3 shadow-md transition-all cursor-pointer group"
+                aria-expanded={isDramaDropdownOpen}
+                aria-haspopup="listbox"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#990000] to-[#CC0000] text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                    <Drama className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs sm:text-sm font-bold text-white font-display-bn truncate block group-hover:text-[#FDE68A] transition-colors">
+                      {selectedDropdownDramaId
+                        ? (() => {
+                            const d = dramas.find(
+                              (item) => item.id === selectedDropdownDramaId
+                            );
+                            const idx = dramas.findIndex(
+                              (item) => item.id === selectedDropdownDramaId
+                            );
+                            return d
+                              ? `${
+                                  lang === 'bn' ? tDigits(idx + 1) : idx + 1
+                                }. ${getDramaTitle(d)}`
+                              : lang === 'bn'
+                              ? 'নাটক নির্বাচন করুন ও বিস্তারিত দেখুন'
+                              : 'Select a Drama & View Details';
+                          })()
+                        : lang === 'bn'
+                        ? `নাটক নির্বাচন করুন ও বিস্তারিত দেখুন (${tDigits(
+                            dramas.length
+                          )}টি মঞ্চ প্রযোজনা)`
+                        : `Select a Drama to View Details (${dramas.length} Stage Productions)`}
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-[#1C1917] group-hover:text-[#CC0000] font-display-bn truncate">
-                      {dramaTitle}
+                    <span className="text-[11px] text-stone-400 block truncate">
+                      {lang === 'bn'
+                        ? 'ক্লিক করে যেকোনো নাটকের বিবরণ ও আলোকচিত্র দেখুন'
+                        : 'Click to view details and photos of any drama'}
                     </span>
-                  </button>
-                );
-              })}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="hidden sm:inline-block px-2.5 py-1 rounded-lg bg-[#140807] border border-[#D4AF37]/35 text-[11px] font-bold text-[#FDE68A] font-mono-code">
+                    {lang === 'bn' ? 'নাট্যসূচি' : 'PLAYBILL'}
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#D4AF37] transition-transform duration-300 ${
+                      isDramaDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+              </button>
+
+              {/* Dropdown Menu Popup */}
+              {isDramaDropdownOpen && (
+                <div
+                  className="absolute top-full left-0 right-0 mt-2 z-40 bg-[#120706] rounded-2xl border-2 border-[#D4AF37]/70 shadow-[0_20px_50px_rgba(0,0,0,0.95)] max-h-72 sm:max-h-80 overflow-y-auto p-2 space-y-1 animate-page-enter backdrop-blur-xl"
+                  role="listbox"
+                >
+                  {dramas.map((drama, index) => {
+                    const numLabel =
+                      lang === 'bn' ? tDigits(index + 1) : String(index + 1);
+                    const dramaTitle = getDramaTitle(drama);
+                    const isSelected = selectedDropdownDramaId === drama.id;
+
+                    return (
+                      <button
+                        key={drama.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedDropdownDramaId(drama.id);
+                          setIsDramaDropdownOpen(false);
+                          openDramaDetail(drama);
+                        }}
+                        className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all flex items-center justify-between gap-3 group cursor-pointer ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] border border-[#D4AF37]/50'
+                            : 'hover:bg-white/5 text-stone-200 hover:text-white border border-transparent'
+                        }`}
+                        role="option"
+                        aria-selected={isSelected}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span
+                            className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center shrink-0 ${
+                              isSelected
+                                ? 'bg-white text-[#990000]'
+                                : 'bg-[#1F0C0B] text-[#D4AF37] group-hover:bg-[#990000] group-hover:text-white'
+                            }`}
+                          >
+                            {numLabel}
+                          </span>
+                          <span className="text-xs sm:text-sm font-bold font-display-bn truncate">
+                            {dramaTitle}
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-semibold text-[#FDE68A] group-hover:translate-x-0.5 transition-transform shrink-0 flex items-center gap-1 font-mono-code">
+                          <Eye className="w-3 h-3" />
+                          <span>{lang === 'bn' ? 'বিবরণ' : 'Details'}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
@@ -277,118 +375,35 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Slider Top Controls Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E5DEC9] text-xs font-bold text-[#1C1917] shadow-2xs">
-                  <Film className="w-3.5 h-3.5 text-[#CC0000]" />
-                  <span>
-                    {lang === 'bn'
-                      ? `প্রদর্শিত নাটক: ${tDigits(
-                          Math.min(currentSlideIndex + 1, filteredDramas.length)
-                        )}–${tDigits(
-                          Math.min(
-                            currentSlideIndex + cardsPerView,
-                            filteredDramas.length
-                          )
-                        )} (মোট ${tDigits(filteredDramas.length)}টি)`
-                      : `Showing ${Math.min(
-                          currentSlideIndex + 1,
-                          filteredDramas.length
-                        )}–${Math.min(
-                          currentSlideIndex + cardsPerView,
-                          filteredDramas.length
-                        )} of ${filteredDramas.length} Dramas`}
-                  </span>
-                </span>
-
-                {filteredDramas.length > cardsPerView && (
-                  <button
-                    type="button"
-                    onClick={() => setIsAutoSlidePlaying((prev) => !prev)}
-                    title={
-                      isAutoSlidePlaying
-                        ? lang === 'bn'
-                          ? 'অটো-স্লাইড বিরতি'
-                          : 'Pause Auto-Slide'
-                        : lang === 'bn'
-                        ? 'অটো-স্লাইড চালু'
-                        : 'Resume Auto-Slide'
-                    }
-                    className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#FFF5F5] border border-[#E5DEC9] hover:border-[#CC0000] text-xs font-bold text-[#57534E] hover:text-[#CC0000] inline-flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
-                  >
-                    {isAutoSlidePlaying ? (
-                      <Pause className="w-3.5 h-3.5 text-[#CC0000]" />
-                    ) : (
-                      <Play className="w-3.5 h-3.5 text-[#0F5132]" />
-                    )}
-                    <span className="hidden sm:inline">
-                      {isAutoSlidePlaying
-                        ? lang === 'bn'
-                          ? 'অটো-স্লাইড চালু'
-                          : 'Auto-Slide On'
-                        : lang === 'bn'
-                        ? 'অটো-স্লাইড বন্ধ'
-                        : 'Auto-Slide Paused'}
-                    </span>
-                  </button>
-                )}
-              </div>
-
-              {/* Prev / Next Slide Buttons */}
-              {filteredDramas.length > cardsPerView && (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handlePrevDramaSlide}
-                    aria-label={lang === 'bn' ? 'পূর্ববর্তী নাটক' : 'Previous Drama'}
-                    className="px-3.5 py-2 rounded-xl bg-white hover:bg-[#CC0000] text-[#1C1917] hover:text-white border border-[#E5DEC9] hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNextDramaSlide}
-                    aria-label={lang === 'bn' ? 'পরবর্তী নাটক' : 'Next Drama'}
-                    className="px-3.5 py-2 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white border border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
-                  >
-                    <span>{lang === 'bn' ? 'পরবর্তী স্লাইড' : 'Next Slide'}</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* 4-Card Slider Viewport */}
-            <div className="relative">
-              {/* Left Floating Arrow */}
-              {filteredDramas.length > cardsPerView && (
+            {/* Slider Top Controls */}
+            {filteredDramas.length > cardsPerView && (
+              <div className="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={handlePrevDramaSlide}
-                  aria-label={lang === 'bn' ? 'বামে স্লাইড করুন' : 'Slide Left'}
-                  className="hidden sm:flex absolute -left-3 lg:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-white/95 hover:bg-[#CC0000] text-[#1C1917] hover:text-white border-2 border-[#D4AF37] shadow-lg items-center justify-center transition-all cursor-pointer"
+                  aria-label={lang === 'bn' ? 'পূর্ববর্তী নাটক' : 'Previous Drama'}
+                  className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                  <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
                 </button>
-              )}
-
-              {/* Right Floating Arrow */}
-              {filteredDramas.length > cardsPerView && (
                 <button
                   type="button"
                   onClick={handleNextDramaSlide}
-                  aria-label={lang === 'bn' ? 'ডানে স্লাইড করুন' : 'Slide Right'}
-                  className="hidden sm:flex absolute -right-3 lg:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-white/95 hover:bg-[#CC0000] text-[#1C1917] hover:text-white border-2 border-[#D4AF37] shadow-lg items-center justify-center transition-all cursor-pointer"
+                  aria-label={lang === 'bn' ? 'পরবর্তী নাটক' : 'Next Drama'}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                  <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
                 </button>
-              )}
+              </div>
+            )}
 
-              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-1">
+            {/* 4-Card Slider Viewport */}
+            <div className="relative">
+              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
                 <div
-                  className="flex transition-transform duration-500 ease-out"
+                  className="flex transition-transform duration-200 ease-out"
                   style={{
                     transform: `translateX(-${
                       currentSlideIndex * (100 / cardsPerView)
@@ -405,15 +420,16 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                     return (
                       <div
                         key={drama.id}
-                        className="w-full sm:w-1/2 lg:w-1/4 shrink-0 px-2.5 sm:px-3"
+                        className="w-full sm:w-1/2 lg:w-1/3 shrink-0 px-2.5 sm:px-3"
                       >
-                        <article
+                        <CinematicCard3D
                           onClick={() => openDramaDetail(drama)}
-                          className="h-full flex group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex-col justify-between cursor-pointer"
+                          className="h-full rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-[0_10px_35px_-8px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col justify-between"
+                          maxTilt={7}
                         >
                           <div>
                             {/* Stage Poster Image or Theatrical Playbill Header */}
-                            <div className="relative aspect-[16/10] bg-gradient-to-br from-[#2B0908] via-[#5C0B09] to-[#1A0807] overflow-hidden flex items-center justify-center">
+                            <div className="relative aspect-[16/10] bg-[#070303] overflow-hidden flex items-center justify-center">
                               {drama.poster ? (
                                 <>
                                   <img
@@ -423,19 +439,19 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                                     decoding="async"
                                     width={400}
                                     height={250}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-[#0E0605] via-[#0E0605]/30 to-transparent" />
                                 </>
                               ) : (
-                                <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center relative">
+                                <div className="w-full h-full p-4 flex flex-col items-center justify-center text-center relative bg-gradient-to-br from-[#2B0908] via-[#1A0807] to-[#0D0404]">
                                   <div className="w-11 h-11 rounded-2xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#FDE68A] mb-2 group-hover:scale-110 transition-transform">
                                     <Drama className="w-5 h-5" />
                                   </div>
                                   <span className="text-sm sm:text-base font-bold text-[#FDE68A] font-display-bn line-clamp-1 px-2">
                                     {displayTitle}
                                   </span>
-                                  <span className="text-[10px] text-amber-200/80 mt-0.5">
+                                  <span className="text-[10px] text-stone-300 mt-0.5">
                                     {lang === 'bn'
                                       ? 'ডিজিটাল সাউন্ড মঞ্চ প্রযোজনা'
                                       : 'Digital Sound Stage Production'}
@@ -443,126 +459,102 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                                 </div>
                               )}
 
-                              {/* Category Badge */}
-                              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#CC0000]/95 text-[#FDE68A] text-[11px] font-bold border border-[#D4AF37]/40 shadow-sm">
-                                {displayCategory}
-                              </span>
+                              {/* Theatrical Card Badges Header (Coordinated No-Break Bar) */}
+                              <div className="absolute top-2.5 inset-x-2.5 sm:top-3 sm:inset-x-3 flex items-center justify-between gap-1.5 z-10 pointer-events-none">
+                                {/* Category Tag */}
+                                <span className="px-2.5 py-0.5 sm:py-1 rounded-md bg-black/85 backdrop-blur-md text-[#FDE68A] text-[10px] sm:text-xs font-bold border border-[#D4AF37]/40 shadow-md whitespace-nowrap shrink-0">
+                                  {displayCategory}
+                                </span>
 
-                              {/* Year Badge */}
-                              <span className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-md bg-black/70 text-white text-[11px] font-bold border border-white/15">
-                                {displayYear}
-                              </span>
+                                {/* Year Tag */}
+                                <span className="px-2.5 py-0.5 sm:py-1 rounded-md bg-[#990000]/90 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-bold border border-[#D4AF37]/50 font-mono-code shadow-md whitespace-nowrap shrink-0">
+                                  {displayYear}
+                                </span>
+                              </div>
                             </div>
 
-                            {/* Drama Content */}
-                            <div className="p-4 sm:p-5 space-y-2.5">
-                              <h3 className="text-lg sm:text-xl font-bold text-[#1C1917] font-display-bn group-hover:text-[#CC0000] transition-colors leading-snug line-clamp-1">
+                            {/* Content */}
+                            <div className="p-4 sm:p-5 space-y-2">
+                              <h3 className="text-base sm:text-lg font-bold text-white font-display-bn group-hover:text-[#FDE68A] transition-colors leading-snug line-clamp-1">
                                 {displayTitle}
                               </h3>
 
-                              <div className="text-xs font-semibold text-[#0F5132] flex items-center gap-1.5">
-                                <UserCheck className="w-3.5 h-3.5 shrink-0" />
-                                <span>
-                                  {lang === 'bn'
-                                    ? `নির্দেশনা: ${displayDirector}`
-                                    : `Director: ${displayDirector}`}
-                                </span>
-                              </div>
-
-                              <p className="text-xs text-[#57534E] line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                              <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
                                 {displayDesc}
                               </p>
+
+                              {/* Director Tag */}
+                              <div className="pt-2 text-[11px] text-stone-300 flex items-center gap-1.5 border-t border-[#D4AF37]/15">
+                                <UserCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                                <span className="truncate">
+                                  {lang === 'bn' ? 'পরিচালনা : ' : 'Dir: '}
+                                  <strong className="text-white font-medium">{displayDirector}</strong>
+                                </span>
+                              </div>
                             </div>
                           </div>
 
-                          {/* Read-Only Footer Action */}
-                          <div className="px-4 sm:px-5 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
-                            <span className="text-[11px] font-medium text-[#78716C] flex items-center gap-1">
-                              <Film className="w-3.5 h-3.5 text-[#CC0000]" />
-                              <span>
-                                {lang === 'bn'
-                                  ? 'পৌরাণিক ও ধর্মীয় মঞ্চনাটক'
-                                  : 'Sanatan Stage Production'}
-                              </span>
+                          {/* Action Strip */}
+                          <div className="px-4 sm:px-5 py-3 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-between text-xs">
+                            <span className="text-[11px] font-semibold text-[#D4AF37] font-mono-code">
+                              {lang === 'bn' ? 'মঞ্চ প্রযোজনা' : 'REPERTOIRE'}
                             </span>
-                            <span className="text-xs font-bold text-[#CC0000] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                            <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                               <Eye className="w-3.5 h-3.5" />
-                              <span>
-                                {lang === 'bn' ? 'বিস্তারিত দেখুন' : 'View Details'}
-                              </span>
+                              <span>{lang === 'bn' ? 'মঞ্চ বিবরণ' : 'Stage Details'}</span>
                             </span>
                           </div>
-                        </article>
+                        </CinematicCard3D>
                       </div>
                     );
                   })}
                 </div>
               </div>
             </div>
-
-            {/* Bottom Slide Indicator Dots */}
-            {filteredDramas.length > cardsPerView && (
-              <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
-                {Array.from({ length: maxSlideIndex + 1 }).map((_, idx) => {
-                  const isActive = idx === currentSlideIndex;
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setCurrentSlideIndex(idx)}
-                      aria-label={
-                        lang === 'bn'
-                          ? `স্লাইড ${tDigits(idx + 1)}`
-                          : `Slide ${idx + 1}`
-                      }
-                      className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                        isActive
-                          ? 'w-8 bg-[#CC0000] ring-2 ring-[#D4AF37]'
-                          : 'w-2.5 bg-[#D6CEBF] hover:bg-[#CC0000]/60'
-                      }`}
-                    />
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
       </section>
 
       {/* =================================================================== */}
-      {/* 2. YOUTUBE VIDEO SECTION (ভিডিও গ্যালারি — Read-Only Public Showcase) */}
+      {/* 2. CINEMATIC VIDEO ARCHIVE (মঞ্চ ভিডিও ও ডিজিটাল সম্প্রচার)        */}
       {/* =================================================================== */}
       <section
         id="video-section"
         aria-labelledby="video-heading"
-        className="py-10 sm:py-16 md:py-24 bg-[#140807] text-white border-b border-[#D4AF37]/30 relative overflow-hidden"
+        className="py-14 sm:py-20 md:py-28 bg-[#050202] text-white border-b border-[#D4AF37]/20 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
           {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 border-b border-white/15 pb-5 sm:pb-8">
-            <div className="space-y-2 sm:space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/10 border border-[#D4AF37]/40 text-[#FDE68A] text-[11px] sm:text-xs font-bold tracking-wide">
-                <Video className="w-3.5 h-3.5 text-[#FDE68A]" />
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#D4AF37]/20 pb-6 sm:pb-8">
+            <div className="space-y-3 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
+                <Video className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
-                    ? 'অফিশিয়াল ইউটিউব চ্যানেল ও মঞ্চ ভিডিও আর্কাইভ'
-                    : 'Official YouTube Channel & Stage Video Archive'}
+                    ? 'মঞ্চ ভিডিও ও ডিজিটাল সম্প্রচার আর্কাইভ'
+                    : 'Stage Video & Digital Broadcast Archive'}
                 </span>
               </div>
 
               <h2
                 id="video-heading"
-                className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white font-display-bn tracking-tight leading-tight"
+                className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display-bn text-white tracking-tight leading-tight"
               >
-                {lang === 'bn'
-                  ? 'নাটক ও সাংস্কৃতিক অনুষ্ঠানের ভিডিও'
-                  : 'Drama & Cultural Program Videos'}
+                {lang === 'bn' ? (
+                  <>
+                    নাটক ও সাংস্কৃতিক অনুষ্ঠানের <span className="gold-text-gradient">ভিডিও সম্ভার</span>
+                  </>
+                ) : (
+                  <>
+                    Stage Drama & <span className="gold-text-gradient">Video Archive</span>
+                  </>
+                )}
               </h2>
 
               <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
                 {lang === 'bn'
-                  ? 'রাধামাধব সাংস্কৃতিক জোটের মঞ্চনাটক, বৈদিক নৃত্য এবং ধর্মীয় অনুষ্ঠানের ধারণকৃত ভিডিওসমূহ দেখুন আমাদের অফিশিয়াল ইউটিউব চ্যানেলে।'
-                  : 'Watch recorded stage dramas, Vedic dance performances, and devotional programs of Radhamadhob Cultural Alliance on our official YouTube channel.'}
+                  ? 'রাধামাধব সনাতন সাংস্কৃতিক জোটের মঞ্চনাটক, বৈদিক নৃত্য এবং ধর্মীয় অনুষ্ঠানের ধারণকৃত ভিডিওসমূহ দেখুন আমাদের অফিশিয়াল ইউটিউব চ্যানেলে।'
+                  : 'Experience high-definition recordings of live performances, divine theatrics, and cultural sagas directly in theater mode.'}
               </p>
             </div>
 
@@ -570,20 +562,20 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
               href={OFFICIAL_YOUTUBE_CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-3 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 border border-[#D4AF37] shadow-lg transition-all shrink-0"
+              className="gold-shimmer-btn px-6 py-3 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 border border-[#D4AF37]/60 shadow-[0_4px_20px_rgba(204,0,0,0.35)] transition-all shrink-0 cursor-pointer"
             >
               <Play className="w-4 h-4 fill-current text-[#FDE68A]" />
               <span>
                 {lang === 'bn'
-                  ? 'অফিশিয়াল ইউটিউব চ্যানেল ভিজিট করুন'
-                  : 'Visit Official YouTube Channel'}
+                  ? 'অফিশিয়াল ইউটিউব চ্যানেল'
+                  : 'Official YouTube Channel'}
               </span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
 
           {/* Videos Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {videos.map((vid) => {
               const ytId = extractYouTubeId(vid.youtube_link);
               const displayVidTitle = getVideoTitle(vid);
@@ -592,16 +584,15 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                 vid.thumbnail ||
                 (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '');
               return (
-                <article
+                <CinematicCard3D
                   key={vid.id}
-                  className="group bg-[#220E0C] rounded-2xl border border-white/15 hover:border-[#D4AF37] overflow-hidden shadow-lg transition-all flex flex-col justify-between"
+                  onClick={() => setActiveVideoModal(vid)}
+                  className="rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
+                  maxTilt={6}
                 >
                   <div>
-                    {/* Video Thumbnail or Theatrical YouTube Stage Banner */}
-                    <div
-                      onClick={() => setActiveVideoModal(vid)}
-                      className="relative aspect-video bg-gradient-to-br from-[#3A0A08] via-[#1C0807] to-[#0D2818] overflow-hidden cursor-pointer"
-                    >
+                    {/* Video Thumbnail Frame */}
+                    <div className="relative aspect-video bg-black overflow-hidden cursor-pointer group">
                       {resolvedThumb && (
                         <img
                           src={resolvedThumb}
@@ -610,16 +601,16 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                           decoding="async"
                           width={400}
                           height={225}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+                          className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90"
                         />
                       )}
-                      <div className="absolute inset-0 bg-black/35 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-2 p-4 text-center">
-                        <div className="w-14 h-14 rounded-full bg-[#CC0000] text-white border-2 border-[#FDE68A] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                          <Play className="w-6 h-6 fill-current ml-0.5" />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-2 p-4 text-center">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#990000] to-[#CC0000] text-white border-2 border-[#FDE68A] flex items-center justify-center shadow-[0_0_30px_rgba(204,0,0,0.6)] group-hover:scale-110 transition-transform">
+                          <Play className="w-6 h-6 fill-current ml-0.5 text-[#FDE68A]" />
                         </div>
                         {!resolvedThumb && (
-                          <span className="text-[11px] font-bold text-[#FDE68A] tracking-wide">
-                            @joyradhe9917 · YouTube Stage Archive
+                          <span className="text-[11px] font-bold text-[#FDE68A] tracking-wide font-mono-code">
+                            @joyradhe9917 · YouTube Stage
                           </span>
                         )}
                       </div>
@@ -627,47 +618,27 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
 
                     {/* Video Info */}
                     <div className="p-4 sm:p-5 space-y-2">
-                      <h3 className="text-lg sm:text-xl font-bold text-white font-display-bn leading-snug">
+                      <h3 className="text-base sm:text-lg font-bold text-white font-display-bn leading-snug group-hover:text-[#FDE68A] transition-colors line-clamp-1">
                         {displayVidTitle}
                       </h3>
-                      <p className="text-xs text-stone-300 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-stone-400 line-clamp-2 leading-relaxed">
                         {displayVidDesc}
                       </p>
                     </div>
                   </div>
 
                   {/* Watch Link */}
-                  <div className="px-4 sm:px-5 py-3 bg-black/30 border-t border-white/10 flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={() => setActiveVideoModal(vid)}
-                      className="text-xs font-bold text-[#FDE68A] hover:underline inline-flex items-center gap-1.5 cursor-pointer"
-                    >
+                  <div className="px-4 sm:px-5 py-3 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1.5 cursor-pointer">
                       <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>
-                        {lang === 'bn' ? 'এখানে দেখুন' : 'Watch Here'}
-                      </span>
-                    </button>
+                      <span>{lang === 'bn' ? 'থিয়েটারে দেখুন' : 'Watch in Theater'}</span>
+                    </span>
 
-                    <a
-                      href={vid.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-bold text-stone-300 hover:text-white inline-flex items-center gap-1"
-                    >
-                      <span>
-                        {lang === 'bn'
-                          ? ytId
-                            ? 'ইউটিউবে দেখুন'
-                            : 'ইউটিউব চ্যানেল'
-                          : ytId
-                          ? 'Watch on YouTube'
-                          : 'YouTube Channel'}
-                      </span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <span className="text-xs text-stone-400 font-mono-code">
+                      {lang === 'bn' ? 'মঞ্চ ভিডিও' : 'CINEMATIC'}
+                    </span>
                   </div>
-                </article>
+                </CinematicCard3D>
               );
             })}
           </div>
@@ -675,19 +646,21 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
       </section>
 
       {/* =================================================================== */}
-      {/* READ-ONLY DRAMA DETAIL MODAL                                        */}
+      {/* CINEMATIC DRAMA DETAIL MODAL                                        */}
       {/* =================================================================== */}
       {selectedDrama && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-page-enter"
           onClick={() => setSelectedDrama(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-3xl w-full overflow-hidden border-2 border-[#D4AF37] shadow-2xl my-auto animate-page-enter"
+            className="bg-[#120706] text-white rounded-3xl max-w-3xl w-full overflow-hidden border-2 border-[#D4AF37]/60 shadow-[0_0_80px_rgba(212,175,55,0.25)] my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Stage Photo Banner or Theatrical Header */}
-            <div className="relative aspect-[16/9] bg-gradient-to-br from-[#2B0908] via-[#5C0B09] to-[#1A0807]">
+            {/* Stage Photo Banner */}
+            <div className="relative aspect-[16/9] bg-black">
               {(activeGalleryImg || selectedDrama.poster) && (
                 <img
                   src={activeGalleryImg || selectedDrama.poster}
@@ -695,23 +668,23 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                   className="w-full h-full object-cover"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#120706] via-[#120706]/40 to-transparent" />
 
               <button
                 type="button"
                 onClick={() => setSelectedDrama(null)}
                 aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-[#CC0000] text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/70 hover:bg-[#CC0000] text-white border border-[#D4AF37]/50 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="absolute bottom-4 left-5 right-5 text-white space-y-1">
-                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#CC0000] text-[#FDE68A] text-xs font-bold border border-[#D4AF37]/40">
-                  <Sparkles className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#990000] text-[#FDE68A] text-xs font-bold border border-[#D4AF37]/40">
+                  <Sparkles className="w-3 h-3 text-[#D4AF37]" />
                   <span>{tCategory(selectedDrama.category)}</span>
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold font-display-bn">
+                <h3 className="text-2xl sm:text-3xl font-bold font-display-bn gold-text-gradient">
                   {getDramaTitle(selectedDrama)}
                 </h3>
               </div>
@@ -729,8 +702,8 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                       onClick={() => setActiveGalleryImg(imgUrl)}
                       className={`w-20 h-14 rounded-xl overflow-hidden border-2 shrink-0 cursor-pointer transition-all ${
                         activeGalleryImg === imgUrl
-                          ? 'border-[#CC0000] scale-105'
-                          : 'border-[#E5DEC9] opacity-75'
+                          ? 'border-[#D4AF37] scale-105 shadow-md'
+                          : 'border-white/20 opacity-70 hover:opacity-100'
                       }`}
                     >
                       <img
@@ -744,81 +717,66 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-center gap-2.5">
-                  <UserCheck className="w-4 h-4 text-[#CC0000] shrink-0" />
+                <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/25 flex items-center gap-2.5">
+                  <UserCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
                   <div>
-                    <span className="text-[#78716C] block">
-                      {lang === 'bn'
-                        ? 'পরিচালক ও নির্দেশক'
-                        : 'Director & Instructor'}
+                    <span className="text-stone-400 block">
+                      {lang === 'bn' ? 'পরিচালনা' : 'Director'}
                     </span>
-                    <span className="font-bold text-[#1C1917] text-sm">
+                    <strong className="text-white font-medium">
                       {getDramaDirector(selectedDrama)}
-                    </span>
+                    </strong>
                   </div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-center gap-2.5">
-                  <Calendar className="w-4 h-4 text-[#0F5132] shrink-0" />
+
+                <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/25 flex items-center gap-2.5">
+                  <Calendar className="w-4 h-4 text-[#D4AF37] shrink-0" />
                   <div>
-                    <span className="text-[#78716C] block">
-                      {lang === 'bn' ? 'মঞ্চায়ন বর্ষ' : 'Production Year'}
+                    <span className="text-stone-400 block">
+                      {lang === 'bn' ? 'প্রথম মঞ্চায়ন ও ক্যাটাগরি' : 'Premiere & Category'}
                     </span>
-                    <span className="font-bold text-[#1C1917] text-sm">
-                      {tDigits(selectedDrama.year)}
-                    </span>
+                    <strong className="text-white font-medium inline-block whitespace-nowrap">
+                      {tDigits(selectedDrama.year)} · {tCategory(selectedDrama.category)}
+                    </strong>
                   </div>
                 </div>
               </div>
 
-              <p className="text-sm text-[#1C1917] leading-relaxed bg-[#FAF7F0] p-4 rounded-2xl border border-[#E5DEC9]">
-                {getDramaDesc(selectedDrama)}
-              </p>
+              {/* Full Description / Synopsis */}
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-bold text-[#FDE68A] uppercase tracking-wider font-mono-code">
+                  {lang === 'bn' ? 'নাট্য পরিচয় ও পৌরাণিক সারাংশ' : 'Synopsis & Lore'}
+                </h4>
+                <p className="text-sm text-stone-300 leading-relaxed">
+                  {getDramaDesc(selectedDrama)}
+                </p>
+              </div>
 
+              {/* Cast and Roles */}
               {selectedDrama.cast && selectedDrama.cast.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-xs font-bold text-[#0F5132] flex items-center gap-1.5">
-                    <Users className="w-4 h-4" />
-                    <span>
-                      {lang === 'bn'
-                        ? 'অভিনয় ও কলাকুশলীবৃন্দ:'
-                        : 'Cast & Performers:'}
-                    </span>
-                  </div>
+                  <h4 className="text-xs font-bold text-[#FDE68A] uppercase tracking-wider font-mono-code flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>{lang === 'bn' ? 'প্রধান চরিত্র ও শিল্পী' : 'Characters & Performers'}</span>
+                  </h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedDrama.cast.map((actor, i) => (
+                    {selectedDrama.cast.map((ch: string, idx: number) => (
                       <span
-                        key={i}
-                        className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#0F5132] border border-[#0F5132]/20 text-xs font-bold"
+                        key={idx}
+                        className="px-3 py-1.5 rounded-lg bg-[#180C0B] border border-[#D4AF37]/25 text-xs text-stone-200"
                       >
-                        {t(actor, selectedDrama.castEn?.[i])}
+                        {ch}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div className="pt-3 border-t border-[#E5DEC9] flex flex-wrap items-center justify-between gap-3">
-                <a
-                  href={
-                    selectedDrama.youtube_link || OFFICIAL_YOUTUBE_CHANNEL_URL
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white text-xs font-bold inline-flex items-center gap-2 shadow-sm"
-                >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>
-                    {lang === 'bn'
-                      ? 'ইউটিউবে ভিডিও দেখুন'
-                      : 'Watch Video on YouTube'}
-                  </span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-
+              <div className="pt-3 border-t border-[#D4AF37]/20 flex items-center justify-end">
                 <button
                   type="button"
                   onClick={() => setSelectedDrama(null)}
-                  className="px-5 py-2.5 rounded-xl bg-[#1C1917] text-white text-xs font-bold cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[#1A0A09] hover:bg-[#CC0000] text-white text-xs font-bold cursor-pointer transition-colors border border-[#D4AF37]/40 shadow-sm"
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>
@@ -829,26 +787,28 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
       )}
 
       {/* =================================================================== */}
-      {/* READ-ONLY VIDEO VIEWER MODAL                                        */}
+      {/* CINEMATIC VIDEO VIEWER THEATER MODAL                                */}
       {/* =================================================================== */}
       {activeVideoModal && (
         <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
           onClick={() => setActiveVideoModal(null)}
         >
           <div
-            className="bg-[#1C1917] text-white rounded-3xl max-w-3xl w-full overflow-hidden border-2 border-[#D4AF37] shadow-2xl animate-page-enter"
+            className="bg-[#120706] text-white rounded-3xl max-w-4xl w-full overflow-hidden border-2 border-[#D4AF37]/60 shadow-[0_0_90px_rgba(212,175,55,0.3)] animate-page-enter"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/15">
-              <h3 className="text-lg font-bold font-display-bn truncate pr-4">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#D4AF37]/25">
+              <h3 className="text-lg font-bold font-display-bn truncate pr-4 text-white">
                 {getVideoTitle(activeVideoModal)}
               </h3>
               <button
                 type="button"
                 onClick={() => setActiveVideoModal(null)}
                 aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="p-1.5 rounded-full bg-white/10 hover:bg-[#CC0000] text-white cursor-pointer"
+                className="w-9 h-9 rounded-full bg-black/60 hover:bg-[#CC0000] text-white border border-[#D4AF37]/40 flex items-center justify-center cursor-pointer transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -875,8 +835,8 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                     className="w-full h-full object-cover opacity-75"
                   />
                 )}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/50 space-y-4">
-                  <p className="text-sm text-amber-100 max-w-md">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/60 space-y-4">
+                  <p className="text-sm text-stone-200 max-w-md">
                     {getVideoDesc(activeVideoModal)}
                   </p>
                   <a
@@ -886,9 +846,9 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white text-sm font-bold inline-flex items-center gap-2 border border-[#D4AF37] shadow-lg"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] text-white text-sm font-bold inline-flex items-center gap-2 border border-[#D4AF37]/60 shadow-lg"
                   >
-                    <Play className="w-4 h-4 fill-current" />
+                    <Play className="w-4 h-4 fill-current text-[#FDE68A]" />
                     <span>
                       {lang === 'bn'
                         ? 'ইউটিউব চ্যানেলে ভিডিওটি দেখুন'

@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Award,
   Calendar,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   Mail,
   MapPin,
@@ -16,6 +18,7 @@ import {
 } from 'lucide-react';
 import { MemberRecord } from '../data/memberDatabase';
 import { useLanguage } from '../context/LanguageContext';
+import { CinematicCard3D } from './CinematicCard3D';
 
 interface MemberDirectorySectionProps {
   members: MemberRecord[];
@@ -23,41 +26,66 @@ interface MemberDirectorySectionProps {
 
 const ROLE_BADGE_STYLES: Record<
   string,
-  { bg: string; text: string; border: string; dot: string }
+  { bg: string; text: string; border: string }
 > = {
   'পরিচালক ও নির্দেশক': {
-    bg: 'bg-[#FFF5F5]',
-    text: 'text-[#990000]',
-    border: 'border-[#CC0000]/30',
-    dot: 'bg-[#CC0000]',
+    bg: 'bg-[#990000]/30',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D4AF37]/60',
+  },
+  'সহকারী পরিচালক ও নির্দেশক': {
+    bg: 'bg-[#990000]/25',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D4AF37]/50',
+  },
+  'সহকারী পরিচালক': {
+    bg: 'bg-[#990000]/25',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D4AF37]/50',
+  },
+  'উপদেষ্টা': {
+    bg: 'bg-[#D4AF37]/25',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D4AF37]/60',
   },
   'উপদেষ্টা ও সাধারণ সম্পাদক': {
-    bg: 'bg-[#FDF6E2]',
-    text: 'text-[#854D0E]',
-    border: 'border-[#D4AF37]/50',
-    dot: 'bg-[#D4AF37]',
+    bg: 'bg-[#D4AF37]/25',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D4AF37]/60',
+  },
+  'অভিনয় ও নৃত্যশিল্পী': {
+    bg: 'bg-[#EA580C]/25',
+    text: 'text-[#FED7AA]',
+    border: 'border-[#EA580C]/40',
+  },
+  প্রশিক্ষক: {
+    bg: 'bg-[#D97706]/25',
+    text: 'text-[#FDE68A]',
+    border: 'border-[#D97706]/40',
+  },
+  'সহকারী প্রশিক্ষক': {
+    bg: 'bg-[#15803D]/25',
+    text: 'text-[#BBF7D0]',
+    border: 'border-[#15803D]/40',
   },
   সহযোগী: {
-    bg: 'bg-[#ECFDF5]',
-    text: 'text-[#0F5132]',
-    border: 'border-[#0F5132]/30',
-    dot: 'bg-[#0F5132]',
+    bg: 'bg-[#0F5132]/25',
+    text: 'text-[#A7F3D0]',
+    border: 'border-[#0F5132]/40',
   },
   সদস্য: {
-    bg: 'bg-[#FAF7F0]',
-    text: 'text-[#44403C]',
-    border: 'border-[#E5DEC9]',
-    dot: 'bg-[#78716C]',
+    bg: 'bg-white/10',
+    text: 'text-stone-300',
+    border: 'border-white/20',
   },
 };
 
 function getBadgeStyle(position: string) {
   return (
     ROLE_BADGE_STYLES[position] || {
-      bg: 'bg-[#FFF5F5]',
-      text: 'text-[#990000]',
-      border: 'border-[#CC0000]/25',
-      dot: 'bg-[#CC0000]',
+      bg: 'bg-[#990000]/25',
+      text: 'text-[#FDE68A]',
+      border: 'border-[#D4AF37]/40',
     }
   );
 }
@@ -74,182 +102,252 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
     : null;
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
-  const [showAllMobile, setShowAllMobile] = useState(false);
 
-  const getMemberName = (m: MemberRecord) =>
-    t(m.name_bn || m.name, m.name_en || m.nameEn || m.name);
+  // Responsive Cards Per View: Mobile: 1, Small Tablet: 2, Medium Tablet: 3, Desktop: 4
+  const [cardsPerView, setCardsPerView] = useState<number>(() => {
+    if (typeof window === 'undefined') return 4;
+    const w = window.innerWidth;
+    if (w >= 1024) return 4;
+    if (w >= 768) return 3;
+    if (w >= 640) return 2;
+    return 1;
+  });
 
-  const getMemberPosition = (m: MemberRecord) =>
-    lang === 'en'
-      ? t(m.position_bn || m.position, m.position_en || m.positionEn)
-      : t(m.position_bn || m.position, m.position_en || m.positionEn);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-  const getMemberAddress = (m: MemberRecord) =>
-    t(m.address_bn || m.address, m.address_en || m.addressEn || m.address);
-
-  const getMemberBio = (m: MemberRecord) =>
-    t(
-      m.bio_bn || m.biography || m.bio,
-      m.bio_en || m.biographyEn || m.bioEn || m.biography
-    );
+  useEffect(() => {
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w >= 1024) {
+        setCardsPerView(4);
+      } else if (w >= 768) {
+        setCardsPerView(3);
+      } else if (w >= 640) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(1);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const uniquePositions = useMemo(() => {
-    const roles = Array.from(
-      new Set(members.map((m) => m.position_bn || m.position))
-    );
-    return ['ALL', ...roles];
+    const set = new Set<string>();
+    members.forEach((m) => {
+      if (m.position) set.add(m.position);
+    });
+    return ['ALL', ...Array.from(set)];
   }, [members]);
 
   const filteredMembers = useMemo(() => {
     return members.filter((m) => {
-      const rawPos = m.position_bn || m.position;
-      const matchesRole = roleFilter === 'ALL' || rawPos === roleFilter;
-      const q = searchQuery.trim().toLowerCase();
-      if (!q) return matchesRole;
-      const nameBn = (m.name_bn || m.name || '').toLowerCase();
-      const nameEn = (m.name_en || m.nameEn || '').toLowerCase();
-      const posBn = (m.position_bn || m.position || '').toLowerCase();
-      const posEn = (m.position_en || m.positionEn || '').toLowerCase();
-      return (
-        matchesRole &&
-        (nameBn.includes(q) ||
-          nameEn.includes(q) ||
-          posBn.includes(q) ||
-          posEn.includes(q))
-      );
+      const matchRole = roleFilter === 'ALL' || m.position === roleFilter;
+      const q = searchQuery.toLowerCase().trim();
+      if (!q) return matchRole;
+      const nameMatch =
+        (m.name && m.name.toLowerCase().includes(q)) ||
+        (m.nameEn && m.nameEn.toLowerCase().includes(q));
+      const posMatch =
+        (m.position && m.position.toLowerCase().includes(q)) ||
+        (m.positionEn && m.positionEn.toLowerCase().includes(q));
+      const bioMatch =
+        (m.bio && m.bio.toLowerCase().includes(q)) ||
+        (m.bioEn && m.bioEn.toLowerCase().includes(q));
+      return matchRole && (nameMatch || posMatch || bioMatch);
     });
   }, [members, roleFilter, searchQuery]);
 
-  // Mobile page length optimization: show first 6 members initially on mobile
-  const MOBILE_INITIAL_COUNT = 6;
-  const mobileDisplayedMembers = showAllMobile
-    ? filteredMembers
-    : filteredMembers.slice(0, MOBILE_INITIAL_COUNT);
+  const maxSlideIndex = Math.max(0, filteredMembers.length - cardsPerView);
 
-  const directorCount = members.filter((m) => {
-    const pos = m.position_bn || m.position || '';
-    const posEn = (m.position_en || m.positionEn || '').toLowerCase();
-    return (
-      pos.includes('পরিচালক') ||
-      pos.includes('সাধারণ সম্পাদক') ||
-      posEn.includes('director') ||
-      posEn.includes('secretary')
-    );
-  }).length;
+  // Reset slide index when search query or role filter changes
+  useEffect(() => {
+    setCurrentSlideIndex(0);
+  }, [searchQuery, roleFilter]);
 
-  const associateCount = members.filter((m) => {
-    const pos = m.position_bn || m.position || '';
-    const posEn = (m.position_en || m.positionEn || '').toLowerCase();
-    return pos.includes('সহযোগী') || posEn.includes('associate');
-  }).length;
-
-  const generalMemberCount = members.filter((m) => {
-    const pos = m.position_bn || m.position || '';
-    return pos === 'সদস্য';
-  }).length;
-
-  const formatRoleLabel = (roleKey: string) => {
-    if (roleKey === 'ALL') {
-      return lang === 'en' ? 'All Positions' : 'সকল পদবি';
+  useEffect(() => {
+    if (currentSlideIndex > maxSlideIndex) {
+      setCurrentSlideIndex(maxSlideIndex);
     }
-    if (lang === 'en') {
-      const sample = members.find(
-        (m) => (m.position_bn || m.position) === roleKey
-      );
-      return t(
-        roleKey,
-        sample?.position_en || sample?.positionEn || tCategory(roleKey)
-      );
+  }, [currentSlideIndex, maxSlideIndex]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlideIndex((prev) => (prev <= 0 ? maxSlideIndex : prev - 1));
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlideIndex((prev) => (prev >= maxSlideIndex ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNextSlide();
+      } else {
+        handlePrevSlide();
+      }
     }
-    return t(roleKey);
+    setTouchStartX(null);
+  };
+
+  const getMemberName = (m: MemberRecord) =>
+    t(m.name_bn || m.name, m.nameEn || m.name_en || m.name);
+
+  const getMemberPosition = (m: MemberRecord) =>
+    t(m.position_bn || m.position, m.positionEn || m.position_en || m.position);
+
+  const getMemberBio = (m: MemberRecord) => {
+    const rawBn = (
+      m.biography ||
+      m.bio_bn ||
+      m.bio ||
+      ''
+    ).trim();
+    const rawEn = (
+      m.biographyEn ||
+      m.bio_en ||
+      m.bioEn ||
+      ''
+    ).trim();
+
+    if (rawBn || rawEn) {
+      return t(rawBn || rawEn, rawEn || rawBn);
+    }
+
+    const fallbackBn = m.position
+      ? `${m.name} রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন নিবেদিতপ্রাণ ${m.position}। তিনি দীর্ঘ সময় ধরে বৈদিক নাট্যকলা, ধর্মীয় নাটক ও সনাতনী ঐতিহ্য সংরক্ষণে মেধা ও নিষ্ঠার সাথে সক্রিয় ভূমিকা পালন করে আসছেন।`
+      : `${m.name} রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন সক্রিয় ও নিবেদিতপ্রাণ শিল্পী।`;
+    const fallbackEn = (m.positionEn || m.position)
+      ? `${m.nameEn || m.name} is a dedicated ${m.positionEn || m.position} of Radhamadhob Sanatan Cultural Alliance, actively serving to preserve Sanatan traditions and theatrical arts.`
+      : `${m.nameEn || m.name} is an active and dedicated member of Radhamadhob Sanatan Cultural Alliance.`;
+
+    return t(fallbackBn, fallbackEn);
+  };
+
+  const getMemberAddress = (m: MemberRecord) =>
+    t(m.address_bn || m.address, m.addressEn || m.address_en || m.address);
+
+  const isBinoySen = (m: MemberRecord) =>
+    m.name?.includes('বিনয় কুমার সেন') || m.nameEn?.toLowerCase().includes('binoy');
+
+  const directorCount = members.filter((m) =>
+    m.position?.includes('পরিচালক') || m.position?.includes('উপদেষ্টা')
+  ).length;
+
+  const associateCount = members.filter((m) =>
+    m.position?.includes('সহযোগী') || m.position?.includes('প্রশিক্ষক')
+  ).length;
+
+  const generalMemberCount = Math.max(0, members.length - directorCount - associateCount);
+
+  const formatRoleLabel = (role: string) => {
+    if (role === 'ALL') return lang === 'bn' ? 'সকল পদবি' : 'All Roles';
+    return tCategory(role);
   };
 
   return (
     <section
       id="members-section"
       aria-labelledby="members-heading"
-      className="py-10 sm:py-16 md:py-24 bg-[#FAF7F0] border-b border-[#E5DEC9] relative overflow-hidden"
+      className="py-14 sm:py-20 md:py-28 bg-[#070303] text-white border-b border-[#D4AF37]/20 relative overflow-hidden"
     >
-      {/* Subtle decorative background accents */}
-      <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#CC0000]/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#0F5132]/5 blur-3xl" />
+      {/* Ambient Glows */}
+      <div
+        className="pointer-events-none absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-[#990000]/10 blur-[130px]"
+        aria-hidden="true"
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 border-b border-[#E5DEC9] pb-5 sm:pb-8">
-          <div className="space-y-2 sm:space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#FFF5F5] border border-[#CC0000]/25 text-[#990000] text-[11px] sm:text-xs font-bold tracking-wide">
-              <Users className="w-3.5 h-3.5 text-[#CC0000]" />
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#D4AF37]/20 pb-6 sm:pb-8">
+          <div className="space-y-3 max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
+              <Users className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span>
                 {lang === 'bn'
-                  ? 'সংগঠনের নিবেদিতপ্রাণ শিল্পী ও কলাকুশলী পরিবার'
-                  : 'Our Dedicated Family of Artists & Performers'}
+                  ? 'নিবেদিতপ্রাণ শিল্পী ও কলাকুশলী পরিবার'
+                  : 'Dedicated Artists & Performers Alliance'}
               </span>
             </div>
 
             <h2
               id="members-heading"
-              className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] font-display-bn tracking-tight leading-tight"
+              className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display-bn text-white tracking-tight leading-tight"
             >
-              {lang === 'bn'
-                ? 'আমাদের সম্মানিত সদস্যবৃন্দ'
-                : 'Our Honorable Members'}
+              {lang === 'bn' ? (
+                <>
+                  আমাদের সম্মানিত <span className="gold-text-gradient">শিল্পী পরিবার</span>
+                </>
+              ) : (
+                <>
+                  Our Honorable <span className="gold-text-gradient">Artists & Members</span>
+                </>
+              )}
             </h2>
 
-            <p className="text-[#57534E] text-xs sm:text-base leading-relaxed">
+            <p className="text-stone-300 text-xs sm:text-base leading-relaxed">
               {lang === 'bn'
-                ? 'রাধামাধব সাংস্কৃতিক জোটের প্রতিটি নাটক, নৃত্য ও সাংস্কৃতিক আয়োজনের পেছনে রয়েছেন আমাদের নিবেদিতপ্রাণ পরিচালক, উপদেষ্টা, সহযোগী ও সদস্যবৃন্দ।'
-                : 'Behind every drama, dance, and cultural celebration of Radhamadhob Cultural Alliance stand our dedicated Director, Advisors, Associates, and Executive Members.'}
+                ? 'রাধামাধব সনাতন সাংস্কৃতিক জোটের প্রতিটি নাটক, নৃত্য ও সাংস্কৃতিক আয়োজনের নেপথ্যে রয়েছেন আমাদের অভিজ্ঞ পরিচালক, উপদেষ্টা ও কলাকুশলীবৃন্দ।'
+                : 'Behind every grand performance stands our visionary leadership, master vocalists, dramatists, and dedicated community members.'}
             </p>
           </div>
 
-          {/* Summary Stat Pills (Desktop & Tablet) */}
+          {/* Summary Stat Cards */}
           <div className="hidden sm:grid grid-cols-4 gap-2.5 shrink-0">
-            <div className="px-3.5 py-2.5 rounded-xl bg-white border border-[#E5DEC9] shadow-2xs text-center">
-              <div className="text-xs text-[#57534E] font-medium">
-                {lang === 'bn' ? 'মোট সদস্য' : 'Total Members'}
+            {[
+              {
+                labelBn: 'মোট সদস্য',
+                labelEn: 'Members',
+                val: `${tDigits(members.length)}`,
+                color: 'text-[#FDE68A]',
+              },
+              {
+                labelBn: 'পরিচালনা',
+                labelEn: 'Leadership',
+                val: `${tDigits(directorCount)}`,
+                color: 'text-[#D4AF37]',
+              },
+              {
+                labelBn: 'সহযোগী',
+                labelEn: 'Associates',
+                val: `${tDigits(associateCount)}`,
+                color: 'text-[#A7F3D0]',
+              },
+              {
+                labelBn: 'কার্যকরী',
+                labelEn: 'Executive',
+                val: `${tDigits(generalMemberCount)}`,
+                color: 'text-stone-300',
+              },
+            ].map((stat, idx) => (
+              <div
+                key={idx}
+                className="px-4 py-3 rounded-2xl bg-[#140807] border border-[#D4AF37]/25 text-center shadow-lg"
+              >
+                <div className="text-[10px] text-stone-400 font-mono-code uppercase">
+                  {lang === 'bn' ? stat.labelBn : stat.labelEn}
+                </div>
+                <div className={`text-xl font-bold font-mono-code ${stat.color}`}>
+                  {stat.val}
+                </div>
               </div>
-              <div className="text-xl font-extrabold text-[#CC0000] font-display-bn">
-                {lang === 'bn'
-                  ? `${tDigits(members.length)} জন`
-                  : members.length}
-              </div>
-            </div>
-            <div className="px-3.5 py-2.5 rounded-xl bg-white border border-[#E5DEC9] shadow-2xs text-center">
-              <div className="text-xs text-[#57534E] font-medium">
-                {lang === 'bn' ? 'পরিচালনা পর্ষদ' : 'Leadership'}
-              </div>
-              <div className="text-xl font-extrabold text-[#854D0E] font-display-bn">
-                {lang === 'bn' ? `${tDigits(directorCount)} জন` : directorCount}
-              </div>
-            </div>
-            <div className="px-3.5 py-2.5 rounded-xl bg-white border border-[#E5DEC9] shadow-2xs text-center">
-              <div className="text-xs text-[#57534E] font-medium">
-                {lang === 'bn' ? 'সহযোগী' : 'Associates'}
-              </div>
-              <div className="text-xl font-extrabold text-[#0F5132] font-display-bn">
-                {lang === 'bn'
-                  ? `${tDigits(associateCount)} জন`
-                  : associateCount}
-              </div>
-            </div>
-            <div className="px-3.5 py-2.5 rounded-xl bg-white border border-[#E5DEC9] shadow-2xs text-center">
-              <div className="text-xs text-[#57534E] font-medium">
-                {lang === 'bn' ? 'কার্যকরী সদস্য' : 'Executive'}
-              </div>
-              <div className="text-xl font-extrabold text-[#1C1917] font-display-bn">
-                {lang === 'bn'
-                  ? `${tDigits(generalMemberCount)} জন`
-                  : generalMemberCount}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Desktop Search & Role Filter Bar */}
-        <div className="hidden md:flex flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-[#E5DEC9] shadow-2xs">
+        {/* Search & Role Filter Bar */}
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-[#120706] p-4 rounded-2xl border border-[#D4AF37]/30 shadow-xl">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#78716C] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
@@ -257,23 +355,23 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
               placeholder={
                 lang === 'bn'
                   ? 'সদস্যের নাম বা পদবি দিয়ে খুঁজুন...'
-                  : 'Search member by name or position...'
+                  : 'Search by artist name or role...'
               }
               aria-label={lang === 'bn' ? 'সদস্য খুঁজুন' : 'Search members'}
-              className="w-full pl-10 pr-4 py-2 text-sm bg-[#FAF7F0] border border-[#E5DEC9] rounded-xl focus:outline-none focus:border-[#CC0000]"
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-[#1A0A09] text-white border border-[#D4AF37]/30 rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] placeholder:text-stone-500"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
             {uniquePositions.map((role) => (
               <button
                 key={role}
                 type="button"
                 onClick={() => setRoleFilter(role)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer whitespace-nowrap ${
                   roleFilter === role
-                    ? 'bg-[#CC0000] text-white border-[#D4AF37] shadow-xs'
-                    : 'bg-[#FAF7F0] text-[#1C1917] border-[#E5DEC9] hover:border-[#CC0000]/40'
+                    ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] border-[#D4AF37]/60 shadow-md'
+                    : 'bg-[#180C0B] text-stone-300 border-[#D4AF37]/20 hover:border-[#D4AF37]/50 hover:text-white'
                 }`}
               >
                 {formatRoleLabel(role)}
@@ -282,278 +380,234 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
           </div>
         </div>
 
-        {/* =================================================================== */}
-        {/* MOBILE VIEW (< 768px): Clean & Simple Card (Photo + Name + Position) */}
-        {/* =================================================================== */}
-        <div className="md:hidden space-y-5">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {mobileDisplayedMembers.map((member) => {
-              const badge = getBadgeStyle(member.position_bn || member.position);
-              const displayName = getMemberName(member);
-              const displayPosition = getMemberPosition(member);
-              return (
-                <article
-                  key={member.id}
-                  onClick={() => setSelectedMember(member)}
-                  className="bg-white rounded-2xl border border-[#E5DEC9] overflow-hidden shadow-xs flex flex-col items-center text-center p-3 sm:p-4 transition-all cursor-pointer"
-                >
-                  {/* Member Photo */}
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-0.5 bg-gradient-to-tr from-[#CC0000] via-[#D4AF37] to-[#0F5132] shadow-sm mb-2.5 shrink-0">
-                    <img
-                      src={member.photo}
-                      alt={`${displayName} - ${displayPosition}`}
-                      loading="lazy"
-                      decoding="async"
-                      width={96}
-                      height={96}
-                      className="w-full h-full object-cover object-top rounded-full bg-[#FAF7F0]"
-                    />
-                  </div>
-
-                  {/* Member Name */}
-                  <h3 className="text-sm sm:text-base font-bold text-[#1C1917] font-display-bn leading-snug line-clamp-2">
-                    {displayName}
-                  </h3>
-
-                  {/* Member Position */}
-                  <span
-                    className={`mt-1.5 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${badge.bg} ${badge.text} ${badge.border}`}
+        {/* Members 1-Row Responsive Slider (Mobile: 1, Small Tablet: 2, Tablet: 3, Desktop: 4) */}
+        {filteredMembers.length > 0 ? (
+          <div
+            className="space-y-4 relative"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Top Slider Navigation Controls */}
+            {maxSlideIndex > 0 && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-stone-400 font-mono-code">
+                  {lang === 'bn'
+                    ? `সদস্য তালিকা (${tDigits(filteredMembers.length)} জন)`
+                    : `Artists & Members (${filteredMembers.length})`}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrevSlide}
+                    aria-label={lang === 'bn' ? 'পূর্ববর্তী' : 'Previous'}
+                    className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} />
-                    <span className="truncate max-w-[125px] sm:max-w-[160px]">
-                      {displayPosition}
-                    </span>
-                  </span>
-                </article>
-              );
-            })}
-          </div>
+                    <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextSlide}
+                    aria-label={lang === 'bn' ? 'পরবর্তী' : 'Next'}
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
+                  >
+                    <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                    <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
+                  </button>
+                </div>
+              </div>
+            )}
 
-          {/* Mobile "আরও দেখুন" (Read More) Expandable Button */}
-          {filteredMembers.length > MOBILE_INITIAL_COUNT && (
-            <div className="flex justify-center pt-1">
-              <button
-                type="button"
-                onClick={() => setShowAllMobile((prev) => !prev)}
-                className="px-6 py-3 rounded-xl bg-white hover:bg-[#FFF5F5] text-[#CC0000] border-2 border-[#CC0000]/30 font-bold text-xs sm:text-sm inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer"
-              >
-                {showAllMobile ? (
-                  <>
-                    <span>{lang === 'bn' ? 'সংক্ষিপ্ত করুন' : 'Show Less'}</span>
-                    <ChevronUp className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    <span>
-                      {lang === 'bn'
-                        ? `আরও দেখুন (${tDigits(
-                            filteredMembers.length - MOBILE_INITIAL_COUNT
-                          )}+ সদস্য)`
-                        : `View All (${
-                            filteredMembers.length - MOBILE_INITIAL_COUNT
-                          }+ Members)`}
-                    </span>
-                    <ChevronDown className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+            {/* Slider Viewport */}
+            <div className="relative">
+              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
+                <div
+                  className="flex transition-transform duration-200 ease-out"
+                  style={{
+                    transform: `translateX(-${
+                      currentSlideIndex * (100 / cardsPerView)
+                    }%)`,
+                  }}
+                >
+                  {filteredMembers.map((member) => {
+                    const badge = getBadgeStyle(member.position);
+                    const name = getMemberName(member);
+                    const position = getMemberPosition(member);
 
-        {/* =================================================================== */}
-        {/* DESKTOP VIEW (>= 768px): Rich Read-Only Cultural Member Cards       */}
-        {/* =================================================================== */}
-        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredMembers.map((member) => {
-            const badge = getBadgeStyle(member.position_bn || member.position);
-            const displayName = getMemberName(member);
-            const displayPosition = getMemberPosition(member);
-            const displayAddress = getMemberAddress(member);
-            const displayBio = getMemberBio(member);
-            const displayJoining =
-              lang === 'en'
-                ? member.joiningDateEn || tDigits(member.joining_date)
-                : member.joining_date;
-
-            return (
-              <article
-                key={member.id}
-                onClick={() => setSelectedMember(member)}
-                className="group bg-white rounded-2xl border border-[#E5DEC9] hover:border-[#D4AF37] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
-              >
-                <div>
-                  {/* Portrait Photo Frame */}
-                  <div className="relative aspect-[4/4.2] bg-[#1C1917] overflow-hidden">
-                    <img
-                      src={member.photo}
-                      alt={`${displayName} — ${displayPosition}`}
-                      loading="lazy"
-                      decoding="async"
-                      width={360}
-                      height={380}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-
-                    {/* Position Badge */}
-                    <div className="absolute top-3 left-3">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-sm backdrop-blur-md ${badge.bg} ${badge.text} ${badge.border}`}
+                    return (
+                      <div
+                        key={member.id}
+                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 shrink-0 px-2.5 sm:px-3"
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} />
-                        <span>{displayPosition}</span>
-                      </span>
-                    </div>
+                        <CinematicCard3D
+                          onClick={() => setSelectedMember(member)}
+                          className="h-full rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
+                          maxTilt={6}
+                        >
+                          <div className="p-4 sm:p-5 space-y-3.5 text-center flex flex-col items-center">
+                            {/* Cameo Portrait */}
+                            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#140807] shadow-lg">
+                              <img
+                                src={member.photo}
+                                alt={name}
+                                loading="lazy"
+                                className="w-full h-full object-cover object-top rounded-full bg-black"
+                              />
+                            </div>
 
-                    {/* Name overlay at bottom of photo */}
-                    <div className="absolute bottom-3 left-3.5 right-3.5 text-white">
-                      <h3 className="text-xl font-bold font-display-bn leading-snug drop-shadow-xs">
-                        {displayName}
-                      </h3>
-                      {displayAddress && (
-                        <div className="text-[11px] text-amber-200/95 flex items-center gap-1 mt-0.5 truncate">
-                          <MapPin className="w-3 h-3 shrink-0" />
-                          <span className="truncate">{displayAddress}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                            <div className="space-y-1 w-full">
+                              <span
+                                className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold border font-mono-code truncate max-w-full ${badge.bg} ${badge.text} ${badge.border}`}
+                              >
+                                {position}
+                              </span>
+                              <h3 className="text-sm sm:text-base font-bold text-white font-display-bn truncate">
+                                {name}
+                              </h3>
+                              <p className="text-[11px] text-stone-300 line-clamp-2 leading-relaxed px-1 pt-1">
+                                {getMemberBio(member)}
+                              </p>
+                            </div>
+                          </div>
 
-                  {/* Desktop Short Biography Preview */}
-                  <div className="p-4 space-y-2.5">
-                    <p className="text-xs text-[#57534E] line-clamp-2 leading-relaxed">
-                      {displayBio}
-                    </p>
-                  </div>
+                          {/* Bottom Action */}
+                          <div className="px-4 py-2.5 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-center text-xs">
+                            <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform text-[11px]">
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>{lang === 'bn' ? 'প্রোফাইল' : 'Profile'}</span>
+                            </span>
+                          </div>
+                        </CinematicCard3D>
+                      </div>
+                    );
+                  })}
                 </div>
+              </div>
+            </div>
 
-                {/* Read-Only View Profile Action */}
-                <div className="px-4 py-3 bg-[#FAF7F0] border-t border-[#E5DEC9] flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-[#78716C] flex items-center gap-1">
-                    <UserCheck className="w-3.5 h-3.5 text-[#0F5132]" />
-                    <span>
-                      {lang === 'bn'
-                        ? `যোগদান: ${displayJoining}`
-                        : `Joined: ${displayJoining}`}
-                    </span>
-                  </span>
-                  <span className="text-xs font-bold text-[#CC0000] group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>
-                      {lang === 'bn' ? 'বিস্তারিত দেখুন' : 'View Profile'}
-                    </span>
-                  </span>
+            {/* Slider Dots Indicator */}
+            {maxSlideIndex > 0 && (
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-[11px] text-stone-400 font-mono-code">
+                  {lang === 'bn'
+                    ? 'স্লাইড করুন বা তীরচিহ্নে ক্লিক করুন'
+                    : 'Swipe or use buttons to browse'}
+                </span>
+                <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] py-1">
+                  {Array.from({ length: maxSlideIndex + 1 })
+                    .slice(0, 12)
+                    .map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentSlideIndex(idx)}
+                        aria-label={`Slide ${idx + 1}`}
+                        className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                          currentSlideIndex === idx
+                            ? 'w-6 bg-[#D4AF37]'
+                            : 'w-1.5 bg-white/20 hover:bg-white/40'
+                        }`}
+                      />
+                    ))}
                 </div>
-              </article>
-            );
-          })}
-        </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-[#120706] rounded-2xl border border-white/10">
+            <p className="text-stone-400 text-sm">
+              {lang === 'bn'
+                ? 'কোনো সদস্য খুঁজে পাওয়া যায়নি।'
+                : 'No artists or members found.'}
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* ===================================================================== */}
-      {/* READ-ONLY MEMBER PROFILE MODAL (Detail View)                          */}
-      {/* ===================================================================== */}
+      {/* Member Profile Modal */}
       {selectedMember && (
         <div
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-page-enter"
           onClick={() => setSelectedMember(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden border-2 border-[#D4AF37] shadow-2xl my-auto animate-page-enter"
+            className="bg-[#120706] text-white rounded-3xl max-w-2xl w-full overflow-hidden border-2 border-[#D4AF37]/60 shadow-[0_0_80px_rgba(212,175,55,0.25)] my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Top Header */}
-            <div className="bg-gradient-to-r from-[#6B0505] via-[#990000] to-[#0F5132] p-6 text-white relative">
+            <div className="bg-gradient-to-r from-[#6B0505] via-[#990000] to-[#120706] p-6 text-white relative border-b border-[#D4AF37]/30">
               <button
                 type="button"
                 onClick={() => setSelectedMember(null)}
                 aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-[#CC0000] text-white border border-[#D4AF37]/40 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="flex flex-col sm:flex-row items-center gap-5">
-                <img
-                  src={selectedMember.photo}
-                  alt={getMemberName(selectedMember)}
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover object-top border-2 border-[#D4AF37] shadow-lg bg-white shrink-0"
-                />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl p-1 bg-gradient-to-tr from-[#D4AF37] to-[#990000] shrink-0 shadow-xl">
+                  <img
+                    src={selectedMember.photo}
+                    alt={getMemberName(selectedMember)}
+                    className="w-full h-full rounded-xl object-cover object-top bg-black"
+                  />
+                </div>
                 <div className="text-center sm:text-left space-y-1.5">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/15 border border-[#FDE68A]/40 text-[#FDE68A] text-xs font-bold">
-                    <Sparkles className="w-3.5 h-3.5" />
+                  <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-black/40 border border-[#FDE68A]/40 text-[#FDE68A] text-xs font-mono-code font-bold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>{getMemberPosition(selectedMember)}</span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold font-display-bn">
+                  <h3 className="text-2xl sm:text-3xl font-bold font-display-bn gold-text-gradient">
                     {getMemberName(selectedMember)}
                   </h3>
-                  <p className="text-xs text-amber-100/90">
+                  <p className="text-xs text-stone-300">
                     {lang === 'bn'
-                      ? 'রাধামাধব সাংস্কৃতিক জোট · সম্মানিত সদস্য প্রোফাইল'
-                      : 'Radhamadhob Cultural Alliance · Honorable Member Profile'}
+                      ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট · শিল্পী প্রোফাইল'
+                      : 'Radhamadhob Cultural Alliance · Artist Profile'}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Modal Body (Read-Only Details) */}
+            {/* Modal Body */}
             <div className="p-6 sm:p-8 space-y-5">
               <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#CC0000] flex items-center gap-1.5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] font-mono-code flex items-center gap-1.5">
                   <Award className="w-4 h-4" />
                   <span>
                     {lang === 'bn'
-                      ? 'সংক্ষিপ্ত পরিচিতি ও সাংস্কৃতিক অবদান'
-                      : 'Short Biography & Cultural Contribution'}
+                      ? 'সংক্ষিপ্ত পরিচিতি ও সাংস্কৃতিক ভূমিকা'
+                      : 'Biography & Cultural Role'}
                   </span>
                 </h4>
-                <p className="text-sm text-[#1C1917] leading-relaxed bg-[#FAF7F0] p-4 rounded-2xl border border-[#E5DEC9]">
+                <p className="text-sm text-stone-200 leading-relaxed bg-[#1A0A09] p-4 rounded-2xl border border-[#D4AF37]/25">
                   {getMemberBio(selectedMember)}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9]">
-                  <span className="text-[#78716C] block mb-0.5">
-                    {lang === 'bn' ? 'পিতার নাম' : "Father's Name"}
-                  </span>
-                  <span className="font-bold text-[#1C1917] text-sm">
-                    {t(
-                      selectedMember.father_name || selectedMember.fatherName,
-                      selectedMember.fatherNameEn || selectedMember.father_name
-                    ) || (lang === 'bn' ? 'তথ্য সংরক্ষিত' : 'Recorded')}
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9]">
-                  <span className="text-[#78716C] block mb-0.5">
-                    {lang === 'bn' ? 'মাতার নাম' : "Mother's Name"}
-                  </span>
-                  <span className="font-bold text-[#1C1917] text-sm">
-                    {t(
-                      selectedMember.mother_name || selectedMember.motherName,
-                      selectedMember.motherNameEn || selectedMember.mother_name
-                    ) || (lang === 'bn' ? 'তথ্য সংরক্ষিত' : 'Recorded')}
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#CC0000] shrink-0 mt-0.5" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/20 flex items-start gap-2.5">
+                  <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[#78716C] block mb-0.5">
+                    <span className="text-stone-400 block mb-0.5">
                       {lang === 'bn' ? 'ঠিকানা' : 'Address'}
                     </span>
-                    <span className="font-bold text-[#1C1917]">
+                    <span className="font-bold text-white">
                       {getMemberAddress(selectedMember)}
                     </span>
                   </div>
                 </div>
-                <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-start gap-2.5">
-                  <Calendar className="w-4 h-4 text-[#0F5132] shrink-0 mt-0.5" />
+
+                <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/20 flex items-start gap-2.5">
+                  <Calendar className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[#78716C] block mb-0.5">
+                    <span className="text-stone-400 block mb-0.5">
                       {lang === 'bn' ? 'যোগদানের তারিখ' : 'Joining Date'}
                     </span>
-                    <span className="font-bold text-[#1C1917]">
+                    <span className="font-bold text-white font-mono-code">
                       {lang === 'en'
                         ? selectedMember.joiningDateEn ||
                           tDigits(selectedMember.joining_date)
@@ -561,27 +615,32 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
                     </span>
                   </div>
                 </div>
-                {selectedMember.phone && (
-                  <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-start gap-2.5">
-                    <Phone className="w-4 h-4 text-[#0F5132] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[#78716C] block mb-0.5">
-                        {lang === 'bn' ? 'যোগাযোগ' : 'Mobile Number'}
-                      </span>
-                      <span className="font-bold text-[#1C1917]">
-                        {tDigits(selectedMember.phone)}
+
+                {isBinoySen(selectedMember) && Boolean(selectedMember.phone) && (
+                  <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/20 flex items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-stone-300 font-medium">
+                        {lang === 'bn' ? 'পরিচালকের সাথে যোগাযোগ' : 'Contact Director'}
                       </span>
                     </div>
+                    <a
+                      href={`tel:${selectedMember.phone.replace(/[^0-9+]/g, '')}`}
+                      className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white font-bold text-xs border border-[#D4AF37]/50 inline-flex items-center gap-1 cursor-pointer transition-all shadow-md"
+                    >
+                      <span>{lang === 'bn' ? 'কল করুন' : 'Call'}</span>
+                    </a>
                   </div>
                 )}
-                {selectedMember.email && (
-                  <div className="p-3.5 rounded-xl bg-[#FAF7F0] border border-[#E5DEC9] flex items-start gap-2.5">
+
+                {isBinoySen(selectedMember) && Boolean(selectedMember.email) && (
+                  <div className="p-3.5 rounded-xl bg-[#1A0A09] border border-[#D4AF37]/20 flex items-start gap-2.5">
                     <Mail className="w-4 h-4 text-[#CC0000] shrink-0 mt-0.5" />
                     <div className="min-w-0">
-                      <span className="text-[#78716C] block mb-0.5">
+                      <span className="text-stone-400 block mb-0.5">
                         {lang === 'bn' ? 'ইমেইল' : 'Email'}
                       </span>
-                      <span className="font-bold text-[#1C1917] truncate block">
+                      <span className="font-bold text-white truncate block">
                         {selectedMember.email}
                       </span>
                     </div>
@@ -593,7 +652,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedMember(null)}
-                  className="px-6 py-2.5 rounded-xl bg-[#1C1917] hover:bg-[#CC0000] text-white text-xs font-bold transition-colors cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[#1A0A09] hover:bg-[#CC0000] text-white text-xs font-bold transition-colors cursor-pointer border border-[#D4AF37]/40 shadow-sm"
                 >
                   {lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
                 </button>

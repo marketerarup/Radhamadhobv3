@@ -2,28 +2,27 @@ import React, { useState, useEffect } from 'react';
 import {
   ArrowRight,
   ArrowUp,
-  BookOpen,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Compass,
   Drama,
   Menu,
-  Music,
   Pause,
   Play,
-  Sparkles,
-  Target,
   UserPlus,
   X,
 } from 'lucide-react';
 import { OfficialLogo } from './components/OfficialLogo';
+import { Cinematic3DCanvas } from './components/Cinematic3DCanvas';
+import { StorytellingSection } from './components/StorytellingSection';
+import { CulturalHighlightsSection } from './components/CulturalHighlightsSection';
 import { MemberDirectorySection } from './components/MemberDirectorySection';
+import { PhotoGallerySection } from './components/PhotoGallerySection';
 import { DramaAndVideoSection } from './components/DramaAndVideoSection';
 import { CulturalProgramAndGallerySection } from './components/CulturalProgramAndGallerySection';
 import { JoinContactPrivacyFooterSection } from './components/JoinContactPrivacyFooterSection';
+import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
 import { AdminDashboardCMS } from './components/AdminDashboardCMS';
-import { WaveSectionDivider } from './components/WaveSectionDivider';
 import { useLanguage } from './context/LanguageContext';
 import { ANALYZED_PHOTOS } from './data/culturalData';
 import { subscribeCollectionFromFirestore } from './firebase';
@@ -80,7 +79,6 @@ import {
 import {
   INITIAL_SETTINGS_SEED,
   SiteSettingsRecord,
-  buildWhatsAppChatUrl,
   loadSettingsFromDatabase,
   normalizeSiteSettings,
   saveSettingsToDatabase,
@@ -123,7 +121,7 @@ function isUrlAdminRoute(): boolean {
 
 export default function App() {
   // Primary Language: Bengali ('bn'), Secondary: English ('en') via LanguageContext + localStorage
-  const { lang, setLang, t, formatNumber } = useLanguage();
+  const { lang, setLang, t, formatNumber, tDigits } = useLanguage();
 
   // Sticky Header & Back-to-Top Scroll Detection
   const [isScrolled, setIsScrolled] = useState(false);
@@ -429,15 +427,8 @@ export default function App() {
     }
   };
 
-  // Active Circular Photo in About Us Section (uses distinct photos 6..11 from ANALYZED_PHOTOS)
+  // Distinct photos 6..11 from ANALYZED_PHOTOS for Storytelling Section
   const aboutSectionPhotos = ANALYZED_PHOTOS.slice(6, 12);
-  const [activeAboutPhoto, setActiveAboutPhoto] = useState<string>(
-    aboutSectionPhotos[0]?.imageUrl || ANALYZED_PHOTOS[0].imageUrl
-  );
-
-  // Read More Expand State in Intro Section & About Section (Mobile Page Length Optimization)
-  const [isReadMoreExpanded, setIsReadMoreExpanded] = useState(false);
-  const [isAboutExpanded, setIsAboutExpanded] = useState(false);
 
   // Mobile Viewport Detection (< 768px shows 3 best Hero slides; Desktop shows 5 slides)
   const [isMobileViewport, setIsMobileViewport] = useState<boolean>(() =>
@@ -535,26 +526,26 @@ export default function App() {
         {
           '@type': 'ListItem',
           position: 3,
+          name: 'গ্যালারি (Gallery)',
+          item: `${siteOrigin}/#gallery-section`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
           name: 'সদস্যবৃন্দ (Members)',
           item: `${siteOrigin}/#members-section`,
         },
         {
           '@type': 'ListItem',
-          position: 4,
+          position: 5,
           name: 'নাটক (Drama)',
           item: `${siteOrigin}/#drama-section`,
         },
         {
           '@type': 'ListItem',
-          position: 5,
+          position: 6,
           name: 'সাংস্কৃতিক অনুষ্ঠান (Programs)',
           item: `${siteOrigin}/#cultural-program-section`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 6,
-          name: 'গ্যালারি (Gallery)',
-          item: `${siteOrigin}/#gallery-section`,
         },
         {
           '@type': 'ListItem',
@@ -638,68 +629,166 @@ export default function App() {
     setCurrentSlide((prev) => (prev + 1) % activeHeroSlides.length);
   };
 
-  // Exact 9 Navigation Items for Desktop Header & Mobile Side Drawer
+  const [activeNavDropdown, setActiveNavDropdown] = useState<string | null>(null);
+
+  // Grouped Navigation for Smart Hollywood-style Header & Clean Mobile Menu
+  const NAV_GROUPS = [
+    {
+      id: 'culture',
+      labelBn: 'সংস্কৃতি',
+      labelEn: 'Culture',
+      items: [
+        {
+          id: 'about',
+          labelBn: 'আমাদের গল্প ও ঐতিহ্য',
+          labelEn: 'Story & Heritage',
+          subBn: '২০১১ হতে গৌরবময় নাট্যযাত্রা',
+          subEn: '15 Years Theatrical Odyssey',
+          href: '#about-section',
+        },
+        {
+          id: 'highlights',
+          labelBn: 'চারটি অনন্য সাংস্কৃতিক স্তম্ভ',
+          labelEn: 'Four Cultural Pillars',
+          subBn: 'পৌরাণিক নাট্যরূপ, বৈদিক ফ্যাশন, সাউন্ড ও মূল্যবোধ',
+          subEn: 'Epic Theatre, Vedic Arts & Acoustic Pioneer',
+          href: '#highlights-section',
+        },
+        {
+          id: 'drama',
+          labelBn: 'পৌরাণিক নাটকসমগ্র',
+          labelEn: 'Mythological Repertoire',
+          subBn: '১৩+ পূর্ণাঙ্গ মৌলিক শাস্ত্রীয় প্রযোজনা',
+          subEn: '13+ Original Stage Dramas',
+          href: '#drama-section',
+        },
+        {
+          id: 'cultural',
+          labelBn: 'মহোৎসব ও অনুষ্ঠান',
+          labelEn: 'Festivals & Programs',
+          subBn: 'সাংস্কৃতিক আয়োজন ও বিশেষ ইভেন্ট',
+          subEn: 'Grand Festivals & Signature Events',
+          href: '#cultural-program-section',
+        },
+      ],
+    },
+    {
+      id: 'media',
+      labelBn: 'মিডিয়া',
+      labelEn: 'Media',
+      items: [
+        {
+          id: 'gallery',
+          labelBn: 'সিনেমাটিক ফটো গ্যালারি',
+          labelEn: 'Cinematic Photo Gallery',
+          subBn: 'মঞ্চনাটক ও উৎসবের দুর্লভ মুহূর্ত',
+          subEn: 'Stage Moments & Live Atmosphere',
+          href: '#gallery-section',
+        },
+        {
+          id: 'video',
+          labelBn: 'মঞ্চ ভিডিও ও আর্কাইভ',
+          labelEn: 'Video Showcase & Archive',
+          subBn: 'পূর্ণাঙ্গ দৃশ্য ও নাট্য সংকলন',
+          subEn: 'Official YouTube Performances',
+          href: '#video-section',
+        },
+      ],
+    },
+    {
+      id: 'community',
+      labelBn: 'কমিউনিটি',
+      labelEn: 'Community',
+      items: [
+        {
+          id: 'members',
+          labelBn: 'সম্মানিত সদস্যবৃন্দ',
+          labelEn: 'Honorable Members',
+          subBn: 'পরিচালক, উপদেষ্টা ও অভিনয়শিল্পী',
+          subEn: 'Artistic Directors & Performers',
+          href: '#members-section',
+        },
+        {
+          id: 'join',
+          labelBn: 'অভিনয়শিল্পী ও সদস্য হোন',
+          labelEn: 'Join As Performer',
+          subBn: 'সাত্ত্বিক সাংস্কৃতিক আন্দোলনে যুক্ত হোন',
+          subEn: 'Become a Part of Our Sacred Journey',
+          href: '#join-section',
+        },
+      ],
+    },
+  ];
+
+  // Flat MENU_ITEMS for quick routing and search
   const MENU_ITEMS = [
     {
       id: 'home',
-      labelBn: 'প্রচ্ছদ (Home)',
-      shortBn: 'Home',
+      labelBn: 'প্রচ্ছদ',
+      shortBn: 'প্রচ্ছদ',
       labelEn: 'Home',
       href: '#hero-section',
     },
     {
       id: 'about',
-      labelBn: 'আমাদের সম্পর্কে (About)',
-      shortBn: 'About',
-      labelEn: 'About',
+      labelBn: 'আমাদের সম্পর্কে',
+      shortBn: 'সম্পর্কে',
+      labelEn: 'About Us',
       href: '#about-section',
     },
     {
+      id: 'highlights',
+      labelBn: 'সাংস্কৃতিক স্তম্ভ',
+      shortBn: 'স্তম্ভ',
+      labelEn: 'Cultural Highlights',
+      href: '#highlights-section',
+    },
+    {
+      id: 'gallery',
+      labelBn: 'ফটো গ্যালারি',
+      shortBn: 'গ্যালারি',
+      labelEn: 'Photo Gallery',
+      href: '#gallery-section',
+    },
+    {
       id: 'members',
-      labelBn: 'সদস্যবৃন্দ (Members)',
-      shortBn: 'Members',
-      labelEn: 'Members',
+      labelBn: 'সম্মানিত সদস্যবৃন্দ',
+      shortBn: 'সদস্যবৃন্দ',
+      labelEn: 'Honorable Members',
       href: '#members-section',
     },
     {
       id: 'drama',
-      labelBn: 'নাটক (Drama)',
-      shortBn: 'Drama',
-      labelEn: 'Drama',
+      labelBn: 'মঞ্চনাটক ও প্রযোজনা',
+      shortBn: 'নাটক',
+      labelEn: 'Stage Dramas',
       href: '#drama-section',
     },
     {
       id: 'cultural',
-      labelBn: 'সাংস্কৃতিক অনুষ্ঠান (Programs)',
-      shortBn: 'Programs',
-      labelEn: 'Programs',
+      labelBn: 'সাংস্কৃতিক অনুষ্ঠান',
+      shortBn: 'অনুষ্ঠান',
+      labelEn: 'Cultural Programs',
       href: '#cultural-program-section',
     },
     {
-      id: 'gallery',
-      labelBn: 'গ্যালারি (Gallery)',
-      shortBn: 'Gallery',
-      labelEn: 'Gallery',
-      href: '#gallery-section',
-    },
-    {
       id: 'video',
-      labelBn: 'ভিডিও (Videos)',
-      shortBn: 'Videos',
-      labelEn: 'Videos',
+      labelBn: 'মঞ্চ ভিডিও ও আর্কাইভ',
+      shortBn: 'ভিডিও',
+      labelEn: 'Video Archive',
       href: '#video-section',
     },
     {
       id: 'join',
-      labelBn: 'যুক্ত হোন (Join Us)',
-      shortBn: 'Join Us',
+      labelBn: 'যুক্ত হোন',
+      shortBn: 'যুক্ত হোন',
       labelEn: 'Join Us',
       href: '#join-section',
     },
     {
       id: 'contact',
-      labelBn: 'যোগাযোগ (Contact)',
-      shortBn: 'Contact',
+      labelBn: 'যোগাযোগ',
+      shortBn: 'যোগাযোগ',
       labelEn: 'Contact',
       href: '#contact-section',
     },
@@ -730,53 +819,6 @@ export default function App() {
 
   const activeSlideData =
     activeHeroSlides[currentSlide] || activeHeroSlides[0] || slides[0];
-  const floatingWhatsAppUrl = buildWhatsAppChatUrl(
-    '8801797059419',
-    'আমি রাধামাধব সনাতন সাংস্কৃতিক জোট সম্পর্কে জানতে চাই।'
-  );
-
-  // Three Highlight Cards for About Us Section (Based on Official Description & History)
-  const ABOUT_HIGHLIGHT_CARDS = [
-    {
-      id: 'highlight-1',
-      numBn: '১.',
-      numEn: '01.',
-      titleBn: 'বৈদিক ও সাত্ত্বিক বিনোদন',
-      titleEn: 'Vedic & Sattvic Entertainment',
-      descBn:
-        'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা।',
-      descEn:
-        'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment.',
-      icon: Music,
-      accentColor: '#CC0000',
-    },
-    {
-      id: 'highlight-2',
-      numBn: '২.',
-      numEn: '02.',
-      titleBn: 'অপবিত্র বিনোদন বন্ধে সচেতনতা',
-      titleEn: 'Sacred Site Awareness',
-      descBn:
-        'পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
-      descEn:
-        'Creating awareness to stop impure and non-devotional entertainment at Puja mandaps and sacred pilgrimage sites.',
-      icon: Drama,
-      accentColor: '#D97706',
-    },
-    {
-      id: 'highlight-3',
-      numBn: '৩.',
-      numEn: '03.',
-      titleBn: 'পৌরাণিক নাট্য ও ডিজিটাল সাউন্ড',
-      titleEn: 'Mythological Drama & Digital Sound',
-      descBn:
-        '২০১১ সাল থেকে সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং পদ্ধতিতে সনাতন ধর্মের ইতিহাস ও পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান।',
-      descEn:
-        'Dramatizing the history and mythological chronicles of Sanatan Dharma using state-of-the-art digital sound recording since 2011.',
-      icon: BookOpen,
-      accentColor: '#0F5132',
-    },
-  ];
 
   // =========================================================================
   // SEPARATED ADMIN PANEL ROUTE (/admin & /admin/dashboard)
@@ -826,42 +868,44 @@ export default function App() {
   return (
     <div
       id="home-section"
-      className="min-h-screen bg-[#FAF8F5] text-[#1C1917] font-body-bn selection:bg-[#CC0000] selection:text-white overflow-x-hidden"
+      className="min-h-screen bg-[#070303] text-stone-100 font-body-bn selection:bg-[#990000] selection:text-[#FDE68A] overflow-x-hidden relative"
     >
+      {/* 3D Cinematic Animated Canvas with volumetric lighting & sacred embers */}
+      <Cinematic3DCanvas />
+
       {/* =================================================================== */}
-      {/* 1. RESPONSIVE STICKY HEADER                                         */}
-      {/* Desktop: Full Navigation Menu                                       */}
-      {/* Mobile (320px/375px/414px): Logo + Organization Name + Hamburger    */}
+      {/* 1. HOLLYWOOD-STYLE GLASSMORPHISM STICKY HEADER                      */}
+      {/* Smart Grouped Dropdowns: Culture | Media | Community | Contact     */}
       {/* =================================================================== */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/98 backdrop-blur-md shadow-md border-b border-[#CC0000]/15 py-2 sm:py-2.5'
-            : 'bg-gradient-to-b from-black/85 via-black/55 to-transparent py-2.5 sm:py-4'
+            ? 'bg-[#0A0404]/90 backdrop-blur-md border-b border-[#D4AF37]/30 shadow-[0_8px_32px_rgba(0,0,0,0.7)] py-2 sm:py-2.5'
+            : 'bg-gradient-to-b from-black/95 via-black/60 to-transparent border-b border-white/10 py-2.5 sm:py-4'
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2">
-          {/* LEFT SIDE: Organization Logo + Organization Name */}
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
+          {/* Brand Wordmark & Official Seal */}
           <a
             href="#hero-section"
             onClick={(e) => {
               e.preventDefault();
               handleNavClick('home', '#hero-section');
             }}
-            className="flex items-center gap-2 sm:gap-3 group min-w-0 focus:outline-none"
+            className="flex items-center gap-2.5 sm:gap-3.5 group min-w-0 focus:outline-none"
           >
             <div
               className={`w-9 h-9 min-[375px]:w-10 min-[375px]:h-10 sm:w-12 sm:h-12 rounded-full p-0.5 shrink-0 transition-transform duration-300 group-hover:scale-105 ${
                 isScrolled
-                  ? 'bg-gradient-to-tr from-[#CC0000] via-[#D4AF37] to-[#990000] shadow-xs'
-                  : 'bg-white/95 shadow-md'
+                  ? 'bg-gradient-to-tr from-[#CC0000] via-[#D4AF37] to-[#0F5132] shadow-sm'
+                  : 'bg-white/95 shadow-md ring-1 ring-[#D4AF37]/50'
               }`}
             >
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full rounded-full bg-[#140807] flex items-center justify-center overflow-hidden">
                 {customLogoUrl || siteSettings.logo ? (
                   <img
                     src={customLogoUrl || siteSettings.logo}
-                    alt="রাধামাধব সাংস্কৃতিক জোট লোগো"
+                    alt="রাধামাধব সনাতন সাংস্কৃতিক জোট লোগো"
                     className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
@@ -874,133 +918,173 @@ export default function App() {
             </div>
 
             <div className="flex flex-col min-w-0">
-              <span
-                className={`text-[14px] min-[360px]:text-[15px] min-[390px]:text-base sm:text-xl lg:text-2xl font-bold tracking-tight font-display-bn leading-tight truncate transition-colors duration-300 ${
-                  isScrolled ? 'text-[#CC0000]' : 'text-white drop-shadow-xs'
-                }`}
-              >
+              <span className="text-[14px] min-[360px]:text-[15px] min-[390px]:text-base sm:text-xl lg:text-2xl font-bold tracking-tight font-display-bn leading-tight truncate text-white group-hover:text-[#FDE68A] transition-colors">
                 {lang === 'bn'
-                  ? siteSettings.organization_name || 'রাধামাধব সাংস্কৃতিক জোট'
+                  ? siteSettings.organization_name || 'রাধামাধব সনাতন সাংস্কৃতিক জোট'
                   : siteSettings.organization_name_en ||
-                    'Radhamadhob Cultural Alliance'}
+                    'Radhamadhob Sanatan Cultural Alliance'}
               </span>
-              <span
-                className={`hidden sm:block text-[11px] font-medium tracking-wide truncate transition-colors duration-300 ${
-                  isScrolled ? 'text-[#57534E]' : 'text-amber-200/95'
-                }`}
-              >
+              <span className="hidden sm:block text-[11px] font-medium tracking-wide truncate text-[#FDE68A]/80 font-mono-code">
                 {t(
-                  siteSettings.tagline_bn ||
-                    'সনাতনী সংস্কৃতি, শিল্প ও ঐতিহ্য',
-                  siteSettings.tagline_en ||
-                    'Sanatani Culture, Art & Heritage'
+                  siteSettings.tagline_bn || 'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন',
+                  siteSettings.tagline_en || 'Preserving Vedic Arts & Sacred Heritage'
                 )}
               </span>
             </div>
           </a>
 
-          {/* DESKTOP FULL NAVIGATION MENU (9 Items) */}
+          {/* DESKTOP SMART GROUPED NAVIGATION (Zero Clutter, 4 Zones) */}
           <nav
             aria-label="Main Navigation"
-            className="hidden xl:flex items-center gap-1"
+            className="hidden lg:flex items-center gap-1.5"
           >
-            {MENU_ITEMS.map((item) => {
-              const isActive = activeNav === item.id;
+            {/* 1. Home */}
+            <a
+              href="#hero-section"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('home', '#hero-section');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                activeNav === 'home'
+                  ? 'text-[#FDE68A] bg-white/10 font-bold border border-[#D4AF37]/40 shadow-xs'
+                  : 'text-stone-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {lang === 'bn' ? 'প্রচ্ছদ' : 'Home'}
+            </a>
+
+            {/* 2. Group Dropdowns (Culture, Media, Community) */}
+            {NAV_GROUPS.map((group) => {
+              const isGroupActive = group.items.some((item) => item.id === activeNav);
+              const isOpen = activeNavDropdown === group.id;
+
               return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(item.id, item.href);
-                  }}
-                  className={`px-3 py-2 rounded-lg text-[13.5px] font-semibold transition-all duration-300 whitespace-nowrap relative ${
-                    isScrolled
-                      ? isActive
-                        ? 'text-[#CC0000] bg-[#FFF5F5]'
-                        : 'text-[#1C1917] hover:text-[#CC0000] hover:bg-stone-100/80'
-                      : isActive
-                      ? 'text-white bg-[#CC0000] shadow-xs'
-                      : 'text-white/95 hover:text-white hover:bg-white/15'
-                  }`}
+                <div
+                  key={group.id}
+                  className="relative"
+                  onMouseEnter={() => setActiveNavDropdown(group.id)}
+                  onMouseLeave={() => setActiveNavDropdown(null)}
                 >
-                  {lang === 'bn' ? item.labelBn.split(' (')[0] : item.labelEn}
-                </a>
+                  <button
+                    type="button"
+                    onClick={() => setActiveNavDropdown(isOpen ? null : group.id)}
+                    aria-expanded={isOpen}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                      isGroupActive || isOpen
+                        ? 'text-[#FDE68A] bg-white/10 font-bold border border-[#D4AF37]/40'
+                        : 'text-stone-300 hover:text-white hover:bg-white/5 border border-transparent'
+                    }`}
+                  >
+                    <span>{lang === 'bn' ? group.labelBn : group.labelEn}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        isOpen ? 'rotate-180 text-[#FDE68A]' : 'text-stone-400'
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu Card with Glassmorphism */}
+                  {isOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-64 p-2 rounded-2xl bg-[#120706]/95 backdrop-blur-xl border border-[#D4AF37]/40 shadow-[0_16px_40px_rgba(0,0,0,0.85)] z-50 space-y-1 animate-page-enter">
+                      {group.items.map((subItem) => {
+                        const isSubActive = activeNav === subItem.id;
+                        return (
+                          <a
+                            key={subItem.id}
+                            href={subItem.href}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setActiveNavDropdown(null);
+                              handleNavClick(subItem.id, subItem.href);
+                            }}
+                            className={`p-2.5 rounded-xl block transition-all group ${
+                              isSubActive
+                                ? 'bg-gradient-to-r from-[#990000]/60 to-[#6B0505]/40 border border-[#D4AF37]/50 text-[#FDE68A]'
+                                : 'hover:bg-white/5 text-stone-200 hover:text-white'
+                            }`}
+                          >
+                            <div className="text-xs font-bold font-display-bn group-hover:text-[#FDE68A] flex items-center justify-between">
+                              <span>{lang === 'bn' ? subItem.labelBn : subItem.labelEn}</span>
+                              <ChevronRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-[#D4AF37]" />
+                            </div>
+                            <div className="text-[10px] text-stone-400 line-clamp-1 mt-0.5">
+                              {lang === 'bn' ? subItem.subBn : subItem.subEn}
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
+
+            {/* 3. Direct Contact Button */}
+            <a
+              href="#contact-section"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('contact', '#contact-section');
+              }}
+              className="ml-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white font-bold text-xs border border-[#D4AF37]/60 shadow-[0_4px_16px_rgba(204,0,0,0.4)] transition-all cursor-pointer gold-shimmer-btn inline-flex items-center gap-1.5"
+            >
+              <span>{lang === 'bn' ? 'যোগাযোগ' : 'Contact'}</span>
+            </a>
           </nav>
 
-          {/* RIGHT SIDE: Top Language Switcher (বাংলা | English) + Mobile Hamburger Icon */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* RIGHT SIDE: Language Switcher + Mobile Hamburger Button */}
+          <div className="flex items-center gap-2 shrink-0">
             <div
-              className={`inline-flex items-center rounded-full p-0.5 sm:p-1 border transition-all duration-300 ${
-                isScrolled
-                  ? 'bg-[#FAF8F5] border-[#CC0000]/25 text-[#1C1917]'
-                  : 'bg-black/55 backdrop-blur-md border-white/35 text-white'
-              }`}
+              className="inline-flex items-center rounded-full p-0.5 border border-[#D4AF37]/35 bg-black/60 backdrop-blur-md text-white text-xs"
               role="group"
               aria-label="Language Switcher"
             >
               <button
                 type="button"
                 onClick={() => setLang('bn')}
-                className={`px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                   lang === 'bn'
                     ? 'bg-[#CC0000] text-white shadow-xs'
-                    : isScrolled
-                    ? 'text-[#57534E] hover:text-[#CC0000]'
-                    : 'text-white/85 hover:text-white'
+                    : 'text-stone-300 hover:text-white'
                 }`}
               >
                 বাংলা
               </button>
-              <span
-                className={`text-xs px-0.5 select-none ${
-                  isScrolled ? 'text-stone-300' : 'text-white/40'
-                }`}
-              >
-                |
-              </span>
+              <span className="text-xs px-0.5 text-white/30 select-none">|</span>
               <button
                 type="button"
                 onClick={() => setLang('en')}
-                className={`px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-300 cursor-pointer ${
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                   lang === 'en'
                     ? 'bg-[#CC0000] text-white shadow-xs'
-                    : isScrolled
-                    ? 'text-[#57534E] hover:text-[#CC0000]'
-                    : 'text-white/85 hover:text-white'
+                    : 'text-stone-300 hover:text-white'
                 }`}
               >
                 English
               </button>
             </div>
 
-            {/* Mobile Hamburger Menu Icon Button (Touch Friendly 44x44px) */}
+            {/* Mobile Hamburger Menu Icon Button */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className={`xl:hidden w-10 h-10 min-[375px]:w-11 min-[375px]:h-11 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
-                isScrolled
-                  ? 'bg-[#FAF8F5] border-[#D4AF37] text-[#CC0000] hover:bg-[#CC0000] hover:text-white'
-                  : 'bg-black/55 border-[#D4AF37]/80 text-white hover:bg-[#CC0000]'
-              }`}
+              className="lg:hidden w-10 h-10 rounded-xl bg-black/60 border border-[#D4AF37]/50 text-white hover:bg-[#CC0000] flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Open Mobile Navigation Menu"
               aria-expanded={isMobileMenuOpen}
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 text-[#FDE68A]" />
             </button>
           </div>
         </div>
       </header>
 
       {/* =================================================================== */}
-      {/* SMOOTH MOBILE SIDE DRAWER MENU                                      */}
-      {/* Contains: Home, About, Members, Drama, Programs, Gallery, Videos,   */}
-      {/* Join Us, Contact + Close Button + Touch Friendly Spacing            */}
+      {/* CLEAN HOLLYWOOD-STYLE MOBILE SIDE DRAWER MENU                       */}
+      {/* Grouped Intelligently: Culture | Media | Community | Contact        */}
       {/* =================================================================== */}
       <div
-        className={`xl:hidden fixed inset-0 z-[70] transition-all duration-300 ${
+        className={`lg:hidden fixed inset-0 z-[70] transition-all duration-300 ${
           isMobileMenuOpen
             ? 'visible opacity-100 pointer-events-auto'
             : 'invisible opacity-0 pointer-events-none'
@@ -1010,75 +1094,66 @@ export default function App() {
         {/* Backdrop Scrim */}
         <div
           onClick={() => setIsMobileMenuOpen(false)}
-          className="absolute inset-0 bg-black/70 backdrop-blur-xs transition-opacity duration-300"
+          className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
         />
 
         {/* Slide-Over Side Drawer Panel */}
         <aside
           aria-label="Mobile Side Navigation"
-          className={`absolute top-0 right-0 bottom-0 w-[290px] min-[375px]:w-[310px] sm:w-[340px] max-w-[86vw] bg-[#FAF8F5] border-l-2 border-[#D4AF37] shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-out ${
+          className={`absolute top-0 right-0 bottom-0 w-[300px] min-[375px]:w-[320px] max-w-[86vw] bg-[#0E0605] border-l-2 border-[#D4AF37]/50 shadow-2xl flex flex-col justify-between transition-transform duration-300 ease-out text-white ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
-          {/* Drawer Top Header: Logo + Organization Name + Close Button */}
-          <div className="p-4 bg-gradient-to-r from-[#8C0808] via-[#CC0000] to-[#6B0505] text-white border-b-2 border-[#D4AF37] flex items-center justify-between gap-2">
+          {/* Drawer Top Header */}
+          <div className="p-4 bg-gradient-to-r from-[#180A09] to-[#0A0404] text-white border-b border-[#D4AF37]/30 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-10 h-10 rounded-full bg-white p-0.5 shrink-0 shadow-md overflow-hidden">
                 {customLogoUrl || siteSettings.logo ? (
                   <img
                     src={customLogoUrl || siteSettings.logo}
-                    alt="রাধামাধব সাংস্কৃতিক জোট লোগো"
+                    alt="রাধামাধব সনাতন সাংস্কৃতিক জোট"
                     className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
-                  <OfficialLogo
-                    variant="medallion-seal"
-                    className="w-full h-full"
-                  />
+                  <OfficialLogo variant="medallion-seal" className="w-full h-full" />
                 )}
               </div>
               <div className="min-w-0">
-                <div className="text-sm sm:text-base font-bold font-display-bn truncate leading-tight">
+                <div className="text-sm font-bold font-display-bn truncate text-white leading-tight">
                   {t(
-                    siteSettings.organization_name || 'রাধামাধব সাংস্কৃতিক জোট',
-                    siteSettings.organization_name_en ||
-                      'Radhamadhob Cultural Alliance'
+                    siteSettings.organization_name || 'রাধামাধব সনাতন সাংস্কৃতিক জোট',
+                    siteSettings.organization_name_en || 'Radhamadhob Cultural Alliance'
                   )}
                 </div>
-                <div className="text-[11px] text-[#FDE68A] truncate">
-                  {lang === 'bn'
-                    ? 'নেভিগেশন মেনু'
-                    : 'Navigation Menu'}
+                <div className="text-[10px] text-[#FDE68A] font-mono-code truncate">
+                  {lang === 'bn' ? 'মেনু নেভিগেশন' : 'Navigation Menu'}
                 </div>
               </div>
             </div>
 
-            {/* Close Button */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Close Side Menu"
-              className="w-10 h-10 rounded-xl bg-black/30 hover:bg-black/50 text-white border border-white/30 flex items-center justify-center shrink-0 cursor-pointer"
+              className="w-9 h-9 rounded-xl bg-white/10 hover:bg-[#CC0000] text-white flex items-center justify-center shrink-0 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Drawer Scrollable Menu Links (9 Items with Touch-Friendly Spacing) */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
-            {/* Mobile Language Switcher inside Drawer */}
-            <div className="flex items-center justify-between bg-white px-3.5 py-2.5 rounded-xl border border-[#E5DEC9] mb-2">
-              <span className="text-xs font-bold text-[#57534E]">
-                {lang === 'bn' ? 'ভাষা:' : 'Language:'}
+          {/* Drawer Scrollable Grouped Content */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center justify-between bg-[#1A0A09] p-2.5 rounded-xl border border-[#D4AF37]/25">
+              <span className="text-xs font-bold text-stone-300">
+                {lang === 'bn' ? 'ভাষা নির্ধারণ:' : 'Language:'}
               </span>
-              <div className="inline-flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-lg border border-[#E5DEC9]">
+              <div className="inline-flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/10">
                 <button
                   type="button"
                   onClick={() => setLang('bn')}
                   className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer ${
-                    lang === 'bn'
-                      ? 'bg-[#CC0000] text-white'
-                      : 'text-[#57534E]'
+                    lang === 'bn' ? 'bg-[#CC0000] text-white' : 'text-stone-400'
                   }`}
                 >
                   বাংলা
@@ -1087,9 +1162,7 @@ export default function App() {
                   type="button"
                   onClick={() => setLang('en')}
                   className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer ${
-                    lang === 'en'
-                      ? 'bg-[#CC0000] text-white'
-                      : 'text-[#57534E]'
+                    lang === 'en' ? 'bg-[#CC0000] text-white' : 'text-stone-400'
                   }`}
                 >
                   English
@@ -1097,51 +1170,63 @@ export default function App() {
               </div>
             </div>
 
-            <nav className="space-y-2" aria-label="Mobile Drawer Links">
-              {MENU_ITEMS.map((item) => {
-                const isActive = activeNav === item.id;
-                return (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(item.id, item.href);
-                    }}
-                    className={`px-4 py-3.5 rounded-xl text-sm font-bold flex items-center justify-between transition-all ${
-                      isActive
-                        ? 'bg-[#CC0000] text-white shadow-sm border border-[#D4AF37]'
-                        : 'bg-white text-[#1C1917] hover:bg-[#FFF5F5] hover:text-[#CC0000] border border-[#E5DEC9]'
-                    }`}
-                  >
-                    <span className="font-display-bn text-[15px]">
-                      {lang === 'bn' ? item.labelBn.split(' (')[0] : item.labelEn}
-                    </span>
-                    <ArrowRight
-                      className={`w-4 h-4 ${
-                        isActive ? 'text-[#FDE68A]' : 'text-[#CC0000]'
-                      }`}
-                    />
-                  </a>
-                );
-              })}
-            </nav>
+            {/* Quick Home Link */}
+            <a
+              href="#hero-section"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('home', '#hero-section');
+              }}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-[#CC0000] text-stone-200 hover:text-white font-bold text-xs flex items-center justify-between transition-colors border border-white/10"
+            >
+              <span>{lang === 'bn' ? 'প্রচ্ছদ' : 'Home'}</span>
+              <ChevronRight className="w-4 h-4 text-[#D4AF37]" />
+            </a>
+
+            {/* Grouped Section Links */}
+            {NAV_GROUPS.map((grp) => (
+              <div key={grp.id} className="space-y-1.5 pt-1">
+                <div className="text-[11px] font-bold text-[#FDE68A] uppercase tracking-wider font-mono-code px-1">
+                  {lang === 'bn' ? grp.labelBn : grp.labelEn}
+                </div>
+                <div className="space-y-1 bg-[#140807] p-1.5 rounded-xl border border-[#D4AF37]/20">
+                  {grp.items.map((it) => {
+                    const isActive = activeNav === it.id;
+                    return (
+                      <a
+                        key={it.id}
+                        href={it.href}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleNavClick(it.id, it.href);
+                        }}
+                        className={`w-full px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between transition-all ${
+                          isActive
+                            ? 'bg-[#CC0000] text-white font-bold'
+                            : 'text-stone-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        <span className="font-display-bn">{lang === 'bn' ? it.labelBn : it.labelEn}</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Drawer Bottom Direct WhatsApp Contact CTA */}
-          <div className="p-4 bg-white border-t border-[#E5DEC9]">
+          {/* Drawer Bottom Contact CTA */}
+          <div className="p-4 bg-[#140807] border-t border-[#D4AF37]/30">
             <a
-              href={floatingWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md"
+              href="#contact-section"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('contact', '#contact-section');
+              }}
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-colors border border-[#D4AF37]/50 gold-shimmer-btn"
             >
-              <span>
-                {lang === 'bn'
-                  ? 'হোয়াটসঅ্যাপে যোগাযোগ করুন'
-                  : 'Contact on WhatsApp'}
-              </span>
+              <span>{lang === 'bn' ? 'যোগাযোগ করুন' : 'Contact Us'}</span>
             </a>
           </div>
         </aside>
@@ -1154,17 +1239,17 @@ export default function App() {
       {/* =================================================================== */}
       <section
         id="hero-section"
-        className="relative w-full h-[420px] min-[375px]:h-[450px] sm:h-[520px] lg:h-[86vh] lg:min-h-[620px] lg:max-h-[860px] bg-[#0F0706] overflow-hidden select-none"
+        className="relative w-full h-[460px] min-[375px]:h-[500px] sm:h-[580px] lg:h-[88vh] lg:min-h-[640px] lg:max-h-[880px] bg-[#0F0706] overflow-hidden select-none"
         onMouseEnter={() => setIsHoveringSlider(true)}
         onMouseLeave={() => setIsHoveringSlider(false)}
       >
-        {/* Background Slides with Smooth Cross-Fade & Subtle Zoom Animation */}
+        {/* Background Slides with Smooth Cross-Fade & Cinematic Slow Zoom (0.2s duration) */}
         {activeHeroSlides.map((slide, index) => {
           const isCurrent = index === currentSlide;
           return (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 transition-opacity duration-200 ease-in-out ${
                 isCurrent
                   ? 'opacity-100 z-10'
                   : 'opacity-0 z-0 pointer-events-none'
@@ -1178,31 +1263,31 @@ export default function App() {
                 decoding="async"
                 fetchPriority={index === 0 ? 'high' : 'auto'}
                 referrerPolicy="no-referrer"
-                className={`w-full h-full object-cover object-center transition-transform duration-[6000ms] ease-out ${
+                className={`w-full h-full object-cover object-center transition-transform duration-[8000ms] ease-out ${
                   isCurrent ? 'scale-105' : 'scale-100'
                 }`}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/40" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/55" />
+              {/* Rich Multi-Layered Theatrical Scrims for High-Contrast Text Legibility */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/35" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/60" />
             </div>
           );
         })}
 
         {/* HERO OVERLAY CONTENT */}
-        <div className="relative z-20 h-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center pt-14 pb-12 sm:pt-16">
-          <div className="max-w-3xl space-y-3 sm:space-y-6 animate-page-enter">
-            {/* Cultural Kicker */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[#FDE68A] text-[11px] sm:text-sm font-semibold tracking-wide max-w-full">
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FDE68A] shrink-0" />
+        <div className="relative z-20 h-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center pt-16 pb-14 sm:pt-20">
+          <div className="max-w-3xl space-y-4 sm:space-y-6 animate-page-enter">
+            {/* Cultural Storytelling Kicker */}
+            <div className="inline-flex items-center gap-2 text-[#FDE68A] text-xs sm:text-sm font-semibold tracking-wide max-w-full">
               <span className="truncate">
                 {lang === 'bn'
-                  ? 'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।'
-                  : 'Let Entertainment be Sattvic, Let Culture be Sanatan — Awaken History, Awaken Consciousness'}
+                  ? 'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন'
+                  : 'Let Entertainment be Sattvic, Culture be Sanatan'}
               </span>
             </div>
 
             {/* Main Hero Title */}
-            <h1 className="text-2xl min-[360px]:text-[26px] min-[414px]:text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-bold text-white font-display-bn leading-[1.2] sm:leading-[1.16] tracking-tight drop-shadow-md">
+            <h1 className="text-2xl min-[360px]:text-[28px] min-[414px]:text-3xl sm:text-5xl md:text-6xl lg:text-[62px] font-bold text-white font-display-bn leading-[1.2] sm:leading-[1.14] tracking-tight drop-shadow-md text-balance">
               {lang === 'bn' ? (
                 siteSettings.hero_title &&
                 siteSettings.hero_title !== 'স্বাগতম রাধামাধব সাংস্কৃতিক জোটে' &&
@@ -1210,7 +1295,7 @@ export default function App() {
                   <span className="block">{siteSettings.hero_title}</span>
                 ) : (
                   <>
-                    <span className="block text-[#FDE68A]">স্বাগতম</span>
+                    <span className="block text-[#FDE68A] font-light italic">স্বাগতম</span>
                     <span className="block mt-0.5 sm:mt-1">
                       {siteSettings.organization_name ||
                         'রাধামাধব সনাতন সাংস্কৃতিক জোট'}
@@ -1225,7 +1310,7 @@ export default function App() {
                 <span className="block">{siteSettings.hero_title_en}</span>
               ) : (
                 <>
-                  <span className="block text-[#FDE68A]">Welcome to</span>
+                  <span className="block text-[#FDE68A] font-light italic">Welcome to</span>
                   <span className="block mt-0.5 sm:mt-1">
                     {siteSettings.organization_name_en ||
                       'Radhamadhob Sanatan Cultural Alliance'}
@@ -1234,14 +1319,8 @@ export default function App() {
               )}
             </h1>
 
-            {/* Decorative Gold & Vermilion Accent Line */}
-            <div className="flex items-center gap-2">
-              <div className="h-1 w-12 sm:w-20 bg-[#CC0000] rounded-full" />
-              <div className="h-1 w-8 sm:w-10 bg-[#D4AF37] rounded-full" />
-            </div>
-
             {/* Hero Subtitle */}
-            <p className="text-xs min-[375px]:text-sm sm:text-xl lg:text-2xl text-stone-100 font-medium leading-relaxed max-w-2xl drop-shadow-xs line-clamp-2 sm:line-clamp-none">
+            <p className="text-xs min-[375px]:text-sm sm:text-lg lg:text-xl text-stone-200 font-medium leading-relaxed max-w-2xl drop-shadow-xs line-clamp-2 sm:line-clamp-none">
               {t(
                 siteSettings.hero_subtitle ||
                   '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।”',
@@ -1251,17 +1330,17 @@ export default function App() {
             </p>
 
             {/* Hero Call-To-Action Buttons */}
-            <div className="pt-1 sm:pt-3 flex flex-wrap items-center gap-2.5 sm:gap-4">
+            <div className="pt-2 sm:pt-4 flex flex-wrap items-center gap-3 sm:gap-4">
               <a
                 href="#about-section"
                 onClick={(e) => {
                   e.preventDefault();
                   handleNavClick('about', '#about-section');
                 }}
-                className="px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white font-bold text-xs sm:text-base border border-[#D4AF37]/80 shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
+                className="gold-shimmer-btn px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white font-bold text-xs sm:text-sm border border-[#D4AF37] shadow-[0_6px_24px_rgba(204,0,0,0.4)] hover:shadow-[0_8px_30px_rgba(204,0,0,0.6)] transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
               >
                 <span>{lang === 'bn' ? 'আমাদের সম্পর্কে ও ইতিহাস' : 'About & History'}</span>
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FDE68A]" />
+                <ArrowRight className="w-4 h-4 text-[#FDE68A]" />
               </a>
 
               <a
@@ -1270,9 +1349,9 @@ export default function App() {
                   e.preventDefault();
                   handleNavClick('join', '#join-section');
                 }}
-                className="px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-xl bg-white/95 hover:bg-[#CC0000] text-[#1C1917] hover:text-white font-bold text-xs sm:text-base border border-white hover:border-[#D4AF37] shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
+                className="px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl bg-white/10 hover:bg-white text-white hover:text-[#1C1917] font-bold text-xs sm:text-sm border border-white/40 hover:border-[#D4AF37] backdrop-blur-md shadow-lg transition-all duration-300 inline-flex items-center gap-2 cursor-pointer group"
               >
-                <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#CC0000]" />
+                <UserPlus className="w-4 h-4 text-[#FDE68A] group-hover:text-[#CC0000] transition-colors" />
                 <span>
                   {lang === 'bn' ? 'অভিনয়শিল্পী ও সদস্য হোন' : 'Join as Performer'}
                 </span>
@@ -1285,8 +1364,8 @@ export default function App() {
         <button
           type="button"
           onClick={handlePrevSlide}
-          aria-label="Previous Slide"
-          className="hidden sm:flex absolute left-4 lg:left-7 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/45 hover:bg-[#CC0000] text-white border border-white/30 hover:border-[#D4AF37] items-center justify-center backdrop-blur-xs transition-all duration-300 cursor-pointer"
+          aria-label={lang === 'bn' ? 'পূর্ববর্তী স্লাইড' : 'Previous Slide'}
+          className="hidden sm:flex absolute left-4 lg:left-7 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full cultural-glass-dark hover:bg-[#CC0000] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] items-center justify-center shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -1294,22 +1373,19 @@ export default function App() {
         <button
           type="button"
           onClick={handleNextSlide}
-          aria-label="Next Slide"
-          className="hidden sm:flex absolute right-4 lg:right-7 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/45 hover:bg-[#CC0000] text-white border border-white/30 hover:border-[#D4AF37] items-center justify-center backdrop-blur-xs transition-all duration-300 cursor-pointer"
+          aria-label={lang === 'bn' ? 'পরবর্তী স্লাইড' : 'Next Slide'}
+          className="hidden sm:flex absolute right-4 lg:right-7 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full cultural-glass-dark hover:bg-[#CC0000] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] items-center justify-center shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* BOTTOM SLIDER CONTROLS BAR (Read-Only Navigation Dots & Play/Pause) */}
-        <div className="absolute bottom-0 inset-x-0 z-30 bg-gradient-to-t from-black/90 via-black/50 to-transparent py-2.5 sm:py-4">
+        {/* BOTTOM SLIDER CONTROLS BAR (Modern Card-Based Indicator & Play/Pause) */}
+        <div className="absolute bottom-0 inset-x-0 z-30 cultural-glass-dark border-t border-white/10 py-2.5 sm:py-3.5">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
-            {/* Active Slide Caption */}
-            <div className="hidden sm:flex items-center gap-2.5 text-xs sm:text-sm text-stone-200 truncate max-w-md">
-              <span className="font-mono-code text-xs font-bold text-[#FDE68A]">
-                {formatNumber(currentSlide + 1)} / {formatNumber(activeHeroSlides.length)}
-              </span>
-              <span aria-hidden="true">·</span>
-              <span className="truncate font-medium">
+            {/* Active Slide Caption (Minimal, No raw numbers) */}
+            <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm text-stone-200 truncate max-w-md">
+              <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0 animate-pulse" />
+              <span className="truncate font-medium text-stone-100">
                 {t(activeSlideData.captionBn, activeSlideData.captionEn)}
               </span>
             </div>
@@ -1319,8 +1395,8 @@ export default function App() {
               <button
                 type="button"
                 onClick={handlePrevSlide}
-                className="sm:hidden p-2 rounded-full bg-white/15 text-white"
-                aria-label="Previous Slide"
+                className="sm:hidden p-2 rounded-full bg-white/15 hover:bg-[#CC0000] text-white transition-colors"
+                aria-label={lang === 'bn' ? 'পূর্ববর্তী স্লাইড' : 'Previous Slide'}
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -1328,7 +1404,7 @@ export default function App() {
               <div
                 className="flex items-center gap-2"
                 role="tablist"
-                aria-label="Hero Slide Navigation Dots"
+                aria-label={lang === 'bn' ? 'হিরো স্লাইড নেভিগেশন' : 'Hero Slide Navigation Dots'}
               >
                 {activeHeroSlides.map((s, idx) => {
                   const isActiveDot = idx === currentSlide;
@@ -1337,11 +1413,11 @@ export default function App() {
                       key={s.id}
                       type="button"
                       onClick={() => setCurrentSlide(idx)}
-                      aria-label={`Slide ${idx + 1}`}
-                      className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      aria-label={lang === 'bn' ? `স্লাইড ${tDigits(idx + 1)}` : `Slide ${idx + 1}`}
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                         isActiveDot
-                          ? 'w-7 sm:w-8 bg-[#CC0000] ring-2 ring-[#D4AF37]'
-                          : 'w-2.5 bg-white/50 hover:bg-white'
+                          ? 'w-7 sm:w-9 bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] shadow-[0_0_10px_rgba(212,175,55,0.6)]'
+                          : 'w-2 bg-white/40 hover:bg-white/70'
                       }`}
                     />
                   );
@@ -1351,8 +1427,8 @@ export default function App() {
               <button
                 type="button"
                 onClick={handleNextSlide}
-                className="sm:hidden p-2 rounded-full bg-white/15 text-white"
-                aria-label="Next Slide"
+                className="sm:hidden p-2 rounded-full bg-white/15 hover:bg-[#CC0000] text-white transition-colors"
+                aria-label={lang === 'bn' ? 'পরবর্তী স্লাইড' : 'Next Slide'}
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -1363,10 +1439,24 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsAutoPlaying((prev) => !prev)}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors cursor-pointer"
-                title={isAutoPlaying ? 'Pause Auto-Play' : 'Resume Auto-Play'}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-[#CC0000] text-white border border-white/20 hover:border-[#D4AF37] transition-all cursor-pointer"
+                title={
+                  lang === 'bn'
+                    ? isAutoPlaying
+                      ? 'স্বয়ংক্রিয় প্লে থামান'
+                      : 'স্বয়ংক্রিয় প্লে চালু করুন'
+                    : isAutoPlaying
+                    ? 'Pause Auto-Play'
+                    : 'Resume Auto-Play'
+                }
                 aria-label={
-                  isAutoPlaying ? 'Pause Auto-Play' : 'Resume Auto-Play'
+                  lang === 'bn'
+                    ? isAutoPlaying
+                      ? 'স্বয়ংক্রিয় প্লে থামান'
+                      : 'স্বয়ংক্রিয় প্লে চালু করুন'
+                    : isAutoPlaying
+                    ? 'Pause Auto-Play'
+                    : 'Resume Auto-Play'
                 }
               >
                 {isAutoPlaying ? (
@@ -1380,490 +1470,44 @@ export default function App() {
         </div>
       </section>
 
+
+
       {/* =================================================================== */}
-      {/* 3. BELOW HERO: COMPACT INTRODUCTION SECTION ("আমাদের উদ্দেশ্য ও যাত্রা") */}
+      {/* 2. CINEMATIC STORYTELLING SECTION ("আমাদের যাত্রা ও সাংস্কৃতিক মহিমা") */}
       {/* =================================================================== */}
-      <section
-        id="intro-section"
-        className="relative py-10 sm:py-16 lg:py-20 bg-[#FAF8F5]"
-      >
-        <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#990000] via-[#D4AF37] to-[#CC0000]" />
-
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl border border-[#E5DEC9] shadow-sm p-6 sm:p-10 lg:p-14">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* LEFT: Circular Organization Seal / Logo (Read-Only) */}
-              <div className="lg:col-span-5 flex flex-col items-center justify-center">
-                <div className="w-44 h-44 sm:w-64 sm:h-64 rounded-full p-2 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#CC0000] shadow-xl flex items-center justify-center">
-                  <div className="w-full h-full rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-4 border-[#FAF8F5]">
-                    {customLogoUrl || siteSettings.logo ? (
-                      <img
-                        src={customLogoUrl || siteSettings.logo}
-                        alt="রাধামাধব সনাতন সাংস্কৃতিক জোট"
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <OfficialLogo
-                        variant="medallion-seal"
-                        className="w-full h-full"
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT: Heading, Short Preview Text & "আরো দেখুন" Button */}
-              <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 text-[#CC0000] text-xs sm:text-sm font-bold tracking-wide uppercase">
-                  <Sparkles className="w-4 h-4" />
-                  <span>
-                    {lang === 'bn'
-                      ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট পরিচিতি · প্রতিষ্ঠিত ২০১১'
-                      : 'Introduction · Radhamadhob Sanatan Cultural Alliance (Est. 2011)'}
-                  </span>
-                </div>
-
-                <h2 className="text-2xl sm:text-4xl lg:text-[40px] font-bold text-[#1C1917] font-display-bn leading-tight">
-                  {t(
-                    siteSettings.intro_title || 'আমাদের উদ্দেশ্য ও সাংস্কৃতিক যাত্রা',
-                    siteSettings.intro_title_en || 'Our Mission & Cultural Journey'
-                  )}
-                </h2>
-
-                <div className="w-16 sm:w-20 h-1 bg-[#CC0000] rounded-full mx-auto lg:mx-0" />
-
-                <p className="text-sm sm:text-lg text-[#44403C] leading-relaxed font-normal">
-                  {t(
-                    siteSettings.intro_text ||
-                      'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
-                    siteSettings.intro_text_en ||
-                      'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites.'
-                  )}
-                </p>
-
-                {isReadMoreExpanded && (
-                  <div className="p-4 sm:p-5 rounded-xl bg-[#FAF8F5] border-l-4 border-[#CC0000] text-left space-y-2.5 animate-page-enter">
-                    <p className="text-sm sm:text-base font-bold text-[#990000] font-display-bn">
-                      {t(
-                        siteSettings.intro_expanded_quote_bn ||
-                          '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।”',
-                        siteSettings.intro_expanded_quote_en ||
-                          '“Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness.”'
-                      )}
-                    </p>
-                    <p className="text-xs sm:text-sm text-[#57534E] leading-relaxed">
-                      {t(
-                        siteSettings.intro_expanded_details_bn ||
-                          'সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়। যোগাযোগ : ০১৭৯৭০৫৯৪১৯ (WhatsApp)।',
-                        siteSettings.intro_expanded_details_en ||
-                          'Dramatizing the history and mythological chronicles of Sanatan Dharma to spread awareness and devotion among everyone through sacred entertainment. We invite you to always stand by our side to carry this mission forward. Contact: 01797059419 (WhatsApp).'
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                <div className="pt-1">
-                  <button
-                    type="button"
-                    onClick={() => setIsReadMoreExpanded((prev) => !prev)}
-                    className="px-6 py-3 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white font-bold text-xs sm:text-sm border border-[#D4AF37]/60 shadow-md inline-flex items-center gap-2 transition-all cursor-pointer"
-                  >
-                    <span>
-                      {isReadMoreExpanded
-                        ? lang === 'bn'
-                          ? 'সংক্ষিপ্ত করুন'
-                          : 'Show Less'
-                        : lang === 'bn'
-                        ? 'আরও দেখুন'
-                        : 'Read More'}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        isReadMoreExpanded ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Wave Divider between Intro and About Us */}
-      <WaveSectionDivider
-        topBg="#FAF8F5"
-        bottomBg="#F3EFE6"
-        variant="red-gold-green"
+      <StorytellingSection
+        settings={siteSettings}
+        portalPhotos={aboutSectionPhotos}
+        logoUrl={customLogoUrl || siteSettings.logo || null}
+        onExploreRepertoire={() => handleNavClick("drama", "#drama-section")}
+        onViewMembers={() => handleNavClick("members", "#members-section")}
       />
 
       {/* =================================================================== */}
-      {/* 4. ABOUT US & HISTORY SECTION ("আমাদের সম্পর্কে ও ইতিহাস")           */}
+      {/* 3. FOUR CULTURAL HIGHLIGHTS (চারটি অনন্য গৌরবগাঁথা - 3D Museum Pillars) */}
       {/* =================================================================== */}
-      <section
-        id="about-section"
-        className="relative py-10 sm:py-16 lg:py-24 bg-[#F3EFE6]"
-      >
-        <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-14">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-            {/* LEFT SIDE: Circular Cultural Stage Photo (Read-Only Viewer) */}
-            <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="relative">
-                <div className="w-60 h-60 sm:w-80 sm:h-80 lg:w-[380px] lg:h-[380px] rounded-full p-2.5 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#0F5132] shadow-2xl flex items-center justify-center">
-                  <div className="w-full h-full rounded-full overflow-hidden border-4 border-white bg-[#1C1917] relative group">
-                    <img
-                      src={activeAboutPhoto}
-                      alt={
-                        lang === 'bn'
-                          ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট — মূল সাংস্কৃতিক আলোকচিত্র'
-                          : 'Radhamadhob Sanatan Cultural Alliance — Original Cultural Photo'
-                      }
-                      loading="lazy"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 inset-x-6 text-center">
-                      <span className="text-[11px] sm:text-xs font-bold text-[#FDE68A] drop-shadow-xs block">
-                        {lang === 'bn'
-                          ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট · মঞ্চ পরিবেশনা'
-                          : 'Radhamadhob Sanatan Cultural Alliance · Stage Performance'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <CulturalHighlightsSection />
 
-              {/* 6 Circular Thumbnails to switch original photo in About section */}
-              <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-5">
-                {aboutSectionPhotos.map((photo, idx) => (
-                  <button
-                    key={photo.id}
-                    type="button"
-                    onClick={() => setActiveAboutPhoto(photo.imageUrl)}
-                    aria-label={
-                      lang === 'bn'
-                        ? `সাংস্কৃতিক আলোকচিত্র ${formatNumber(idx + 1)}`
-                        : `Cultural Stage Photo ${idx + 1}`
-                    }
-                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${
-                      activeAboutPhoto === photo.imageUrl
-                        ? 'border-[#CC0000] scale-110 ring-2 ring-[#D4AF37]'
-                        : 'border-[#E5DEC9] opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={photo.imageUrl}
-                      alt={lang === 'bn' ? photo.titleBn : photo.titleEn}
-                      loading="lazy"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* RIGHT SIDE: Heading, Description + "আরো দেখুন" Button on Mobile */}
-            <div className="lg:col-span-7 space-y-4 sm:space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#CC0000] uppercase tracking-wider">
-                <Sparkles className="w-4 h-4 text-[#0F5132]" />
-                <span>
-                  {lang === 'bn'
-                    ? 'সংগঠন পরিচিতি ও ইতিহাস (২০১১ সাল হতে চলমান)'
-                    : 'About & History (Since 2011)'}
-                </span>
-              </div>
-
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#1C1917] font-display-bn leading-tight">
-                {lang === 'bn'
-                  ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট — উদ্দেশ্য ও ইতিহাস'
-                  : 'Radhamadhob Sanatan Cultural Alliance — Mission & History'}
-              </h2>
-
-              <div className="flex items-center gap-2">
-                <div className="h-1.5 w-16 sm:w-20 bg-[#CC0000] rounded-full" />
-                <div className="h-1.5 w-10 bg-[#D4AF37] rounded-full" />
-                <div className="h-1.5 w-6 bg-[#0F5132] rounded-full" />
-              </div>
-
-              {/* Official Motto Banner */}
-              <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#FFF5F5] to-[#FAF8F5] border-l-4 border-[#CC0000] shadow-2xs">
-                <p className="text-sm sm:text-lg font-bold text-[#990000] font-display-bn">
-                  {lang === 'bn'
-                    ? '“বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা।”'
-                    : '“Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness.”'}
-                </p>
-              </div>
-
-              {/* Primary Description Paragraph */}
-              <p className="text-sm sm:text-lg lg:text-xl text-[#1C1917] font-medium leading-relaxed">
-                {t(
-                  siteSettings.about ||
-                    'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা। পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন এবং অধর্মীয় বিনোদন বন্ধে সচেতনতা সৃষ্টি করা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা। আমরা চাই আমাদের এই লক্ষ্যকে এগিয়ে নিতে আপনারাও আমাদের পাশে থাকুন সবসময়।',
-                  siteSettings.about_en ||
-                    'Our primary objective is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment, and to create awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites. We dramatize the history and mythological events of Sanatan Dharma to spread awareness and devotion among everyone through entertainment. We invite you to always stand by our side to carry this mission forward.'
-                )}
-              </p>
-
-              {/* Secondary History Paragraph (Hidden on mobile until "আরও দেখুন" is clicked) */}
-              <p
-                className={`${
-                  isAboutExpanded ? 'block' : 'hidden md:block'
-                } text-xs sm:text-base lg:text-lg text-[#44403C] leading-relaxed`}
-              >
-                {t(
-                  siteSettings.about_secondary ||
-                    'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দিরসহ দেশের স্বনামধন্য বিভিন্ন পূজা মণ্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।',
-                  siteSettings.about_secondary_en ||
-                    'Since 2011, Radhamadhob Sanatan Cultural Alliance has been striving with glory to highlight the unknown mythological history of Sanatan Dharma and promote Sattvic entertainment. Every year, Sanatani dramas are staged at major venues across Dhaka and Bangladesh including Shilpakala Academy, Shishu Academy, Krishibid Institution, Institution of Engineers, ISKCON Temple, and renowned Puja mandaps.'
-                )}
-              </p>
-
-              {/* Mobile "আরও দেখুন" (Read More) Button */}
-              <div className="md:hidden pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsAboutExpanded((prev) => !prev)}
-                  className="px-6 py-3 rounded-xl bg-[#CC0000] hover:bg-[#990000] text-white font-bold text-xs sm:text-sm border border-[#D4AF37] shadow-md inline-flex items-center gap-2 cursor-pointer"
-                >
-                  <span>
-                    {isAboutExpanded
-                      ? lang === 'bn'
-                        ? 'সংক্ষিপ্ত করুন'
-                        : 'Show Less'
-                      : lang === 'bn'
-                      ? 'আরও দেখুন (সম্পূর্ণ ইতিহাস)'
-                      : 'Read More (Full History)'}
-                  </span>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-300 ${
-                      isAboutExpanded ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-              </div>
-
-              {/* THREE HIGHLIGHT CARDS */}
-              <div
-                className={`${
-                  isAboutExpanded ? 'grid' : 'hidden md:grid'
-                } pt-2 grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5`}
-              >
-                {ABOUT_HIGHLIGHT_CARDS.map((card) => {
-                  const IconComponent = card.icon;
-                  return (
-                    <div
-                      key={card.id}
-                      className="bg-white rounded-2xl p-5 border border-[#E5DEC9] shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between group"
-                    >
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span
-                            className="text-lg font-bold font-display-bn"
-                            style={{ color: card.accentColor }}
-                          >
-                            {lang === 'bn' ? card.numBn : card.numEn}
-                          </span>
-                          <div
-                            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-xs"
-                            style={{ backgroundColor: card.accentColor }}
-                          >
-                            <IconComponent className="w-4 h-4" />
-                          </div>
-                        </div>
-
-                        <h3 className="text-base sm:text-lg font-bold text-[#1C1917] font-display-bn leading-snug">
-                          {lang === 'bn' ? card.titleBn : card.titleEn}
-                        </h3>
-
-                        <p className="text-xs text-[#57534E] leading-relaxed">
-                          {lang === 'bn' ? card.descBn : card.descEn}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* FULL OFFICIAL HISTORY SECTION (ইতিহাস : ২০১১ সাল হতে এখনো পর্যন্ত) */}
-          <div
-            className={`${
-              isAboutExpanded ? 'block' : 'hidden md:block'
-            } bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#D4AF37]/50 shadow-sm space-y-6`}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E5DEC9] pb-4">
-              <div className="space-y-1">
-                <span className="text-xs font-bold text-[#CC0000] uppercase tracking-wider block">
-                  {lang === 'bn'
-                    ? 'ইতিহাস ও ঐতিহ্য · ২০১১ সাল হতে চলমান'
-                    : 'Our Glorious History · Since 2011'}
-                </span>
-                <h3 className="text-xl sm:text-3xl font-bold text-[#1C1917] font-display-bn">
-                  {lang === 'bn'
-                    ? 'ইতিহাস : রাধামাধব সনাতন সাংস্কৃতিক জোট'
-                    : 'History : Radhamadhob Sanatan Cultural Alliance'}
-                </h3>
-              </div>
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FFF5F5] border border-[#CC0000]/25 text-xs font-bold text-[#990000]">
-                <Sparkles className="w-3.5 h-3.5 text-[#CC0000]" />
-                <span>
-                  {lang === 'bn'
-                    ? 'যোগাযোগ : ০১৭৯৭০৫৯৪১৯ (WhatsApp)'
-                    : 'Contact : 01797059419 (WhatsApp)'}
-                </span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 text-xs sm:text-base text-[#44403C] leading-relaxed">
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-2.5">
-                <h4 className="font-bold text-[#990000] font-display-bn text-sm sm:text-lg">
-                  {lang === 'bn'
-                    ? '১. ২০১১ সাল হতে গৌরবময় পথচলা ও সুসংগঠিত সংগঠন'
-                    : '1. Glorious Journey Since 2011 & Organized Alliance'}
-                </h4>
-                <p>
-                  {lang === 'bn'
-                    ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট ২০১১ সাল হতে এখনো পর্যন্ত স্বমহিমায় বিনোদনের মাধ্যমে সনাতন ধর্মের অজানা পৌরাণিক ইতিহাসকে সকলের মধ্যে তুলে ধরতে এবং সনাতন ধর্মীয় সাত্ত্বিক বিনোদন প্রচারের জন্য দৃঢ় প্রচেষ্টা চালাচ্ছে। রাধামাধব সনাতন সাংস্কৃতিক জোট বাংলাদেশের অন্যতম প্রাচীন ও সুসংগঠিত একটি সনাতন ধর্ম প্রচারকারী সাংস্কৃতিক সংগঠন।'
-                    : 'Since 2011, Radhamadhob Sanatan Cultural Alliance has been striving with glory to highlight the unknown mythological history of Sanatan Dharma and promote Sattvic entertainment. It is one of the oldest and most well-organized Sanatan Dharma propagating cultural organizations in Bangladesh.'}
-                </p>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-2.5">
-                <h4 className="font-bold text-[#0F5132] font-display-bn text-sm sm:text-lg">
-                  {lang === 'bn'
-                    ? '২. বাংলাদেশের বৃহত্তর মঞ্চ ও পূজা মণ্ডপে নিয়মিত মঞ্চায়ন'
-                    : '2. Regular Staging at Major Venues Across Bangladesh'}
-                </h4>
-                <p>
-                  {lang === 'bn'
-                    ? 'এই সংগঠনের পক্ষ থেকে ঢাকা তথা বাংলাদেশের বৃহত্তর মঞ্চসমূহ যেমন শিল্পকলা, শিশু একাডেমি, কৃষিবিদ ইনস্টিটিউট, ইঞ্জিনিয়ারিং ইনস্টিটিউট, ইসকন মন্দিরসহ দেশের স্বনামধন্য বিভিন্ন পূজা মণ্ডপে প্রতিবছরই সনাতনী নাটক মঞ্চায়ন করা হচ্ছে।'
-                    : 'On behalf of this organization, Sanatani dramas are staged every year at the largest stages of Dhaka and Bangladesh — including Shilpakala Academy, Shishu Academy, Krishibid Institution, Institution of Engineers, ISKCON Temple, and renowned Puja mandaps across the country.'}
-                </p>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-2.5">
-                <h4 className="font-bold text-[#B45309] font-display-bn text-sm sm:text-lg">
-                  {lang === 'bn'
-                    ? '৩. বাংলাদেশের প্রথম বৈদিক ফ্যাশন শো ও গীতিনাট্য'
-                    : '3. First Vedic Fashion Show & Musical Dramas in Bangladesh'}
-                </h4>
-                <p>
-                  {lang === 'bn'
-                    ? 'বাংলাদেশের প্রথম বৈদিক ফ্যাশন শো, বিশ্বরূপ দর্শন এবং দশাবতারের মতো গীতিনাট্য এই সংগঠন থেকেই মঞ্চায়িত হয়েছিল। এছাড়াও ধর্মীয় বিনোদনের পাশাপাশি সামাজিক সংস্কারমূলক এবং সামাজিক দাতব্য বিভিন্ন কার্যক্রমও পরিচালনা করে থাকে।'
-                    : 'Bangladesh’s first Vedic Fashion Show, as well as musical dramas like Vishwaroopa Darshan and Dashavatara, were staged by this organization. Alongside religious entertainment, the alliance also conducts social reform and charitable activities.'}
-                </p>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-2.5">
-                <h4 className="font-bold text-[#990000] font-display-bn text-sm sm:text-lg">
-                  {lang === 'bn'
-                    ? '৪. সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেমের পথিকৃৎ'
-                    : '4. Pioneer of State-of-the-Art Digital Sound Recording'}
-                </h4>
-                <p>
-                  {lang === 'bn'
-                    ? 'বাংলাদেশের সনাতন নাট্য সংগঠনগুলোর মধ্যে আমরাই প্রথম, প্রচলিত মাইক্রোফোন ব্যবহার করে নাটক মঞ্চায়ন বর্জন করে, সর্বাধুনিক ডিজিটাল সাউন্ড রেকর্ডিং সিস্টেম পদ্ধতি ব্যবহার করে নাটক মঞ্চায়নের প্রচলন শুরু করি। যা ২০১১ সাল থেকে শুরু করে এখনো পর্যন্ত চলমান। এতে করে সনাতন ধর্মীয় বিনোদনকে আরও সার্বজনীন রূপ দান করি।'
-                    : 'Among the Sanatan theatre organizations in Bangladesh, we were the first to abandon traditional microphone staging and pioneer drama performances using a state-of-the-art digital sound recording system — running continuously since 2011 to make Sanatan religious entertainment truly universal.'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* MISSION & VISION BLOCKS */}
-          <div
-            id="mission-vision-section"
-            className={`${
-              isAboutExpanded ? 'grid' : 'hidden md:grid'
-            } pt-4 grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8`}
-          >
-            {/* BLOCK 1: আমাদের লক্ষ্য */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5DEC9] shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#CC0000] to-[#D4AF37]" />
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#FFF5F5] border border-[#CC0000]/20 text-[#CC0000] flex items-center justify-center shrink-0">
-                  <Target className="w-6 h-6" />
-                </div>
-                <div className="space-y-2">
-                  <span className="text-xs font-bold text-[#CC0000] uppercase tracking-wider block">
-                    {lang === 'bn' ? 'আমাদের সুদূরপ্রসারী লক্ষ্য' : 'Our Long-Term Vision'}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#1C1917] font-display-bn">
-                    {lang === 'bn' ? 'আমাদের লক্ষ্য' : 'Our Vision'}
-                  </h3>
-                  <p className="text-sm sm:text-base text-[#44403C] font-medium leading-relaxed">
-                    “
-                    {t(
-                      siteSettings.vision_text ||
-                        'বিনোদন হোক সাত্ত্বিক, সংস্কৃতি হোক সনাতন—জাগুক ইতিহাস, জাগুক চেতনা। সনাতন ধর্মের ইতিহাস এবং পৌরাণিক ঘটনাপ্রবাহকে নাট্যরূপ দান করে বিনোদনের মাধ্যমে সকলের মাঝে প্রচার, প্রসার এবং সচেতনতা সৃষ্টি করা।',
-                      siteSettings.vision_text_en ||
-                        'Let entertainment be Sattvic, let culture be Sanatan — Awaken history, awaken consciousness. Dramatizing the history and mythological chronicles of Sanatan Dharma to spread awareness and devotion among all.'
-                    )}
-                    ”
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* BLOCK 2: আমাদের উদ্দেশ্য */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5DEC9] shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#0F5132] to-[#D4AF37]" />
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#F0FDF4] border border-[#0F5132]/20 text-[#0F5132] flex items-center justify-center shrink-0">
-                  <Compass className="w-6 h-6" />
-                </div>
-                <div className="space-y-2">
-                  <span className="text-xs font-bold text-[#0F5132] uppercase tracking-wider block">
-                    {lang === 'bn'
-                      ? 'আমাদের মূল উদ্দেশ্য'
-                      : 'Our Core Mission'}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#1C1917] font-display-bn">
-                    {lang === 'bn' ? 'আমাদের উদ্দেশ্য' : 'Our Mission'}
-                  </h3>
-                  <p className="text-sm sm:text-base text-[#44403C] font-medium leading-relaxed">
-                    “
-                    {t(
-                      siteSettings.mission_text ||
-                        'আমাদের প্রধান উদ্দেশ্য হচ্ছে বৈদিক এবং সাত্ত্বিক বিনোদনের মাধ্যমে সনাতন ধর্মের প্রচার এবং প্রসার করা এবং পূজা মণ্ডপ তথা পবিত্র তীর্থস্থানগুলোতে অপবিত্র বিনোদন বন্ধে সচেতনতা সৃষ্টি করা।',
-                      siteSettings.mission_text_en ||
-                        'Our primary mission is to propagate and expand Sanatan Dharma through Vedic and Sattvic entertainment and build awareness to stop impure entertainment at Puja mandaps and sacred pilgrimage sites.'
-                    )}
-                    ”
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Wave Divider between About/Mission and Members */}
-      <WaveSectionDivider
-        topBg="#F3EFE6"
-        bottomBg="#FAF7F0"
-        variant="gold-green"
-        flip
+      {/* =================================================================== */}
+      {/* 5. PHOTO GALLERY SECTION (ফটো গ্যালারি ও মঞ্চের স্মৃতিচারণ)         */}
+      {/* =================================================================== */}
+      <PhotoGallerySection
+        gallery={gallery}
+        categories={galleryCategories}
       />
 
       {/* =================================================================== */}
-      {/* 5. HONORABLE MEMBERS SECTION (আমাদের সম্মানিত সদস্যবৃন্দ — Read-Only) */}
+      {/* 6. HONORABLE MEMBERS SECTION (আমাদের সম্মানিত সদস্যবৃন্দ — Read-Only) */}
       {/* =================================================================== */}
       <MemberDirectorySection members={members} />
 
       {/* =================================================================== */}
-      {/* 6. DRAMA SHOWCASE & YOUTUBE VIDEOS SECTION (Read-Only)              */}
+      {/* 7. DRAMA SHOWCASE & YOUTUBE VIDEOS SECTION (Read-Only)              */}
       {/* =================================================================== */}
       <DramaAndVideoSection dramas={dramas} videos={videos} />
 
       {/* =================================================================== */}
-      {/* 7. CULTURAL PROGRAMS, EVENTS & PHOTO GALLERY SECTION (Read-Only)    */}
+      {/* 8. CULTURAL PROGRAMS & SPECIAL EVENTS SECTION (Read-Only)           */}
       {/* =================================================================== */}
       <CulturalProgramAndGallerySection
         programs={programs}
@@ -1906,59 +1550,19 @@ export default function App() {
         </button>
       )}
 
-      {/* =================================================================== */}
-      {/* FIXED FLOATING WHATSAPP BUTTON (Bottom Right Corner, Pulse + Tooltip) */}
-      {/* Link: https://wa.me/8801797059419                                   */}
-      {/* Tooltip: "WhatsApp এ যোগাযোগ করুন"                                   */}
-      {/* =================================================================== */}
-      <div className="fixed bottom-5 right-4 sm:right-5 z-[60] flex items-center gap-2.5 group">
-        {/* Tooltip Label */}
-        <a
-          href={floatingWhatsAppUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1C1917]/95 text-white text-xs sm:text-sm font-bold font-display-bn border border-[#25D366]/60 shadow-xl opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto whitespace-nowrap"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#25D366] animate-ping" />
-          <span>
-            {lang === 'bn'
-              ? 'হোয়াটসঅ্যাপে যোগাযোগ করুন'
-              : 'Chat with Us on WhatsApp'}
-          </span>
-        </a>
 
-        {/* Round Green WhatsApp Button with Pulse Ring */}
-        <a
-          href={floatingWhatsAppUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={
-            lang === 'bn'
-              ? 'হোয়াটসঅ্যাপে যোগাযোগ করুন'
-              : 'Chat with Us on WhatsApp'
-          }
-          title={
-            lang === 'bn'
-              ? 'হোয়াটসঅ্যাপে যোগাযোগ করুন'
-              : 'Chat with Us on WhatsApp'
-          }
-          className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-[#128C7E] via-[#25D366] to-[#22c35e] text-white flex items-center justify-center shadow-[0_8px_30px_rgba(37,211,102,0.55)] hover:shadow-[0_12px_38px_rgba(37,211,102,0.85)] border-2 border-white transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer"
-        >
-          {/* Animated Pulse Ring */}
-          <span
-            className="absolute inset-0 rounded-full bg-[#25D366] animate-whatsapp-pulse pointer-events-none"
-            aria-hidden="true"
-          />
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="relative z-10 w-7 h-7 sm:w-8 sm:h-8 text-white drop-shadow-xs"
-            aria-hidden="true"
-          >
-            <path d="M12.031 2.01c-5.518 0-9.998 4.48-9.998 9.998 0 1.763.459 3.485 1.332 5.003L2 22l5.122-1.343a9.957 9.957 0 0 0 4.908 1.298h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.671-1.04-5.182-2.928-7.071A9.935 9.935 0 0 0 12.031 2.01Zm0 18.297h-.003a8.285 8.285 0 0 1-4.224-1.157l-.303-.18-3.141.824.838-3.061-.197-.314a8.278 8.278 0 0 1-1.272-4.411c0-4.576 3.724-8.3 8.303-8.3 2.217 0 4.302.864 5.87 2.432a8.248 8.248 0 0 1 2.43 5.869c0 4.577-3.725 8.298-8.301 8.298Zm4.554-6.214c-.249-.125-1.477-.729-1.706-.812-.229-.083-.395-.125-.562.125-.166.25-.645.812-.791.979-.145.166-.291.187-.54.062-.25-.125-1.054-.388-2.008-1.239-.742-.662-1.243-1.48-1.389-1.73-.145-.25-.015-.385.11-.509.112-.112.25-.292.374-.438.125-.145.167-.25.25-.416.083-.167.042-.312-.021-.437-.062-.125-.562-1.354-.77-1.854-.202-.486-.408-.42-.562-.428l-.478-.008c-.167 0-.437.062-.666.312-.229.25-.874.854-.874 2.083s.895 2.416 1.02 2.583c.125.166 1.761 2.689 4.267 3.77.596.257 1.061.411 1.424.526.598.19 1.143.163 1.573.099.48-.072 1.477-.604 1.685-1.187.208-.583.208-1.083.146-1.187-.063-.104-.229-.167-.479-.292Z" />
-          </svg>
-        </a>
-      </div>
+      {/* =================================================================== */}
+      {/* FLOATING WHATSAPP BUTTON (Fixed Bottom Right, Persistent Everywhere) */}
+      {/* =================================================================== */}
+      <FloatingWhatsAppButton
+        whatsappNumber={
+          siteSettings.whatsapp_number ||
+          siteSettings.whatsapp ||
+          siteSettings.phone_number ||
+          '+880 1797-059419'
+        }
+      />
+
     </div>
   );
 }

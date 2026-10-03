@@ -18,6 +18,11 @@ import durgaLionCurtainImg from '../assets/images/durga_lion_mahishasura_curtain
 import durgaSunsetMeditationImg from '../assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
 import durgaSunsetProfileImg from '../assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
 import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
+import krishnaRasLeelaImg from '../assets/images/krishna_ras_leela_stage_1791070495861.jpg';
+import saraswatiPujaImg from '../assets/images/saraswati_puja_celebration_1791070508405.jpg';
+import dhakiDrummersImg from '../assets/images/dhaki_drummers_durga_puja_1791070519329.jpg';
+import bhaktaHaridasImg from '../assets/images/bhakta_haridas_stage_drama_1791070531334.jpg';
+import gitaJayantiImg from '../assets/images/gita_jayanti_recitation_1791070544226.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -399,22 +404,7 @@ export const INITIAL_EVENTS_SEED: EventRecord[] = [
  */
 export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
   {
-    id: 'gal-001-pandal-stage-cast',
-    image: pandalStageCastGroupImg,
-    title: 'পূজা মণ্ডপ মঞ্চে মহাদেব, মা দুর্গা ও পূর্ণাঙ্গ নাট্যদল',
-    titleEn: 'Pandal Stage Cast with Lord Shiva, Devi Durga & Asura Warriors',
-    category: 'সাংস্কৃতিক অনুষ্ঠান',
-    description:
-      'শারদীয় দুর্গোৎসব মণ্ডপ মঞ্চে বাঘছাল পরিহিত মহাদেব, দশভুজা দুর্গা, মা কালী, স্বর্ণবর্মধারী অসুর যোদ্ধা ও শিশু শিল্পীদের সম্মিলিত অভিবাদন।',
-    descriptionEn:
-      'Full ensemble cast posing on the red carpet in front of the Durga Puja pandal backdrop with Lord Shiva, Devi Durga, Maa Kali, and child artists.',
-    date: 'শারদীয় উৎসব ২০২৫',
-    seo_filename: 'radhamadhob-pandal-stage-cast-group-01.jpg',
-    alt_text: 'পূজা মণ্ডপ মঞ্চে রাধামাধব সনাতন সাংস্কৃতিক জোটের শিল্পীদল',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-002-durga-sunset-meditation',
+    id: 'gal-001-durga-sunset-meditation',
     image: durgaSunsetMeditationImg,
     title: 'গোধূলি আকাশে পদ্মাসনে ধ্যানমগ্না দেবী মহামায়া',
     titleEn: 'Golden Hour Sunset Meditation of Devi Durga in Banarasi Attire',
@@ -424,38 +414,53 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     descriptionEn:
       'Serene outdoor sunset portrait of Devi Durga seated in lotus meditation posture wearing crimson Banarasi silk, gold ornaments, and Shola crown.',
     date: 'শারদীয় দুর্গোৎসব ২০২৫',
-    seo_filename: 'radhamadhob-devi-durga-sunset-meditation-02.jpg',
+    seo_filename: 'radhamadhob-devi-durga-sunset-meditation-01.jpg',
     alt_text: 'গোধূলি আকাশে ধ্যানমগ্না দেবী দুর্গা — রাধামাধব সনাতন সাংস্কৃতিক জোট',
     aspectHint: 'tall',
   },
   {
-    id: 'gal-003-asura-trio-dialogue',
-    image: asuraTrioStageImg,
-    title: 'অসুর রাজদরবারে তিন পরাক্রমশালী যোদ্ধার নাটকীয় সংলাপ',
-    titleEn: 'Three Crowned Asura Warriors in Dramatic Stage Dialogue',
-    category: 'নাটক',
-    description:
-      'লাল-নীল এলইডি মঞ্চে স্বর্ণমুকুট ও বর্ম পরিহিত তিন পৌরাণিক যোদ্ধা ও রাজচরিত্রের খড়্গ হাতে বীররসাত্মক সংলাপ।',
-    descriptionEn:
-      'Live stage scene of three crowned mythological warriors in golden armor delivering intense battle dialogue in front of an LED backdrop.',
-    date: '২০২৫',
-    seo_filename: 'radhamadhob-asura-trio-stage-drama-03.jpg',
-    alt_text: 'পৌরাণিক নাটকে তিন অসুর যোদ্ধার মঞ্চ সংলাপ',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-004-durga-stage-spotlight',
-    image: durgaStageSpotlightImg,
-    title: 'মহিষাসুরমর্দিনী নৃত্যনাট্য ও বর্ণাঢ্য মঞ্চ আলোকসজ্জা',
-    titleEn: 'Mahishasuramardini Dance-Drama Under Stage Spotlights',
+    id: 'gal-002-durga-sunset-profile',
+    image: durgaSunsetProfileImg,
+    title: 'সন্ধ্যার স্বর্ণালি আকাশে দেবী দুর্গার শৈল্পিক পার্শ্ব-প্রতিকৃতি',
+    titleEn: 'Golden Hour Side-Profile Portrait of Devi Durga',
     category: 'নৃত্য',
     description:
-      'কেন্দ্রে দেবী দুর্গা ও সিংহবাহন এবং দুই পাশে লাল-সাদা শাড়িতে নৃত্যশিল্পীদের ছন্দোময় সমবেত নৃত্য পরিবেশনা।',
+      'গোধূলির আলোয় শোলার মুকুট, নথ, ঝুমকা ও জরির কাজ করা লাল বেনারসি সাজে দেবী দুর্গার অনন্য প্রতিকৃতি।',
     descriptionEn:
-      'Vibrant live stage performance featuring Devi Durga at center flanked by female and male dancers under concert lighting.',
-    date: 'শারদীয় উৎসব ২০২৫',
-    seo_filename: 'radhamadhob-durga-stage-dance-spotlight-04.jpg',
-    alt_text: 'মহিষাসুরমর্দিনী নৃত্যনাট্যে সমবেত নৃত্যশিল্পীদের পরিবেশনা',
+      'Close-up golden hour profile portrait of Devi Durga showcasing traditional gold Nath nose ring, Jhumka earrings, and Shola crown.',
+    date: '২০২৫',
+    seo_filename: 'radhamadhob-devi-durga-sunset-profile-02.jpg',
+    alt_text: 'স্বর্ণালি গোধূলি আলোয় দেবী দুর্গার প্রতিকৃতি',
+    aspectHint: 'tall',
+  },
+  {
+    id: 'gal-003-durga-green-trident',
+    image: durgaGreenTridentImg,
+    title: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনীর তেজোদীপ্ত রূপ',
+    titleEn: 'Devi Durgatinashini Holding the Sacred Trident',
+    category: 'ধর্মীয় অনুষ্ঠান',
+    description:
+      'ঝলমলে মঞ্চ পর্দার সামনে ত্রিশূল হাতে দেবী দুর্গার করুণাময়ী অথচ তেজোময় ভঙ্গিমা।',
+    descriptionEn:
+      'Atmospheric portrait of Devi Durga in red and gold Banarasi silk holding her trident with both hands.',
+    date: '২০২৫',
+    seo_filename: 'radhamadhob-durga-trident-portrait-03.jpg',
+    alt_text: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনী দুর্গা',
+    aspectHint: 'tall',
+  },
+  {
+    id: 'gal-004-durga-lion-curtain',
+    image: durgaLionCurtainImg,
+    title: 'দশভুজা দেবী দুর্গার মহিষাসুর দলন ও সিংহবাহন দৃশ্য',
+    titleEn: 'Ten-Armed Devi Durga Slaying Mahishasura with Lion Vahana',
+    category: 'নাটক',
+    description:
+      'বেগুনি ও সোনালি মঞ্চ পর্দার সামনে শূল হাতে দশভুজা দেবী দুর্গা, বামে সিংহবাহন এবং ডানে করজোড়ে মহিষাসুর।',
+    descriptionEn:
+      'Stage scene of ten-armed Devi Durga holding her spear as Mahishasura kneels in surrender and the lion vahana crouches on the left.',
+    date: 'শারদীয় দুর্গোৎসব ২০২৫',
+    seo_filename: 'radhamadhob-durga-lion-mahishasura-stage-04.jpg',
+    alt_text: 'মঞ্চে দশভুজা দুর্গার মহিষাসুর বধ ও সিংহবাহন',
     aspectHint: 'wide',
   },
   {
@@ -474,18 +479,18 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     aspectHint: 'tall',
   },
   {
-    id: 'gal-006-full-cast-geometric-floor',
-    image: fullCastGeometricGroupImg,
-    title: 'পৌরাণিক বেশভূষায় রাধামাধব সাংস্কৃতিক জোটের ১৮ জন শিল্পীর পূর্ণাঙ্গ দল',
-    titleEn: 'Full 18-Member Mythological Drama & Dance Troupe',
+    id: 'gal-006-ensemble-finale',
+    image: heroEnsembleImg,
+    title: 'শারদীয় মহিষাসুরমর্দিনী পালা — পূর্ণাঙ্গ শিল্পীদলের সমাপনী দৃশ্য',
+    titleEn: 'Sharodiya Mahishasuramardini Pala — Full Ensemble Stage Finale',
     category: 'সাংস্কৃতিক অনুষ্ঠান',
     description:
-      'দশভুজা দুর্গা, গণেশ, সিংহবাহন, মা কালী, অসুর যোদ্ধা ও নৃত্যশিল্পীদের পূর্ণাঙ্গ দলের সম্মিলিত আলোকচিত্র।',
+      'মঞ্চে লাল-সবুজ-হলুদ শামিয়ানার নিচে দশভুজা দেবী দুর্গা, শিব, লক্ষ্মী, সরস্বতী, কার্তিক, গণেশ ও অসুর চরিত্রে শিল্পীদের সম্মিলিত উপস্থিতি।',
     descriptionEn:
-      '18 performers of Radhamadhob Sanatan Cultural Alliance in full mythological stage costumes posing together.',
-    date: '২০২৫',
-    seo_filename: 'radhamadhob-full-cast-group-photo-06.jpg',
-    alt_text: 'পৌরাণিক পোশাকে রাধামাধব সনাতন সাংস্কৃতিক জোটের পূর্ণাঙ্গ নাট্যদল',
+      'Full multi-generational ensemble cast of Radhamadhob Cultural Alliance on stage beneath the festive canopy.',
+    date: 'শারদীয় উৎসব ২০২৫',
+    seo_filename: 'radhamadhob-ensemble-stage-finale-sharodiya-utsav-06.jpg',
+    alt_text: 'রাধামাধব সাংস্কৃতিক জোটের সাংস্কৃতিক অনুষ্ঠান — পূর্ণাঙ্গ নাট্যদলের সমাপনী দৃশ্য',
     aspectHint: 'wide',
   },
   {
@@ -504,48 +509,48 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     aspectHint: 'tall',
   },
   {
-    id: 'gal-008-rath-yatra-community',
-    image: rathYatraCommunityGroupImg,
-    title: 'রথযাত্রা মহোৎসবে গেরুয়া ও ওঁ-খচিত পোশাকে জোটের সদস্যবৃন্দ',
-    titleEn: 'Alliance Members at Outdoor Rath Yatra Cultural Gathering',
-    category: 'সাংস্কৃতিক অনুষ্ঠান',
-    description:
-      'রথযাত্রা উৎসবে গেরুয়া টি-শার্ট, ধুতি, ওঁ-খচিত পাঞ্জাবি ও শাড়ি পরিহিত রাধামাধব সনাতন সাংস্কৃতিক জোটের সদস্যদের সম্মিলিত উপস্থিতি।',
-    descriptionEn:
-      'Outdoor group photograph of alliance members in traditional saffron attire, dhotis, and saree with folded hands during Rath Yatra.',
-    date: 'রথযাত্রা ২০২৫',
-    seo_filename: 'radhamadhob-rath-yatra-community-gathering-08.jpg',
-    alt_text: 'রথযাত্রা উৎসবে রাধামাধব সনাতন সাংস্কৃতিক জোটের সদস্যবৃন্দ',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-009-durga-lion-curtain',
-    image: durgaLionCurtainImg,
-    title: 'দশভুজা দেবী দুর্গার মহিষাসুর দলন ও সিংহবাহন দৃশ্য',
-    titleEn: 'Ten-Armed Devi Durga Slaying Mahishasura with Lion Vahana',
-    category: 'নাটক',
-    description:
-      'বেগুনি ও সোনালি মঞ্চ পর্দার সামনে শূল হাতে দশভুজা দেবী দুর্গা, বামে সিংহবাহন এবং ডানে করজোড়ে মহিষাসুর।',
-    descriptionEn:
-      'Stage scene of ten-armed Devi Durga holding her spear as Mahishasura kneels in surrender and the lion vahana crouches on the left.',
-    date: 'শারদীয় দুর্গোৎসব ২০২৫',
-    seo_filename: 'radhamadhob-durga-lion-mahishasura-stage-09.jpg',
-    alt_text: 'মঞ্চে দশভুজা দুর্গার মহিষাসুর বধ ও সিংহবাহন',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-010-durga-sunset-profile',
-    image: durgaSunsetProfileImg,
-    title: 'সন্ধ্যার স্বর্ণালি আকাশে দেবী দুর্গার শৈল্পিক পার্শ্ব-প্রতিকৃতি',
-    titleEn: 'Golden Hour Side-Profile Portrait of Devi Durga',
+    id: 'gal-008-parvati-solo-dance',
+    image: parvatiDanceSoloImg,
+    title: 'দেবী পার্বতীর একক শাস্ত্রীয় ও বৈদিক নৃত্য নিবেদন',
+    titleEn: 'Devi Parvati Solo Classical & Vedic Dance Offering',
     category: 'নৃত্য',
     description:
-      'গোধূলির আলোয় শোলার মুকুট, নথ, ঝুমকা ও জরির কাজ করা লাল বেনারসি সাজে দেবী দুর্গার অনন্য প্রতিকৃতি।',
+      'নীল এলইডি মঞ্চ আলোকসজ্জায় সিঁদুর-লাল বেনারসি ও শোলার মুকুট পরিহিত শিল্পীর দেবী পার্বতী রূপে ভক্তিমূলক শাস্ত্রীয় নৃত্য মুদ্রা।',
     descriptionEn:
-      'Close-up golden hour profile portrait of Devi Durga showcasing traditional gold Nath nose ring, Jhumka earrings, and Shola crown.',
+      'Graceful solo classical dance mudra performed as Devi Parvati in a crimson Banarasi saree and traditional crown.',
     date: '২০২৫',
-    seo_filename: 'radhamadhob-devi-durga-sunset-profile-10.jpg',
-    alt_text: 'স্বর্ণালি গোধূলি আলোয় দেবী দুর্গার প্রতিকৃতি',
+    seo_filename: 'radhamadhob-devi-parvati-classical-solo-dance-08.jpg',
+    alt_text: 'দেবী পার্বতী রূপে একক বৈদিক নৃত্য পরিবেশনা',
+    aspectHint: 'tall',
+  },
+  {
+    id: 'gal-009-durga-mahishasuramardini',
+    image: durgaPalaImg,
+    title: 'শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী পৌরাণিক নাটকের চূড়ান্ত পর্ব',
+    titleEn: 'Sri Sri Chandi & Mahishasuramardini Mythological Drama Climax',
+    category: 'নাটক',
+    description:
+      'দশভুজা দেবী দুর্গা ত্রিশূল হাতে অসুররাজ মহিষাসুরকে বধ করছেন; দুই পাশে কমলাসনা লক্ষ্মী, বীণাপাণি সরস্বতী, কার্তিক ও গণেশ।',
+    descriptionEn:
+      'Climactic stage scene of ten-armed Devi Durga vanquishing Mahishasura with her trident, flanked by Lakshmi, Saraswati, Kartikeya, and Ganesha.',
+    date: 'শারদীয় দুর্গোৎসব ২০২৫',
+    seo_filename: 'radhamadhob-mahishasuramardini-durga-mythological-drama-09.jpg',
+    alt_text: 'দশভুজা দেবী দুর্গার মহিষাসুর বধ মঞ্চায়ন',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-010-youth-masked-kharga',
+    image: youthMaskedImg,
+    title: 'মুখোশধারী কালভৈরব ও তরুণ যোদ্ধার মঞ্চাভিনয়',
+    titleEn: 'Skull-Masked Bhairav & Youth Warrior Performance',
+    category: 'নৃত্য',
+    description:
+      'কঙ্কাল মুখোশ ও খড়্গ হাতে কিশোর শিল্পীর ছন্দোময় ভৈরব নৃত্য এবং পেছনে স্বর্ণবর্ম পরিহিত তরুণ যোদ্ধার দৃপ্ত মঞ্চ উপস্থিতি।',
+    descriptionEn:
+      'Young artist in a skull mask holding a ritual sword alongside a youth warrior in golden chest armor.',
+    date: '২০২৫',
+    seo_filename: 'radhamadhob-youth-masked-bhairav-sword-dance-10.jpg',
+    alt_text: 'মুখোশধারী কিশোর শিল্পীর খড়্গ নৃত্য',
     aspectHint: 'tall',
   },
   {
@@ -564,82 +569,7 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     aspectHint: 'tall',
   },
   {
-    id: 'gal-012-durga-green-trident',
-    image: durgaGreenTridentImg,
-    title: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনীর তেজোদীপ্ত রূপ',
-    titleEn: 'Devi Durgatinashini Holding the Sacred Trident',
-    category: 'ধর্মীয় অনুষ্ঠান',
-    description:
-      'ঝলমলে মঞ্চ পর্দার সামনে ত্রিশূল হাতে দেবী দুর্গার করুণাময়ী অথচ তেজোময় ভঙ্গিমা।',
-    descriptionEn:
-      'Atmospheric portrait of Devi Durga in red and gold Banarasi silk holding her trident with both hands.',
-    date: '২০২৫',
-    seo_filename: 'radhamadhob-durga-trident-portrait-12.jpg',
-    alt_text: 'ত্রিশূল হাতে দেবী দুর্গতিনাশিনী দুর্গা',
-    aspectHint: 'tall',
-  },
-  {
-    id: 'gal-013-ensemble-finale',
-    image: heroEnsembleImg,
-    title: 'শারদীয় মহিষাসুরমর্দিনী পালা — পূর্ণাঙ্গ শিল্পীদলের সমাপনী দৃশ্য',
-    titleEn: 'Sharodiya Mahishasuramardini Pala — Full Ensemble Stage Finale',
-    category: 'সাংস্কৃতিক অনুষ্ঠান',
-    description:
-      'মঞ্চে লাল-সবুজ-হলুদ শামিয়ানার নিচে দশভুজা দেবী দুর্গা, শিব, লক্ষ্মী, সরস্বতী, কার্তিক, গণেশ ও অসুর চরিত্রে শিল্পীদের সম্মিলিত উপস্থিতি।',
-    descriptionEn:
-      'Full multi-generational ensemble cast of Radhamadhob Cultural Alliance on stage beneath the festive canopy.',
-    date: 'শারদীয় উৎসব ২০২৫',
-    seo_filename: 'radhamadhob-ensemble-stage-finale-sharodiya-utsav-13.jpg',
-    alt_text: 'রাধামাধব সাংস্কৃতিক জোটের সাংস্কৃতিক অনুষ্ঠান — পূর্ণাঙ্গ নাট্যদলের সমাপনী দৃশ্য',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-014-parvati-solo-dance',
-    image: parvatiDanceSoloImg,
-    title: 'দেবী পার্বতীর একক শাস্ত্রীয় ও বৈদিক নৃত্য নিবেদন',
-    titleEn: 'Devi Parvati Solo Classical & Vedic Dance Offering',
-    category: 'নৃত্য',
-    description:
-      'নীল এলইডি মঞ্চ আলোকসজ্জায় সিঁদুর-লাল বেনারসি ও শোলার মুকুট পরিহিত শিল্পীর দেবী পার্বতী রূপে ভক্তিমূলক শাস্ত্রীয় নৃত্য মুদ্রা।',
-    descriptionEn:
-      'Graceful solo classical dance mudra performed as Devi Parvati in a crimson Banarasi saree and traditional crown.',
-    date: '২০২৫',
-    seo_filename: 'radhamadhob-devi-parvati-classical-solo-dance-14.jpg',
-    alt_text: 'দেবী পার্বতী রূপে একক বৈদিক নৃত্য পরিবেশনা',
-    aspectHint: 'tall',
-  },
-  {
-    id: 'gal-015-durga-mahishasuramardini',
-    image: durgaPalaImg,
-    title: 'শ্রীশ্রী চণ্ডী ও মহিষাসুরমর্দিনী পৌরাণিক নাটকের চূড়ান্ত পর্ব',
-    titleEn: 'Sri Sri Chandi & Mahishasuramardini Mythological Drama Climax',
-    category: 'নাটক',
-    description:
-      'দশভুজা দেবী দুর্গা ত্রিশূল হাতে অসুররাজ মহিষাসুরকে বধ করছেন; দুই পাশে কমলাসনা লক্ষ্মী, বীণাপাণি সরস্বতী, কার্তিক ও গণেশ।',
-    descriptionEn:
-      'Climactic stage scene of ten-armed Devi Durga vanquishing Mahishasura with her trident, flanked by Lakshmi, Saraswati, Kartikeya, and Ganesha.',
-    date: 'শারদীয় দুর্গোৎসব ২০২৫',
-    seo_filename: 'radhamadhob-mahishasuramardini-durga-mythological-drama-15.jpg',
-    alt_text: 'দশভুজা দেবী দুর্গার মহিষাসুর বধ মঞ্চায়ন',
-    aspectHint: 'wide',
-  },
-  {
-    id: 'gal-016-youth-masked-kharga',
-    image: youthMaskedImg,
-    title: 'মুখোশধারী কালভৈরব ও তরুণ যোদ্ধার মঞ্চাভিনয়',
-    titleEn: 'Skull-Masked Bhairav & Youth Warrior Performance',
-    category: 'নৃত্য',
-    description:
-      'কঙ্কাল মুখোশ ও খড়্গ হাতে কিশোর শিল্পীর ছন্দোময় ভৈরব নৃত্য এবং পেছনে স্বর্ণবর্ম পরিহিত তরুণ যোদ্ধার দৃপ্ত মঞ্চ উপস্থিতি।',
-    descriptionEn:
-      'Young artist in a skull mask holding a ritual sword alongside a youth warrior in golden chest armor.',
-    date: '২০২৫',
-    seo_filename: 'radhamadhob-youth-masked-bhairav-sword-dance-16.jpg',
-    alt_text: 'মুখোশধারী কিশোর শিল্পীর খড়্গ নৃত্য',
-    aspectHint: 'tall',
-  },
-  {
-    id: 'gal-017-maa-kali-shiva-tableau',
+    id: 'gal-012-maa-kali-shiva-tableau',
     image: maaKaliImg,
     title: 'মা দক্ষিণাকালীর রণচণ্ডী রূপ ও মহাদেবের জীবন্ত মঞ্চ ট্যাবলো',
     titleEn: 'Maa Dakshinakali & Lord Shiva Living Stage Tableau',
@@ -649,12 +579,12 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     descriptionEn:
       'Devotional stage tableau portraying fierce Maa Dakshinakali standing over Lord Shiva while devotees pray with folded hands.',
     date: 'শ্যামাপূজা ২০২৫',
-    seo_filename: 'radhamadhob-maa-kali-shiva-religious-drama-tableau-17.jpg',
+    seo_filename: 'radhamadhob-maa-kali-shiva-religious-drama-tableau-12.jpg',
     alt_text: 'মা কালী ও মহাদেবের জীবন্ত মঞ্চ দৃশ্য',
     aspectHint: 'wide',
   },
   {
-    id: 'gal-018-shiva-shakti-dance-duet',
+    id: 'gal-013-shiva-shakti-dance-duet',
     image: shivaShaktiDuetImg,
     title: 'শিব-শক্তি নৃত্যনাট্য ও আধুনিক মঞ্চ আলোকসজ্জা',
     titleEn: 'Shiva-Shakti Dance-Drama & LED Stage Production',
@@ -664,12 +594,12 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     descriptionEn:
       'Cultural evening performance featuring Devi Parvati in a dance posture in the foreground with Lord Shiva in front of a vibrant LED backdrop.',
     date: '২০২৫',
-    seo_filename: 'radhamadhob-shiva-shakti-cultural-evening-dance-18.jpg',
+    seo_filename: 'radhamadhob-shiva-shakti-cultural-evening-dance-13.jpg',
     alt_text: 'শিব ও পার্বতীর নৃত্যনাট্য পরিবেশনা',
     aspectHint: 'wide',
   },
   {
-    id: 'gal-019-shiva-parvati-blessing',
+    id: 'gal-014-shiva-parvati-blessing',
     image: shivaParvatiImg,
     title: 'দেবাদিদেব মহাদেব ও দেবী পার্বতীর যুগল আশীর্বাদ দৃশ্য',
     titleEn: 'Divine Stage Darshan & Blessing of Lord Shiva and Devi Parvati',
@@ -679,12 +609,12 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     descriptionEn:
       'Sacred stage darshan of Lord Shiva holding the Trident and Damaru alongside Devi Parvati in Abhaya mudra.',
     date: '২০২৫',
-    seo_filename: 'radhamadhob-lord-shiva-devi-parvati-stage-darshan-19.jpg',
+    seo_filename: 'radhamadhob-lord-shiva-devi-parvati-stage-darshan-14.jpg',
     alt_text: 'ত্রিশূলধারী শিব ও দেবী পার্বতীর যুগল রূপ',
     aspectHint: 'tall',
   },
   {
-    id: 'gal-020-asura-warriors-climax',
+    id: 'gal-015-asura-warriors-climax',
     image: asuraBattleImg,
     title: 'শুম্ভ-নিশুম্ভ অসুর সেনাপতিদ্বয়ের রণহুঙ্কার ও নাট্য সংলাপ',
     titleEn: 'Battle Cry of Asura Generals Shumbha & Nishumbha',
@@ -694,8 +624,83 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
     descriptionEn:
       'Dramatic battle scene featuring two Asura generals in ornate golden armor and crowns roaring with raised sword.',
     date: '২০২৫',
-    seo_filename: 'radhamadhob-asura-warriors-battle-scene-drama-20.jpg',
+    seo_filename: 'radhamadhob-asura-warriors-battle-scene-drama-15.jpg',
     alt_text: 'অসুর যোদ্ধাদের যুদ্ধের দৃশ্য ও সংলাপ',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-016-krishna-ras-leela',
+    image: krishnaRasLeelaImg,
+    title: 'শ্রীকৃষ্ণ রাসলীলা ও বৃন্দাবনের গোপী নৃত্যনাট্য',
+    titleEn: 'Sri Krishna Ras Leela & Vraja Gopi Dance-Drama',
+    category: 'নৃত্য',
+    description:
+      'ময়ূরপুচ্ছ মুকুট ও মোহন বাঁশি হাতে শ্রীকৃষ্ণের মনোহর মঞ্চরূপ এবং গোপীবেশে নৃত্যশিল্পীদের ভক্তিপূর্ণ রাস নৃত্য নিবেদন।',
+    descriptionEn:
+      'Divine theatrical depiction of Sri Krishna with sacred flute and peacock crown dancing with the Gopis of Vrindavan.',
+    date: 'রাসপূর্ণিমা ২০২৫',
+    seo_filename: 'radhamadhob-krishna-ras-leela-stage-16.jpg',
+    alt_text: 'মঞ্চে শ্রীকৃষ্ণ রাসলীলা ও নৃত্যনাট্য পরিবেশনা',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-017-saraswati-puja-celebration',
+    image: saraswatiPujaImg,
+    title: 'বসন্ত পঞ্চমী ও সরস্বতী পূজায় তরুণ শিল্পীদের পুষ্পাঞ্জলি ও বীণা বাদন',
+    titleEn: 'Saraswati Puja Pushpanjali, Veena & Devotional Music Offering',
+    category: 'সাংস্কৃতিক অনুষ্ঠান',
+    description:
+      'বাসন্তী শাড়ি ও পাঞ্জাবি পরিহিত নবীন শিল্পীদের বীণাপাণি দেবী সরস্বতীর চরণে পুষ্পাঞ্জলি, শাস্ত্রীয় সঙ্গীত ও বীণা অর্ঘ্য।',
+    descriptionEn:
+      'Youth cultural alliance artists offering prayers, veena melodies, and flowers before Goddess Saraswati during Vasant Panchami.',
+    date: 'বসন্ত পঞ্চমী ২০২৫',
+    seo_filename: 'radhamadhob-saraswati-puja-celebration-17.jpg',
+    alt_text: 'সরস্বতী পূজা উপলক্ষে রাধামাধব জোটের তরুণ শিল্পীদের নিবেদন',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-018-dhaki-drummers-sharodiya',
+    image: dhakiDrummersImg,
+    title: 'শারদীয় দুর্গোৎসবে বাংলার ঐতিহ্যবাহী ঢাক বাদন ও কাঁসর ধ্বনি',
+    titleEn: 'Traditional Bengali Dhak Drummers & Festive Rhythms at Durga Festival',
+    category: 'সাংস্কৃতিক অনুষ্ঠান',
+    description:
+      'ঐতিহ্যবাহী লাল পাড় ধুতি পরিহিত প্রবীণ ও তরুণ ঢাকিদের ছন্দোময় ঢাকের বোল ও কাঁসর-ঘণ্টার মঙ্গলধ্বনি।',
+    descriptionEn:
+      'Traditional Bengali Dhaki percussionists playing large festive drums adorned with feathers during Sharodiya Durga festival.',
+    date: 'শারদীয় উৎসব ২০২৫',
+    seo_filename: 'radhamadhob-dhaki-drummers-durga-puja-18.jpg',
+    alt_text: 'শারদীয় দুর্গোৎসবে বাংলার ঐতিহ্যবাহী ঢাক বাদন',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-019-bhakta-haridas-theatre',
+    image: bhaktaHaridasImg,
+    title: 'নামাচার্য শ্রীল হরিদাস ঠাকুরের ভক্তিময় জীবনগাথা মঞ্চনাটক',
+    titleEn: 'Namacharya Srila Haridas Thakur Devotional Life Drama',
+    category: 'নাটক',
+    description:
+      'করতাল হাতে হরিনাম সংকীর্তনে আত্মহারা শ্রীল হরিদাস ঠাকুরের পরম ভক্তি ও আত্মনিবেদনের দৃশ্যপট নিয়ে মৌলিক পৌরাণিক নাটক।',
+    descriptionEn:
+      'Touching stage dramatization portraying Namacharya Srila Haridas Thakur chanting holy names with bronze cymbals.',
+    date: '২০২৫',
+    seo_filename: 'radhamadhob-bhakta-haridas-stage-drama-19.jpg',
+    alt_text: 'মঞ্চনাটকে শ্রীল হরিদাস ঠাকুরের ভক্তিগাথা',
+    aspectHint: 'wide',
+  },
+  {
+    id: 'gal-020-gita-jayanti-recitation',
+    image: gitaJayantiImg,
+    title: 'গীতা জয়ন্তী মহোৎসব ও সমবেত শ্রীমদ্ভগবদ্গীতা শ্লোক পাঠ',
+    titleEn: 'Gita Jayanti Sacred Chanting & Ceremonial Lamp Offering',
+    category: 'ধর্মীয় অনুষ্ঠান',
+    description:
+      'মঙ্গল প্রদীপ ও ধূপশিখার পবিত্র পরিবেশে জোটের তরুণ ও শিক্ষার্থী সদস্যদের সমস্বরে শ্রীমদ্ভগবদ্গীতা শ্লোক আবৃত্তি ও বৈদিক প্রার্থনা।',
+    descriptionEn:
+      'Youth cultural students reciting Shrimad Bhagavad Gita verses amidst golden brass lamps and temple decorations.',
+    date: 'গীতা জয়ন্তী ২০২৫',
+    seo_filename: 'radhamadhob-gita-jayanti-recitation-20.jpg',
+    alt_text: 'গীতা জয়ন্তী উপলক্ষে সমবেত গীতা পাঠ ও প্রার্থনা',
     aspectHint: 'wide',
   },
 ];
@@ -705,7 +710,7 @@ export const INITIAL_GALLERY_SEED: GalleryRecord[] = [
  * PERSISTENT STORAGE FOR `events`, `gallery` & `gallery_categories`
  * ============================================================================
  */
-const ARCHIVE_DB_NAME = 'RadhamadhobEventsGalleryDB_bilingual_v9';
+const ARCHIVE_DB_NAME = 'RadhamadhobEventsGalleryDB_bilingual_v10';
 const ARCHIVE_DB_VERSION = 1;
 const EVENTS_STORE = 'events';
 const GALLERY_STORE = 'gallery';

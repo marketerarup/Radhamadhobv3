@@ -650,89 +650,54 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
             onTouchStart={handleVideoTouchStart}
             onTouchEnd={handleVideoTouchEnd}
           >
-            {/* Slider Top Controls: Status badge & Prev/Next navigation */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-stone-300 text-xs font-mono-code shadow-md">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      isVideoSliderHovered || isVideoAutoSlidePaused
-                        ? 'bg-amber-400'
-                        : 'bg-emerald-400 animate-pulse'
-                    }`}
-                  />
-                  <span className="font-bold text-[#FDE68A]">
-                    {lang === 'bn'
-                      ? `ভিডিও ${tDigits(currentVideoSlideIndex + 1)}-${tDigits(
-                          Math.min(
-                            currentVideoSlideIndex + videoCardsPerView,
-                            videos.length
-                          )
-                        )} / মোট ${tDigits(videos.length)}টি`
-                      : `Video ${currentVideoSlideIndex + 1}-${Math.min(
-                          currentVideoSlideIndex + videoCardsPerView,
-                          videos.length
-                        )} of ${videos.length}`}
-                  </span>
-                </span>
+            {/* Slider Top Controls: Prev/Next navigation */}
+            {videos.length > videoCardsPerView && (
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsVideoAutoSlidePaused((p) => !p)}
+                  title={
+                    isVideoAutoSlidePaused
+                      ? (lang === 'bn' ? 'অটো-স্লাইড চালু করুন' : 'Resume Auto-slide')
+                      : (lang === 'bn' ? 'অটো-স্লাইড থামান' : 'Pause Auto-slide')
+                  }
+                  aria-label={isVideoAutoSlidePaused ? 'Resume Auto-slide' : 'Pause Auto-slide'}
+                  className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                >
+                  {isVideoAutoSlidePaused ? (
+                    <>
+                      <Play className="w-3.5 h-3.5 text-[#FDE68A] fill-current" />
+                      <span className="hidden sm:inline">{lang === 'bn' ? 'চালু' : 'Play'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Pause className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <span className="hidden sm:inline">{lang === 'bn' ? 'পজ' : 'Pause'}</span>
+                    </>
+                  )}
+                </button>
 
-                <span className="hidden md:inline-block text-[11px] text-stone-400">
-                  {isVideoSliderHovered
-                    ? (lang === 'bn' ? 'কার্সার রেখে থামানো আছে' : 'Paused on hover')
-                    : isVideoAutoSlidePaused
-                    ? (lang === 'bn' ? 'অটো-স্লাইড স্থগিত' : 'Auto-slide paused')
-                    : (lang === 'bn' ? 'স্বয়ংক্রিয় স্লাইড চলমান' : 'Auto-sliding active')}
-                </span>
+                <button
+                  type="button"
+                  onClick={handlePrevVideoSlide}
+                  aria-label={lang === 'bn' ? 'পূর্ববর্তী ভিডিও' : 'Previous Video'}
+                  className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                  <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNextVideoSlide}
+                  aria-label={lang === 'bn' ? 'পরবর্তী ভিডিও' : 'Next Video'}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
+                >
+                  <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                  <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
+                </button>
               </div>
-
-              {videos.length > videoCardsPerView && (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsVideoAutoSlidePaused((p) => !p)}
-                    title={
-                      isVideoAutoSlidePaused
-                        ? (lang === 'bn' ? 'অটো-স্লাইড চালু করুন' : 'Resume Auto-slide')
-                        : (lang === 'bn' ? 'অটো-স্লাইড থামান' : 'Pause Auto-slide')
-                    }
-                    aria-label={isVideoAutoSlidePaused ? 'Resume Auto-slide' : 'Pause Auto-slide'}
-                    className="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
-                  >
-                    {isVideoAutoSlidePaused ? (
-                      <>
-                        <Play className="w-3.5 h-3.5 text-[#FDE68A] fill-current" />
-                        <span className="hidden sm:inline">{lang === 'bn' ? 'চালু' : 'Play'}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Pause className="w-3.5 h-3.5 text-[#D4AF37]" />
-                        <span className="hidden sm:inline">{lang === 'bn' ? 'পজ' : 'Pause'}</span>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handlePrevVideoSlide}
-                    aria-label={lang === 'bn' ? 'পূর্ববর্তী ভিডিও' : 'Previous Video'}
-                    className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37]/70 text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
-                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleNextVideoSlide}
-                    aria-label={lang === 'bn' ? 'পরবর্তী ভিডিও' : 'Next Video'}
-                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
-                  >
-                    <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
-                    <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
-                  </button>
-                </div>
-              )}
-            </div>
+            )}
 
             {/* 1 Row Carousel Viewport */}
             <div className="relative">

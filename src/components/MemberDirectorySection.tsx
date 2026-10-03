@@ -389,12 +389,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
           >
             {/* Top Slider Navigation Controls */}
             {maxSlideIndex > 0 && (
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-stone-400 font-mono-code">
-                  {lang === 'bn'
-                    ? `সদস্য তালিকা (${tDigits(filteredMembers.length)} জন)`
-                    : `Artists & Members (${filteredMembers.length})`}
-                </span>
+              <div className="flex items-center justify-end">
                 <div className="flex items-center gap-2">
                   <button
                     type="button"

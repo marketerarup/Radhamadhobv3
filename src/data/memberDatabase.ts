@@ -2,7 +2,7 @@ import binoySenPortraitImg from '../assets/images/binoy_sen_director_portrait_17
 import amitDasPortraitImg from '../assets/images/amit_das_portrait_1791053126528.jpg';
 import trishnaRoyPortraitImg from '../assets/images/trishna_roy_instructor_portrait_1790456089667.jpg';
 import trishnaRaniDasPortraitImg from '../assets/images/trishna_rani_das_portrait_1791052436502.jpg';
-import samontiBiswasPortraitImg from '../assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078.jpg';
+import samontiBiswasPortraitImg from '../assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078-D1-ibnCZ.jpg';
 import sumaDasPortraitImg from '../assets/images/suma_das_portrait_1791051380739.jpg';
 import apurbaSagarPortraitImg from '../assets/images/apurba_sagar_portrait_1791051802295.jpg';
 import dibakarDasPortraitImg from '../assets/images/dibakar_das_portrait_1791051877921.jpg';

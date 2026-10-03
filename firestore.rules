@@ -140,72 +140,63 @@ service cloud.firestore {
 
     // Collection 2: settings
     match /settings/{settingId} {
-      allow get: if isValidId(settingId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(settingId) && isValidSettings(incoming());
       allow delete: if isValidId(settingId);
     }
 
     // Collection 3: members
     match /members/{memberId} {
-      allow get: if isValidId(memberId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(memberId) && isValidMember(incoming());
       allow delete: if isValidId(memberId);
     }
 
     // Collection 4: dramas
     match /dramas/{dramaId} {
-      allow get: if isValidId(dramaId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(dramaId) && isValidDrama(incoming());
       allow delete: if isValidId(dramaId);
     }
 
     // Collection 5: programs
     match /programs/{programId} {
-      allow get: if isValidId(programId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(programId) && isValidProgram(incoming());
       allow delete: if isValidId(programId);
     }
 
     // Collection 6: events
     match /events/{eventId} {
-      allow get: if isValidId(eventId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(eventId) && isValidEvent(incoming());
       allow delete: if isValidId(eventId);
     }
 
     // Collection 7: gallery
     match /gallery/{galleryId} {
-      allow get: if isValidId(galleryId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(galleryId) && isValidGalleryItem(incoming());
       allow delete: if isValidId(galleryId);
     }
 
     // Collection 8: videos
     match /videos/{videoId} {
-      allow get: if isValidId(videoId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(videoId) && isValidVideo(incoming());
       allow delete: if isValidId(videoId);
     }
 
     // Collection 9: seo
     match /seo/{seoId} {
-      allow get: if isValidId(seoId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(seoId) && isValidSeo(incoming());
       allow delete: if isValidId(seoId);
     }
 
     // Collection 10: privacy_policy
     match /privacy_policy/{policyId} {
-      allow get: if isValidId(policyId);
-      allow list: if resource.data.id is string;
+      allow get, list: if true;
       allow create, update: if isValidId(policyId) && isValidPrivacyPolicy(incoming());
       allow delete: if isValidId(policyId);
     }

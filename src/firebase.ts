@@ -149,13 +149,8 @@ export async function fetchCollectionFromFirestore<T extends { id: string }>(
       items.push(docSnap.data() as T);
     });
     return items;
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message.includes('Missing or insufficient permissions')
-    ) {
-      handleFirestoreError(error, OperationType.LIST, collectionName);
-    }
+  } catch {
+    // If permissions or network is unavailable, return null to allow local cache/seed fallback
     return null;
   }
 }

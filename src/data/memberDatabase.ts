@@ -16,6 +16,7 @@ import synthiaRanjanPortraitImg from '../assets/images/synthia_ranjan_portrait_1
 import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054258043.jpg';
 import arpitaDasPortraitImg from '../assets/images/arpita_das_portrait_1791054283177.jpg';
 import ankitaBhattacharyaPortraitImg from '../assets/images/ankita_bhattacharya_portrait_1791067244850.jpg';
+import arupSarkerShuvoPortraitImg from '../assets/images/arup_sarker_shuvo_portrait_1791072020673.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -789,6 +790,47 @@ export const INITIAL_MEMBERS_SEED: MemberRecord[] = [
     createdAt: '2026-10-03T15:40:00.000Z',
     updatedAt: '2026-10-03T15:40:00.000Z',
   },
+  {
+    id: 'member-017-arup-sarker-shuvo',
+    name: 'অরূপ সরকার শুভ',
+    name_bn: 'অরূপ সরকার শুভ',
+    nameEn: 'Arup Sarker Shuvo',
+    name_en: 'Arup Sarker Shuvo',
+    fullName: 'Arup Sarker Shuvo',
+    fullNameBn: 'অরূপ সরকার শুভ',
+    photo: arupSarkerShuvoPortraitImg,
+    originalPhotoFileName: 'arup_sarker_shuvo_portrait_1791072020673.jpg',
+    position: 'উপদেষ্টা',
+    positionBn: 'উপদেষ্টা',
+    position_bn: 'উপদেষ্টা',
+    positionEn: 'Advisor',
+    position_en: 'Advisor',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট কেন্দ্রীয় কার্যালয়, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance Central Office, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'অরূপ সরকার শুভ রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সম্মানিত উপদেষ্টা। তিনি দীর্ঘ সময় ধরে সনাতন কৃষ্টি-সংস্কৃতি, বৈদিক মূল্যবোধ ও পৌরাণিক নাট্যকলার প্রসারে সুচিন্তিত দিকনির্দেশনা ও সার্বিক পৃষ্ঠপোষকতা প্রদান করে আসছেন। জোটের প্রতিটি সাংগঠনিক ও সাংস্কৃতিক কার্যক্রমকে সফল ও সুদৃঢ় করতে তাঁর প্রজ্ঞাময় পরামর্শ এবং আন্তরিক দিকনির্দেশনা অপরিসীম ভূমিকা রেখে চলেছে।',
+    bio_bn:
+      'অরূপ সরকার শুভ রাধামাধব সনাতন সাংস্কৃতিক জোটের অন্যতম সম্মানিত উপদেষ্টা। তিনি দীর্ঘ সময় ধরে সনাতন কৃষ্টি-সংস্কৃতি, বৈদিক মূল্যবোধ ও পৌরাণিক নাট্যকলার প্রসারে সুচিন্তিত দিকনির্দেশনা ও সার্বিক পৃষ্ঠপোষকতা প্রদান করে আসছেন। জোটের প্রতিটি সাংগঠনিক ও সাংস্কৃতিক কার্যক্রমকে সফল ও সুদৃঢ় করতে তাঁর প্রজ্ঞাময় পরামর্শ এবং আন্তরিক দিকনির্দেশনা অপরিসীম ভূমিকা রেখে চলেছে।',
+    biographyEn:
+      'Arup Sarker Shuvo is a distinguished Advisor of Radhamadhob Sanatan Cultural Alliance. He provides strategic guidance, patronage, and visionary leadership to preserve and celebrate Sanatan heritage, sacred theatre, and timeless Vedic cultural traditions.',
+    bio_en:
+      'Arup Sarker Shuvo is a distinguished Advisor of Radhamadhob Sanatan Cultural Alliance. He provides strategic guidance, patronage, and visionary leadership to preserve and celebrate Sanatan heritage, sacred theatre, and timeless Vedic cultural traditions.',
+    joining_date: '2022-03-15',
+    joiningDateEn: 'March 15, 2022',
+    isOriginalPhotoOnly: true,
+    displayOrder: 17,
+    status: 'active',
+    createdAt: '2026-10-03T16:00:00.000Z',
+    updatedAt: '2026-10-03T16:00:00.000Z',
+  },
 ];
 
 /**
@@ -822,10 +864,10 @@ CREATE TABLE members (
  * PERSISTENT STORAGE ENGINE (`members` collection in IndexedDB + localStorage)
  * ============================================================================
  */
-const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v13';
+const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v14';
 const DB_VERSION = 1;
 const STORE_NAME = 'members';
-const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v13';
+const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v14';
 
 const isPureEn = (val?: string | null): boolean =>
   Boolean(val && val.trim().length > 0 && !/[\u0980-\u09FF]/.test(val));

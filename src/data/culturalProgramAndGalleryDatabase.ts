@@ -10,7 +10,7 @@ import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_179054
 import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
 import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
 import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
-import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338.jpg';
+import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338.jpeg';
 import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
 import soloAsuraPurpleStageImg from '../assets/images/solo_asura_purple_stage_1790542195989.jpg';
 import durgaGreenTridentImg from '../assets/images/durga_green_trident_portrait_1790542210952.jpg';

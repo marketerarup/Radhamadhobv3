@@ -1,6 +1,5 @@
 import binoySenPortraitImg from '../assets/images/binoy_sen_director_portrait_1790455480817.jpg';
 import amitDasPortraitImg from '../assets/images/amit_das_portrait_1791053126528.jpg';
-import trishnaRoyPortraitImg from '../assets/images/trishna_roy_instructor_portrait_1790456089667.jpg';
 import trishnaRaniDasPortraitImg from '../assets/images/trishna_rani_das_portrait_1791052436502.jpg';
 import samontiBiswasPortraitImg from '../assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078-D1-ibnCZ.jpg';
 import sumaDasPortraitImg from '../assets/images/suma_das_portrait_1791051380739.jpg';
@@ -10,7 +9,6 @@ import badhonMondolPortraitImg from '../assets/images/badhon_mondol_portrait_179
 import nayanDasPortraitImg from '../assets/images/nayan_das_portrait_1791052239800.jpg';
 import arpanSarkarPortraitImg from '../assets/images/arpan_sarkar_portrait_1791052321407.jpg';
 import shubhankarDasPortraitImg from '../assets/images/shubhankar_das_portrait_1791052532983.jpg';
-import rishikeshDasPortraitImg from '../assets/images/rishikesh_das_portrait_1791052647395.jpg';
 import hrishikeshDasSuitPortraitImg from '../assets/images/hrishikesh_das_suit_portrait_1791054301299.jpg';
 import synthiaRanjanPortraitImg from '../assets/images/synthia_ranjan_portrait_1791053316807.jpg';
 import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054258043.jpg';

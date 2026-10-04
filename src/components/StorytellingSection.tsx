@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Award,
   BookOpen,
-  Calendar,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Compass,
   Crown,
   Flame,
-  Globe2,
   Quote,
   Sparkles,
   Users,
@@ -84,36 +81,6 @@ export const StorytellingSection: React.FC<StorytellingSectionProps> = ({
     },
   ];
 
-  const highlights = [
-    {
-      numBn: '১৩+',
-      numEn: '13+',
-      labelBn: 'পূর্ণাঙ্গ মৌলিক পৌরাণিক নাটক',
-      labelEn: 'Original Stage Productions',
-      subBn: 'মহিষাসুরমর্দিনী, দক্ষযজ্ঞ, বিশ্বরূপ দর্শন',
-      subEn: 'Epic chronicles from scripture',
-      icon: Award,
-    },
-    {
-      numBn: '২০১১',
-      numEn: '2011',
-      labelBn: 'প্রতিষ্ঠালগ্ন হতে চলমান',
-      labelEn: 'Continuous Cultural Journey',
-      subBn: 'দেশের অন্যতম প্রাচীন সুসংগঠিত জোট',
-      subEn: 'A pioneering Sanatan institution',
-      icon: Calendar,
-    },
-    {
-      numBn: '১০০+',
-      numEn: '100+',
-      labelBn: 'মঞ্চায়ন ও বিশেষ উৎসব',
-      labelEn: 'Performances & Grand Festivals',
-      subBn: 'শিল্পকলা একাডেমি, শিশু একাডেমি ও মণ্ডপ',
-      subEn: 'National auditoriums & temple stages',
-      icon: Globe2,
-    },
-  ];
-
   return (
     <section
       id="about-section"
@@ -132,7 +99,84 @@ export const StorytellingSection: React.FC<StorytellingSectionProps> = ({
 
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 sm:space-y-16">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
+        <div className="text-center max-w-3xl mx-auto space-y-5 flex flex-col items-center">
+          {/* Radhamadhob Sanatan Cultural Alliance Official Emblem / Logo with Subtle Soft Light Animation */}
+          <div className="flex flex-col items-center justify-center mb-2 group relative">
+            {/* Animated Soft Backlight Aura Behind Logo (Line-free, feathering softly) */}
+            <div className="relative flex items-center justify-center">
+              {/* Layer 1: Soft Feathered Breathing Ambient Halo (Light & Gentle, No Lines) */}
+              <div
+                className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full pointer-events-none animate-divine-pulse-soft -z-10"
+                style={{
+                  background: 'radial-gradient(circle, rgba(253, 230, 138, 0.28) 0%, rgba(212, 175, 55, 0.16) 40%, rgba(245, 158, 11, 0.06) 60%, transparent 75%)',
+                  filter: 'blur(20px)',
+                }}
+                aria-hidden="true"
+              />
+
+              {/* Layer 2: Rotating Gentle Solar Beams (Seamlessly Faded to Transparent, No Border/Line) */}
+              <div
+                className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-divine-spin -z-10"
+                style={{
+                  background: `conic-gradient(
+                    from 0deg,
+                    rgba(253, 230, 138, 0.25) 0deg,
+                    transparent 30deg,
+                    rgba(212, 175, 55, 0.2) 60deg,
+                    transparent 90deg,
+                    rgba(253, 230, 138, 0.25) 120deg,
+                    transparent 150deg,
+                    rgba(212, 175, 55, 0.2) 180deg,
+                    transparent 210deg,
+                    rgba(253, 230, 138, 0.25) 240deg,
+                    transparent 270deg,
+                    rgba(212, 175, 55, 0.2) 300deg,
+                    transparent 330deg,
+                    rgba(253, 230, 138, 0.25) 360deg
+                  )`,
+                  maskImage: 'radial-gradient(circle, black 25%, transparent 70%)',
+                  WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 70%)',
+                  filter: 'blur(12px)',
+                }}
+                aria-hidden="true"
+              />
+
+              {/* Layer 3: Delicate Center Warmth directly behind medallion */}
+              <div
+                className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-[#FDE68A]/15 blur-xl pointer-events-none -z-10"
+                aria-hidden="true"
+              />
+
+              {/* Sacred Medallion / Logo Container */}
+              <div className="relative z-10 w-28 h-28 sm:w-36 sm:h-36 rounded-full p-1 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#0F5132] shadow-[0_4px_25px_rgba(0,0,0,0.6),0_0_18px_rgba(212,175,55,0.3)] ring-1 ring-[#D4AF37]/60 group-hover:scale-105 group-hover:ring-[#FDE68A] group-hover:shadow-[0_6px_30px_rgba(0,0,0,0.7),0_0_24px_rgba(253,230,138,0.45)] transition-all duration-300">
+                <div className="w-full h-full rounded-full bg-[#120706] flex items-center justify-center overflow-hidden p-1 shadow-inner">
+                  {logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt={
+                        lang === 'bn'
+                          ? 'রাধামাধব সনাতন সাংস্কৃতিক জোটের অফিশিয়াল লোগো'
+                          : 'Radhamadhob Sanatan Cultural Alliance Official Logo'
+                      }
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <OfficialLogo
+                      variant="medallion-seal"
+                      className="w-full h-full"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <span className="mt-3 text-sm sm:text-base font-bold tracking-wide text-[#FDE68A] font-display-bn drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+              {lang === 'bn'
+                ? 'রাধামাধব সনাতন সাংস্কৃতিক জোট'
+                : 'Radhamadhob Sanatan Cultural Alliance'}
+            </span>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#180C0B] border border-[#D4AF37]/35 text-[#FDE68A] text-xs font-semibold tracking-wider uppercase shadow-inner">
             <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>
@@ -440,37 +484,6 @@ export const StorytellingSection: React.FC<StorytellingSectionProps> = ({
               </button>
             </div>
           </div>
-        </div>
-
-        {/* 3 Compact Cinematic Cultural Feature Placards (Minimal, No raw numbers) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 pt-6">
-          {highlights.map((h, i) => {
-            const Icon = h.icon;
-            return (
-              <CinematicCard3D
-                key={i}
-                className="p-5 sm:p-6 rounded-2xl bg-[#110706] border border-[#D4AF37]/25 hover:border-[#D4AF37]/50 shadow-xl space-y-3"
-                maxTilt={6}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-[#1F0C0B] border border-[#D4AF37]/35 flex items-center justify-center text-[#D4AF37] shadow-md">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <span className="text-[10px] font-bold text-[#FDE68A] uppercase tracking-wider font-mono-code px-2.5 py-0.5 rounded-full bg-[#180C0B] border border-[#D4AF37]/30">
-                    {lang === 'bn' ? 'সাংস্কৃতিক গৌরব' : 'Alliance Legacy'}
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-base sm:text-lg font-bold text-white font-display-bn">
-                    {lang === 'bn' ? h.labelBn : h.labelEn}
-                  </h4>
-                  <p className="text-xs text-stone-300 mt-1">
-                    {lang === 'bn' ? h.subBn : h.subEn}
-                  </p>
-                </div>
-              </CinematicCard3D>
-            );
-          })}
         </div>
       </div>
     </section>

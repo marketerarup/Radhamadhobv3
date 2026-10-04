@@ -213,3 +213,48 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #FDE68A;
 }
+
+/* ========================================================================= */
+/* DIVINE AURA & RADIANT LIGHT ANIMATIONS (SOFT & LINE-FREE)                 */
+/* ========================================================================= */
+
+@keyframes divine-light-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes divine-light-spin-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes divine-light-pulse-soft {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.06);
+  }
+}
+
+.animate-divine-spin {
+  animation: divine-light-spin 26s linear infinite;
+}
+
+.animate-divine-spin-reverse {
+  animation: divine-light-spin-reverse 34s linear infinite;
+}
+
+.animate-divine-pulse-soft {
+  animation: divine-light-pulse-soft 5s ease-in-out infinite;
+}

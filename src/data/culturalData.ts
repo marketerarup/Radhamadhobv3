@@ -10,13 +10,7 @@ import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_179054
 import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
 import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
 import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
-import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338-DSL505iG.jpg';
 import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
-import soloAsuraPurpleStageImg from '../assets/images/solo_asura_purple_stage_1790542195989.jpg';
-import durgaGreenTridentImg from '../assets/images/durga_green_trident_portrait_1790542210952.jpg';
-import durgaLionCurtainImg from '../assets/images/durga_lion_mahishasura_curtain_1790542225436.jpg';
-import durgaSunsetMeditationImg from '../assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
-import durgaSunsetProfileImg from '../assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
 import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
 import heroTheatreAuditoriumImg from '../assets/images/hero_theatre_auditorium_1791070237582.jpg';
 import aboutTheatreRehearsalImg from '../assets/images/about_theatre_rehearsal_1791070252405.jpg';

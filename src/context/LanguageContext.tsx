@@ -92,6 +92,8 @@ const CATEGORY_TO_EN: Record<string, string> = {
   'নাট্য প্রশিক্ষক': 'Drama Instructor',
   'কার্যকরী সদস্য': 'Executive Member',
   'সিনিয়র শিল্পী ও সদস্য': 'Senior Artist & Member',
+  'অভিনয় ও নৃত্যশিল্পী': 'Stage Actress & Dancer',
+  'অভিনয়শিল্পী': 'Stage Actor',
   'নাট্য ও নৃত্যশিল্পী': 'Drama & Dance Artist',
   'নৃত্য ও সংগীত শিল্পী': 'Dance & Music Artist',
   'সহযোগী': 'Associate Member',

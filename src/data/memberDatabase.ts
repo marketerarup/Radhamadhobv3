@@ -17,6 +17,10 @@ import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054
 import arpitaDasPortraitImg from '../assets/images/arpita_das_portrait_1791054283177.jpg';
 import ankitaBhattacharyaPortraitImg from '../assets/images/ankita_bhattacharya_portrait_1791067244850.jpg';
 import arupSarkerShuvoPortraitImg from '../assets/images/arup_sarker_shuvo_portrait_1791072020673.jpg';
+import maumitaSutradharPortraitImg from '../assets/images/maumita_sutradhar_portrait_1791146058418.jpg';
+import devjaneeSutradharPortraitImg from '../assets/images/devjanee_sutradhar_portrait_1791146076800.jpg';
+import mithilaSutradharPortraitImg from '../assets/images/mithila_sutradhar_portrait_1791146308943.jpg';
+import manindraSutradharPortraitImg from '../assets/images/manindra_sutradhar_portrait_1791146331505.jpg';
 import {
   fetchCollectionFromFirestore,
   syncCollectionToFirestore,
@@ -831,6 +835,170 @@ export const INITIAL_MEMBERS_SEED: MemberRecord[] = [
     createdAt: '2026-10-03T16:00:00.000Z',
     updatedAt: '2026-10-03T16:00:00.000Z',
   },
+  {
+    id: 'member-018-maumita-sutradhar',
+    name: 'মৌমিতা সূত্রধর',
+    name_bn: 'মৌমিতা সূত্রধর',
+    nameEn: 'Maumita Sutradhar',
+    name_en: 'Maumita Sutradhar',
+    fullName: 'Maumita Sutradhar',
+    fullNameBn: 'মৌমিতা সূত্রধর',
+    photo: maumitaSutradharPortraitImg,
+    originalPhotoFileName: 'maumita_sutradhar_portrait_1791146058418.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'মৌমিতা সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের নিবেদিতপ্রাণ অভিনয় ও নৃত্যশিল্পী। তিনি নিয়মিত পৌরাণিক নাটক এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনায় সক্রিয়ভাবে অংশগ্রহণ করে জোটের সাংস্কৃতিক ঐতিহ্যকে সমৃদ্ধ করে চলেছেন।',
+    bio_bn:
+      'মৌমিতা সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের নিবেদিতপ্রাণ অভিনয় ও নৃত্যশিল্পী। তিনি নিয়মিত পৌরাণিক নাটক এবং শাস্ত্রীয় ও বৈদিক নৃত্য পরিবেশনায় সক্রিয়ভাবে অংশগ্রহণ করে জোটের সাংস্কৃতিক ঐতিহ্যকে সমৃদ্ধ করে চলেছেন।',
+    biographyEn:
+      'Maumita Sutradhar is a dedicated stage actress and classical dancer of Radhamadhob Sanatan Cultural Alliance. She actively participates in mythological theatrical dramas and Vedic dance performances, preserving cultural traditions.',
+    bio_en:
+      'Maumita Sutradhar is a dedicated stage actress and classical dancer of Radhamadhob Sanatan Cultural Alliance. She actively participates in mythological theatrical dramas and Vedic dance performances, preserving cultural traditions.',
+    joining_date: '2023-05-10',
+    joiningDateEn: 'May 10, 2023',
+    isOriginalPhotoOnly: true,
+    displayOrder: 18,
+    status: 'active',
+    createdAt: '2026-10-04T12:00:00.000Z',
+    updatedAt: '2026-10-04T12:00:00.000Z',
+  },
+  {
+    id: 'member-019-devjanee-sutradhar',
+    name: 'দেবযানী সূত্রধর',
+    name_bn: 'দেবযানী সূত্রধর',
+    nameEn: 'Devjanee Sutradhar',
+    name_en: 'Devjanee Sutradhar',
+    fullName: 'Devjanee Sutradhar',
+    fullNameBn: 'দেবযানী সূত্রধর',
+    photo: devjaneeSutradharPortraitImg,
+    originalPhotoFileName: 'devjanee_sutradhar_portrait_1791146076800.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'দেবযানী সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন সম্ভাবনাময় কনিষ্ঠ অভিনয় ও নৃত্যশিল্পী। অত্যন্ত নিষ্ঠা ও শৈল্পিক অনুরাগে তিনি বৈদিক নৃত্য ও মঞ্চনাট্যে নিজের প্রতিভা ফুটিয়ে তুলে দর্শকদের মুগ্ধ করে আসছেন।',
+    bio_bn:
+      'দেবযানী সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন সম্ভাবনাময় কনিষ্ঠ অভিনয় ও নৃত্যশিল্পী। অত্যন্ত নিষ্ঠা ও শৈল্পিক অনুরাগে তিনি বৈদিক নৃত্য ও মঞ্চনাট্যে নিজের প্রতিভা ফুটিয়ে তুলে দর্শকদের মুগ্ধ করে আসছেন।',
+    biographyEn:
+      'Devjanee Sutradhar is a talented young stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. With sincere passion and grace, she performs in Vedic dramas and traditional dance showcases.',
+    bio_en:
+      'Devjanee Sutradhar is a talented young stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. With sincere passion and grace, she performs in Vedic dramas and traditional dance showcases.',
+    joining_date: '2024-02-15',
+    joiningDateEn: 'February 15, 2024',
+    isOriginalPhotoOnly: true,
+    displayOrder: 19,
+    status: 'active',
+    createdAt: '2026-10-04T12:10:00.000Z',
+    updatedAt: '2026-10-04T12:10:00.000Z',
+  },
+  {
+    id: 'member-020-mithila-sutradhar',
+    name: 'মিথিলা সূত্রধর',
+    name_bn: 'মিথিলা সূত্রধর',
+    nameEn: 'Mithila Sutradhar',
+    name_en: 'Mithila Sutradhar',
+    fullName: 'Mithila Sutradhar',
+    fullNameBn: 'মিথিলা সূত্রধর',
+    photo: mithilaSutradharPortraitImg,
+    originalPhotoFileName: 'mithila_sutradhar_portrait_1791146308943.jpg',
+    position: 'অভিনয় ও নৃত্যশিল্পী',
+    positionBn: 'অভিনয় ও নৃত্যশিল্পী',
+    position_bn: 'অভিনয় ও নৃত্যশিল্পী',
+    positionEn: 'Stage Actress & Dancer',
+    position_en: 'Stage Actress & Dancer',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'মিথিলা সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন নিবেদিতপ্রাণ অভিনয় ও নৃত্যশিল্পী। সনাতন ঐতিহ্য ও কৃষ্টির প্রসারে পৌরাণিক মঞ্চনাটক এবং নৃত্যনাট্যে তাঁর আন্তরিক পরিবেশনা জোটের সাংস্কৃতিক কর্মকাণ্ডে গুরুত্বপূর্ণ অবদান রেখে চলেছে।',
+    bio_bn:
+      'মিথিলা সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন নিবেদিতপ্রাণ অভিনয় ও নৃত্যশিল্পী। সনাতন ঐতিহ্য ও কৃষ্টির প্রসারে পৌরাণিক মঞ্চনাটক এবং নৃত্যনাট্যে তাঁর আন্তরিক পরিবেশনা জোটের সাংস্কৃতিক কর্মকাণ্ডে গুরুত্বপূর্ণ অবদান রেখে চলেছে।',
+    biographyEn:
+      'Mithila Sutradhar is a dedicated stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. She contributes actively to mythological theatrical productions and classical dance recitals.',
+    bio_en:
+      'Mithila Sutradhar is a dedicated stage actress and dancer of Radhamadhob Sanatan Cultural Alliance. She contributes actively to mythological theatrical productions and classical dance recitals.',
+    joining_date: '2023-08-20',
+    joiningDateEn: 'August 20, 2023',
+    isOriginalPhotoOnly: true,
+    displayOrder: 20,
+    status: 'active',
+    createdAt: '2026-10-04T12:20:00.000Z',
+    updatedAt: '2026-10-04T12:20:00.000Z',
+  },
+  {
+    id: 'member-021-manindra-chandra-sutradhar',
+    name: 'মনীন্দ্র চন্দ্র সূত্রধর',
+    name_bn: 'মনীন্দ্র চন্দ্র সূত্রধর',
+    nameEn: 'Manindra Chandra Sutradhar',
+    name_en: 'Manindra Chandra Sutradhar',
+    fullName: 'Manindra Chandra Sutradhar',
+    fullNameBn: 'মনীন্দ্র চন্দ্র সূত্রধর',
+    photo: manindraSutradharPortraitImg,
+    originalPhotoFileName: 'manindra_sutradhar_portrait_1791146331505.jpg',
+    position: 'অভিনয়শিল্পী',
+    positionBn: 'অভিনয়শিল্পী',
+    position_bn: 'অভিনয়শিল্পী',
+    positionEn: 'Stage Actor',
+    position_en: 'Stage Actor',
+    father_name: '',
+    father_name_en: '',
+    mother_name: '',
+    mother_name_en: '',
+    address: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    address_bn: 'রাধামাধব সাংস্কৃতিক জোট, বাংলাদেশ',
+    addressEn: 'Radhamadhob Cultural Alliance, Bangladesh',
+    address_en: 'Radhamadhob Cultural Alliance, Bangladesh',
+    phone: '',
+    email: '',
+    biography:
+      'মনীন্দ্র চন্দ্র সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন অভিজ্ঞ ও গুণী অভিনয়শিল্পী এবং বাচিক শিল্পী। বাংলাদেশ বেতার সহ বিভিন্ন মাধ্যমে তাঁর কন্ঠ ও অভিনয়শৈলীর অভিজ্ঞতা জোটের পৌরাণিক নাটক ও সাংস্কৃতিক পরিবেশনাকে গভীর ও প্রাণবন্ত করে তোলে।',
+    bio_bn:
+      'মনীন্দ্র চন্দ্র সূত্রধর রাধামাধব সনাতন সাংস্কৃতিক জোটের একজন অভিজ্ঞ ও গুণী অভিনয়শিল্পী এবং বাচিক শিল্পী। বাংলাদেশ বেতার সহ বিভিন্ন মাধ্যমে তাঁর কন্ঠ ও অভিনয়শৈলীর অভিজ্ঞতা জোটের পৌরাণিক নাটক ও সাংস্কৃতিক পরিবেশনাকে গভীর ও প্রাণবন্ত করে তোলে।',
+    biographyEn:
+      'Manindra Chandra Sutradhar is a distinguished veteran stage actor and voice artist of Radhamadhob Sanatan Cultural Alliance. With extensive artistic experience including radio broadcasting and theatre, he brings gravitas to mythological drama performances.',
+    bio_en:
+      'Manindra Chandra Sutradhar is a distinguished veteran stage actor and voice artist of Radhamadhob Sanatan Cultural Alliance. With extensive artistic experience including radio broadcasting and theatre, he brings gravitas to mythological drama performances.',
+    joining_date: '2021-11-10',
+    joiningDateEn: 'November 10, 2021',
+    isOriginalPhotoOnly: true,
+    displayOrder: 21,
+    status: 'active',
+    createdAt: '2026-10-04T12:30:00.000Z',
+    updatedAt: '2026-10-04T12:30:00.000Z',
+  },
 ];
 
 /**
@@ -864,10 +1032,10 @@ CREATE TABLE members (
  * PERSISTENT STORAGE ENGINE (`members` collection in IndexedDB + localStorage)
  * ============================================================================
  */
-const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v14';
+const DB_NAME = 'RadhamadhobMemberDatabase_bilingual_v15';
 const DB_VERSION = 1;
 const STORE_NAME = 'members';
-const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v14';
+const LOCAL_STORAGE_FALLBACK_KEY = 'radhamadhob_members_collection_bilingual_v15';
 
 const isPureEn = (val?: string | null): boolean =>
   Boolean(val && val.trim().length > 0 && !/[\u0980-\u09FF]/.test(val));

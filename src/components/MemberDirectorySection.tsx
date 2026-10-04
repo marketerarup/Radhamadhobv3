@@ -58,6 +58,11 @@ const ROLE_BADGE_STYLES: Record<
     text: 'text-[#FED7AA]',
     border: 'border-[#EA580C]/40',
   },
+  'অভিনয়শিল্পী': {
+    bg: 'bg-[#C2410C]/25',
+    text: 'text-[#FED7AA]',
+    border: 'border-[#C2410C]/40',
+  },
   প্রশিক্ষক: {
     bg: 'bg-[#D97706]/25',
     text: 'text-[#FDE68A]',

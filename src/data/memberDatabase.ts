@@ -1221,54 +1221,57 @@ function openMemberIndexedDB(): Promise<IDBDatabase> {
 }
 
 export async function loadMembersFromDatabase(): Promise<MemberRecord[]> {
-  try {
-    const remote = await fetchCollectionFromFirestore<MemberRecord>('members');
-    if (remote && remote.length > 0) {
-      const { merged } = normalizeAndMergeRecords(remote);
-      return merged;
-    }
-  } catch {
-    // Fallback to IndexedDB
-  }
+  let localRecords: Partial<MemberRecord>[] = [];
   try {
     const db = await openMemberIndexedDB();
-    return await new Promise<MemberRecord[]>((resolve, reject) => {
+    localRecords = await new Promise<Partial<MemberRecord>[]>((resolve) => {
       const tx = db.transaction(STORE_NAME, 'readonly');
       const store = tx.objectStore(STORE_NAME);
       const req = store.getAll();
-      req.onsuccess = async () => {
-        const records = (req.result as Partial<MemberRecord>[]) || [];
-        if (records.length === 0) {
-          await saveAllMembersToDatabase(INITIAL_MEMBERS_SEED);
-          resolve(INITIAL_MEMBERS_SEED);
-        } else {
-          const { merged, changed } = normalizeAndMergeRecords(records);
-          if (changed) {
-            await saveAllMembersToDatabase(merged);
-          }
-          resolve(merged);
-        }
-      };
-      req.onerror = () => reject(req.error);
+      req.onsuccess = () => resolve((req.result as Partial<MemberRecord>[]) || []);
+      req.onerror = () => resolve([]);
     });
   } catch {
     try {
       const raw = localStorage.getItem(LOCAL_STORAGE_FALLBACK_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as Partial<MemberRecord>[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const { merged, changed } = normalizeAndMergeRecords(parsed);
-          if (changed) {
-            localStorage.setItem(LOCAL_STORAGE_FALLBACK_KEY, JSON.stringify(merged));
-          }
-          return merged;
-        }
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) localRecords = parsed;
       }
     } catch {
-      // Ignore storage errors
+      // Ignore
     }
-    return INITIAL_MEMBERS_SEED;
   }
+
+  try {
+    const remote = await fetchCollectionFromFirestore<MemberRecord>('members');
+    if (remote && remote.length > 0) {
+      const combined = [...remote];
+      const remoteIds = new Set(remote.map((r) => r.id));
+      for (const loc of localRecords) {
+        if (loc.id && !remoteIds.has(loc.id)) {
+          combined.push(loc as MemberRecord);
+        }
+      }
+      const { merged, changed } = normalizeAndMergeRecords(combined);
+      if (changed || combined.length > remote.length) {
+        saveAllMembersToDatabase(merged).catch(() => {});
+      }
+      return merged;
+    }
+  } catch {
+    // Fallback to local
+  }
+
+  if (localRecords.length > 0) {
+    const { merged, changed } = normalizeAndMergeRecords(localRecords);
+    if (changed) {
+      saveAllMembersToDatabase(merged).catch(() => {});
+    }
+    return merged;
+  }
+
+  return INITIAL_MEMBERS_SEED;
 }
 
 export async function saveAllMembersToDatabase(members: MemberRecord[]): Promise<void> {

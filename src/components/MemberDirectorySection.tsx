@@ -7,10 +7,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  LayoutGrid,
   Mail,
   MapPin,
   Phone,
   Search,
+  SlidersHorizontal,
   Sparkles,
   UserCheck,
   Users,
@@ -107,6 +109,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
     : null;
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
+  const [viewMode, setViewMode] = useState<'slider' | 'grid'>('slider');
 
   // Responsive Cards Per View: Mobile: 1, Small Tablet: 2, Medium Tablet: 3, Desktop: 4
   const [cardsPerView, setCardsPerView] = useState<number>(() => {
@@ -259,6 +262,54 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
     return tCategory(role);
   };
 
+  const renderMemberCard = (member: MemberRecord) => {
+    const badge = getBadgeStyle(member.position);
+    const name = getMemberName(member);
+    const position = getMemberPosition(member);
+
+    return (
+      <CinematicCard3D
+        onClick={() => setSelectedMember(member)}
+        className="h-full rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
+        maxTilt={6}
+      >
+        <div className="p-4 sm:p-5 space-y-3.5 text-center flex flex-col items-center">
+          {/* Cameo Portrait */}
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#140807] shadow-lg">
+            <img
+              src={member.photo}
+              alt={name}
+              loading="lazy"
+              className="w-full h-full object-cover object-top rounded-full bg-black"
+            />
+          </div>
+
+          <div className="space-y-1 w-full">
+            <span
+              className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold border font-mono-code truncate max-w-full ${badge.bg} ${badge.text} ${badge.border}`}
+            >
+              {position}
+            </span>
+            <h3 className="text-sm sm:text-base font-bold text-white font-display-bn truncate">
+              {name}
+            </h3>
+            <p className="text-[11px] text-stone-300 line-clamp-2 leading-relaxed px-1 pt-1">
+              {getMemberBio(member)}
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Action */}
+        <div className="px-4 py-2.5 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-center text-xs">
+          <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform text-[11px]">
+            <Eye className="w-3.5 h-3.5" />
+            <span>{lang === 'bn' ? 'প্রোফাইল' : 'Profile'}</span>
+          </span>
+        </div>
+      </CinematicCard3D>
+    );
+  };
+
   return (
     <section
       id="members-section"
@@ -349,8 +400,8 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
           </div>
         </div>
 
-        {/* Search & Role Filter Bar */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-[#120706] p-4 rounded-2xl border border-[#D4AF37]/30 shadow-xl">
+        {/* Search & Role Filter Bar + View Mode Toggle */}
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-[#120706] p-4 rounded-2xl border border-[#D4AF37]/30 shadow-xl">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -367,153 +418,176 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-            {uniquePositions.map((role) => (
+          <div className="flex items-center gap-3 justify-between flex-wrap">
+            <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+              {uniquePositions.map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  onClick={() => setRoleFilter(role)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer whitespace-nowrap ${
+                    roleFilter === role
+                      ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] border-[#D4AF37]/60 shadow-md'
+                      : 'bg-[#180C0B] text-stone-300 border-[#D4AF37]/20 hover:border-[#D4AF37]/50 hover:text-white'
+                  }`}
+                >
+                  {formatRoleLabel(role)}
+                </button>
+              ))}
+            </div>
+
+            {/* View Mode Toggle (Slider / Grid) */}
+            <div className="flex items-center gap-1 bg-[#1A0A09] p-1 rounded-xl border border-[#D4AF37]/30 shrink-0">
               <button
-                key={role}
                 type="button"
-                onClick={() => setRoleFilter(role)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer whitespace-nowrap ${
-                  roleFilter === role
-                    ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] border-[#D4AF37]/60 shadow-md'
-                    : 'bg-[#180C0B] text-stone-300 border-[#D4AF37]/20 hover:border-[#D4AF37]/50 hover:text-white'
+                onClick={() => setViewMode('slider')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  viewMode === 'slider'
+                    ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] shadow'
+                    : 'text-stone-400 hover:text-white'
                 }`}
+                title={lang === 'bn' ? 'স্লাইডার ভিউ' : 'Slider View'}
               >
-                {formatRoleLabel(role)}
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span className="text-xs">{lang === 'bn' ? 'স্লাইডার' : 'Slider'}</span>
               </button>
-            ))}
+              <button
+                type="button"
+                onClick={() => setViewMode('grid')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  viewMode === 'grid'
+                    ? 'bg-gradient-to-r from-[#990000] to-[#6B0505] text-[#FDE68A] shadow'
+                    : 'text-stone-400 hover:text-white'
+                }`}
+                title={lang === 'bn' ? 'সকল সদস্য গ্রিডে দেখুন' : 'Grid View'}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="text-xs">{lang === 'bn' ? 'সকল সদস্য' : 'Grid'}</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Members 1-Row Responsive Slider (Mobile: 1, Small Tablet: 2, Tablet: 3, Desktop: 4) */}
+        {/* Members Directory Content */}
         {filteredMembers.length > 0 ? (
-          <div
-            className="space-y-4 relative"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Top Slider Navigation Controls */}
-            {maxSlideIndex > 0 && (
-              <div className="flex items-center justify-end">
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handlePrevSlide}
-                    aria-label={lang === 'bn' ? 'পূর্ববর্তী' : 'Previous'}
-                    className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
-                    <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNextSlide}
-                    aria-label={lang === 'bn' ? 'পরবর্তী' : 'Next'}
-                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
-                  >
-                    <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
-                    <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Slider Viewport */}
-            <div className="relative">
-              <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
-                <div
-                  className="flex transition-transform duration-200 ease-out"
-                  style={{
-                    transform: `translateX(-${
-                      currentSlideIndex * (100 / cardsPerView)
-                    }%)`,
-                  }}
+          viewMode === 'grid' ? (
+            /* Full Grid View */
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-xs text-stone-400 font-mono-code px-1">
+                <span>
+                  {lang === 'bn'
+                    ? `মোট ${tDigits(filteredMembers.length)} জন শিল্পী প্রদর্শিত হচ্ছে`
+                    : `Showing all ${filteredMembers.length} artists`}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('slider')}
+                  className="text-[#D4AF37] hover:underline cursor-pointer flex items-center gap-1 text-xs"
                 >
-                  {filteredMembers.map((member) => {
-                    const badge = getBadgeStyle(member.position);
-                    const name = getMemberName(member);
-                    const position = getMemberPosition(member);
+                  <SlidersHorizontal className="w-3 h-3" />
+                  <span>{lang === 'bn' ? 'স্লাইডার মোডে দেখুন' : 'Switch to Slider'}</span>
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {filteredMembers.map((member) => (
+                  <div key={member.id} className="w-full">
+                    {renderMemberCard(member)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* Responsive Slider View */
+            <div
+              className="space-y-4 relative"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {/* Top Slider Navigation Controls */}
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-stone-400 font-mono-code">
+                  {lang === 'bn'
+                    ? `স্লাইডার: মোট ${tDigits(filteredMembers.length)} জন সদস্য (${tDigits(currentSlideIndex + 1)}-${tDigits(Math.min(currentSlideIndex + cardsPerView, filteredMembers.length))})`
+                    : `Slider: ${filteredMembers.length} members (${currentSlideIndex + 1}-${Math.min(currentSlideIndex + cardsPerView, filteredMembers.length)})`}
+                </span>
+                {maxSlideIndex > 0 && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handlePrevSlide}
+                      aria-label={lang === 'bn' ? 'পূর্ববর্তী' : 'Previous'}
+                      className="px-3.5 py-2 rounded-xl bg-[#140807] hover:bg-[#1C0D0C] text-stone-300 hover:text-white border border-[#D4AF37]/30 hover:border-[#D4AF37] text-xs font-bold inline-flex items-center gap-1.5 shadow-lg transition-all cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-[#D4AF37]" />
+                      <span>{lang === 'bn' ? 'পূর্ববর্তী' : 'Prev'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextSlide}
+                      aria-label={lang === 'bn' ? 'পরবর্তী' : 'Next'}
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#990000] to-[#CC0000] hover:from-[#B91C1C] hover:to-[#E11D48] text-white border border-[#D4AF37]/60 text-xs font-bold inline-flex items-center gap-1.5 shadow-[0_4px_20px_rgba(204,0,0,0.3)] transition-all cursor-pointer gold-shimmer-btn"
+                    >
+                      <span>{lang === 'bn' ? 'পরবর্তী' : 'Next'}</span>
+                      <ChevronRight className="w-4 h-4 text-[#FDE68A]" />
+                    </button>
+                  </div>
+                )}
+              </div>
 
-                    return (
+              {/* Slider Viewport */}
+              <div className="relative">
+                <div className="overflow-hidden -mx-2.5 sm:-mx-3 py-2">
+                  <div
+                    className="flex transition-transform duration-200 ease-out"
+                    style={{
+                      transform: `translateX(-${
+                        currentSlideIndex * (100 / cardsPerView)
+                      }%)`,
+                    }}
+                  >
+                    {filteredMembers.map((member) => (
                       <div
                         key={member.id}
                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 shrink-0 px-2.5 sm:px-3"
                       >
-                        <CinematicCard3D
-                          onClick={() => setSelectedMember(member)}
-                          className="h-full rounded-2xl bg-gradient-to-br from-[#160B0A] to-[#0E0605] border border-[#D4AF37]/25 hover:border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between"
-                          maxTilt={6}
-                        >
-                          <div className="p-4 sm:p-5 space-y-3.5 text-center flex flex-col items-center">
-                            {/* Cameo Portrait */}
-                            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-[#990000] via-[#D4AF37] to-[#140807] shadow-lg">
-                              <img
-                                src={member.photo}
-                                alt={name}
-                                loading="lazy"
-                                className="w-full h-full object-cover object-top rounded-full bg-black"
-                              />
-                            </div>
-
-                            <div className="space-y-1 w-full">
-                              <span
-                                className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold border font-mono-code truncate max-w-full ${badge.bg} ${badge.text} ${badge.border}`}
-                              >
-                                {position}
-                              </span>
-                              <h3 className="text-sm sm:text-base font-bold text-white font-display-bn truncate">
-                                {name}
-                              </h3>
-                              <p className="text-[11px] text-stone-300 line-clamp-2 leading-relaxed px-1 pt-1">
-                                {getMemberBio(member)}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Bottom Action */}
-                          <div className="px-4 py-2.5 bg-[#110706] border-t border-[#D4AF37]/20 flex items-center justify-center text-xs">
-                            <span className="font-bold text-[#FDE68A] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform text-[11px]">
-                              <Eye className="w-3.5 h-3.5" />
-                              <span>{lang === 'bn' ? 'প্রোফাইল' : 'Profile'}</span>
-                            </span>
-                          </div>
-                        </CinematicCard3D>
+                        {renderMemberCard(member)}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Slider Dots Indicator */}
-            {maxSlideIndex > 0 && (
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-[11px] text-stone-400 font-mono-code">
-                  {lang === 'bn'
-                    ? 'স্লাইড করুন বা তীরচিহ্নে ক্লিক করুন'
-                    : 'Swipe or use buttons to browse'}
-                </span>
-                <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] py-1">
-                  {Array.from({ length: maxSlideIndex + 1 })
-                    .slice(0, 12)
-                    .map((_, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setCurrentSlideIndex(idx)}
-                        aria-label={`Slide ${idx + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                          currentSlideIndex === idx
-                            ? 'w-6 bg-[#D4AF37]'
-                            : 'w-1.5 bg-white/20 hover:bg-white/40'
-                        }`}
-                      />
                     ))}
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Slider Dots Indicator */}
+              {maxSlideIndex > 0 && (
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-[11px] text-stone-400 font-mono-code">
+                    {lang === 'bn'
+                      ? 'স্লাইড করুন বা তীরচিহ্নে ক্লিক করুন'
+                      : 'Swipe or use buttons to browse'}
+                  </span>
+                  <div className="flex items-center gap-1.5 overflow-x-auto max-w-[200px] py-1">
+                    {Array.from({ length: maxSlideIndex + 1 })
+                      .slice(0, 12)
+                      .map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCurrentSlideIndex(idx)}
+                          aria-label={`Slide ${idx + 1}`}
+                          className={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                            currentSlideIndex === idx
+                              ? 'w-6 bg-[#D4AF37]'
+                              : 'w-1.5 bg-white/20 hover:bg-white/40'
+                          }`}
+                        />
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
         ) : (
+
           <div className="text-center py-12 bg-[#120706] rounded-2xl border border-white/10">
             <p className="text-stone-400 text-sm">
               {lang === 'bn'

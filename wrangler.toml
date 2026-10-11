@@ -1,0 +1,6 @@
+name = "radhamadhob"
+compatibility_date = "2026-08-04"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+MONGODB_DB_NAME = "radhamadhob"

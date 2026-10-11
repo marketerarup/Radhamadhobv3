@@ -141,6 +141,20 @@ function broadcastCollectionUpdate<T>(collectionName: string, records: T[]): voi
 export async function fetchCollectionFromFirestore<T extends { id: string }>(
   collectionName: string
 ): Promise<T[] | null> {
+  // 1. Try Cloudflare Pages Functions MongoDB API first
+  try {
+    const res = await fetch(`/api/${encodeURIComponent(collectionName)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data as T[];
+      }
+    }
+  } catch {
+    // If running in local dev without functions, fallback to Firestore
+  }
+
+  // 2. Fallback to Firestore SDK
   try {
     const snap = await getDocs(collection(db, collectionName));
     if (snap.empty) return null;
@@ -156,13 +170,32 @@ export async function fetchCollectionFromFirestore<T extends { id: string }>(
 }
 
 /**
- * Helper to sync a collection of documents to Firestore when an admin updates records
+ * Helper to sync a collection of documents to MongoDB and Firestore when an admin updates records
  */
 export async function syncCollectionToFirestore<T extends { id: string }>(
   collectionName: string,
   records: T[]
 ): Promise<void> {
   broadcastCollectionUpdate(collectionName, records);
+
+  // 1. Send update to Cloudflare Pages Functions MongoDB API
+  try {
+    const res = await fetch(`/api/${encodeURIComponent(collectionName)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(records),
+    });
+    if (res.ok) {
+      // Successfully saved to MongoDB via Cloudflare Pages Function
+      return;
+    }
+  } catch {
+    // Continue to Firestore fallback
+  }
+
+  // 2. Fallback to Firestore
   try {
     const existingSnap = await getDocs(collection(db, collectionName));
     const newIds = new Set(records.map((r) => r.id));
@@ -180,7 +213,7 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
       await setDoc(doc(db, collectionName, record.id), sanitized);
     }
   } catch (error) {
-    console.warn(`Firestore sync notice for ${collectionName}:`, error);
+    console.warn(`Database sync notice for ${collectionName}:`, error);
   }
 }
 

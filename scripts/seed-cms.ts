@@ -38,7 +38,7 @@ const seeds: Record<string, Array<{ id: string }>> = {
   programs: INITIAL_PROGRAMS_SEED,
   seo: INITIAL_SEO_PAGES_SEED as unknown as Array<{ id: string }>,
   privacy_policy: [INITIAL_PRIVACY_POLICY_DOC],
-  // Admin accounts without passwords: first sign-in uses ADMIN_BOOTSTRAP_PASSWORD.
+  // Admin accounts WITHOUT passwords — set one with `npm run admin:password` before signing in.
   users: INITIAL_ADMIN_USERS.map((u) => ({
     id: u.uid,
     uid: u.uid,

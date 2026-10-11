@@ -1,7 +1,7 @@
 import type { DefaultSession } from 'next-auth';
 
 type AdminRole = 'admin' | 'super_admin' | 'editor';
-type SessionError = 'RefreshTokenError' | 'AccessDenied';
+type SessionError = 'RefreshTokenError';
 
 declare module 'next-auth' {
   interface Session {

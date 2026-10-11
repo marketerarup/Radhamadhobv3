@@ -1,8 +1,7 @@
 import 'server-only';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
-import { authenticateWithPassword, findAdminByEmail } from './adminAuth';
+import { authenticateWithPassword } from './adminAuth';
 import {
   REFRESH_TOKEN_TTL_SECONDS,
   SessionUser,
@@ -13,8 +12,6 @@ import {
 
 /** Rotate a little before expiry so in-flight requests never carry a stale token. */
 const ACCESS_TOKEN_REFRESH_MARGIN_MS = 60_000;
-
-const googleEnabled = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
 /**
  * Session design
@@ -43,32 +40,13 @@ export const authOptions: NextAuthOptions = {
         return authenticateWithPassword(email, password);
       },
     }),
-    ...(googleEnabled
-      ? [
-          GoogleProvider({
-            clientId: process.env.AUTH_GOOGLE_ID as string,
-            clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
-          }),
-        ]
-      : []),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider !== 'google') return true;
-      const verified = (profile as { email_verified?: boolean } | undefined)?.email_verified;
-      if (!user.email || verified === false) return false;
-      return Boolean(await findAdminByEmail(user.email));
-    },
-
     async jwt({ token, user, account }) {
       // 1. Initial sign-in: start a new refresh-token family.
       if (user && account) {
-        const sessionUser: SessionUser | null =
-          account.provider === 'credentials'
-            ? (user as unknown as SessionUser)
-            : await findAdminByEmail(user.email || '');
-        if (!sessionUser) return { ...token, error: 'AccessDenied' };
-
+        // Email + password is the only sign-in method (see CredentialsProvider).
+        const sessionUser = user as unknown as SessionUser;
         const tokens = await issueTokensForSignIn(sessionUser);
         return {
           sub: sessionUser.id,
@@ -134,5 +112,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-export const isGoogleSignInEnabled = googleEnabled;

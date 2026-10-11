@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getProviders, signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import {
   ArrowLeft,
   Calendar,
@@ -103,21 +103,14 @@ function getRequestedTabFromLocation(): CmsTabId {
   return getTabFromAdminPath(window.location.pathname);
 }
 
-const LOGIN_ERROR_UNAUTHORIZED_EMAIL =
-  'অনুমোদিত অ্যাডমিন ইমেইল নয় (Unauthorized email). শুধুমাত্র অনুমোদিত অ্যাডমিন প্রবেশ করতে পারবেন।';
 const LOGIN_ERROR_INVALID_CREDENTIALS =
   'লগইন ব্যর্থ হয়েছে: ভুল ইমেইল অথবা পাসওয়ার্ড (Invalid Admin Email or Password)।';
-const LOGIN_ERROR_GOOGLE_FAILED =
-  'Google Sign-In failed. Please use your Admin Email and Password below.';
 
-// NextAuth redirects back to /admin/login?error=<code> after a failed OAuth sign-in
+// NextAuth may redirect back to /admin/login?error=<code> (e.g. a stale sign-in link)
 function getLoginErrorFromLocation(): string | null {
   if (typeof window === 'undefined') return null;
   const code = new URLSearchParams(window.location.search).get('error');
-  if (!code) return null;
-  if (code === 'AccessDenied') return LOGIN_ERROR_UNAUTHORIZED_EMAIL;
-  if (code === 'CredentialsSignin') return LOGIN_ERROR_INVALID_CREDENTIALS;
-  return LOGIN_ERROR_GOOGLE_FAILED;
+  return code ? LOGIN_ERROR_INVALID_CREDENTIALS : null;
 }
 
 interface AdminDashboardCMSProps {
@@ -437,22 +430,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     }
   }, [isAuthenticated, sessionStatus, activeTab]);
 
-  const handleGoogleSignIn = async () => {
-    setLoginError(null);
-    try {
-      const providers = await getProviders();
-      if (!providers?.google) {
-        setLoginError(LOGIN_ERROR_GOOGLE_FAILED);
-        return;
-      }
-      await signIn('google', {
-        callbackUrl: getAdminPathForTab(requestedTabBeforeLogin || 'dashboard'),
-      });
-    } catch (err) {
-      setLoginError(err instanceof Error ? err.message : LOGIN_ERROR_GOOGLE_FAILED);
-    }
-  };
-
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSigningIn) return;
@@ -570,24 +547,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
               {loginError}
             </div>
           )}
-
-          {/* Primary Google Sign-In via Firebase Authentication */}
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            className="w-full py-3.5 px-4 rounded-xl bg-[#1C1917] hover:bg-black text-white font-bold text-sm border border-[#D4AF37] shadow-md transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <Globe className="w-4 h-4 text-[#FDE68A]" />
-            <span>Sign in with Google (Firebase Authentication)</span>
-          </button>
-
-          <div className="relative flex items-center justify-center">
-            <div className="border-t border-[#E5DEC9] w-full" />
-            <span className="bg-white px-3 text-[11px] font-bold text-[#78716C] uppercase">
-              অথবা / OR
-            </span>
-            <div className="border-t border-[#E5DEC9] w-full" />
-          </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div>

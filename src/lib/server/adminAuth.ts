@@ -2,18 +2,17 @@ import 'server-only';
 import type { Db } from 'mongodb';
 import { withDb } from './mongodb';
 import { ADMIN_USERS_COLLECTION, AdminUserDocument } from './cmsRepository';
-import { hashPassword, timingSafeEqualStrings, verifyPassword } from './passwords';
+import { hashPassword, verifyPassword } from './passwords';
 import { ensureAuthIndexes, SessionUser, toSessionUser } from './refreshTokens';
 
 /**
  * Admin credential checks against the MongoDB `users` collection.
  *
- * Bootstrap (no password UI exists in the dashboard):
- * - Empty `users` collection: ADMIN_BOOTSTRAP_EMAIL + ADMIN_BOOTSTRAP_PASSWORD
- *   creates the first admin account.
- * - Admins added from the dashboard have no password yet: their first sign-in
- *   with ADMIN_BOOTSTRAP_PASSWORD sets it (stored hashed). Afterwards only that
- *   stored hash is accepted. `npm run admin:password` sets a password directly.
+ * Sign-in only: there is no registration. Accounts exist only when an admin
+ * adds them from the dashboard (`users` module) or an operator creates them
+ * with `npm run admin:password -- <email> <password> --create "Name"`.
+ * A password is accepted only if it matches that account's stored hash;
+ * accounts without a password cannot sign in until one is set server-side.
  */
 
 const MAX_FAILED_ATTEMPTS = 8;
@@ -49,16 +48,19 @@ async function recordFailure(db: Db, email: string): Promise<void> {
   );
 }
 
-async function markSignedIn(db: Db, user: AdminUserDocument, extra: Partial<AdminUserDocument> = {}) {
+async function markSignedIn(db: Db, user: AdminUserDocument) {
   await db
     .collection<AdminUserDocument>(ADMIN_USERS_COLLECTION)
-    .updateOne({ id: user.id }, { $set: { ...extra, lastLoginAt: new Date().toISOString() } });
+    .updateOne({ id: user.id }, { $set: { lastLoginAt: new Date().toISOString() } });
   await db.collection<LoginAttemptRecord>(LOGIN_ATTEMPTS).deleteOne({ _id: user.email });
 }
 
-function bootstrapPassword(): string | null {
-  const value = process.env.ADMIN_BOOTSTRAP_PASSWORD;
-  return value && value.length >= 8 ? value : null;
+// Unknown emails still pay for one hash verification so response timing does
+// not reveal which admin emails exist.
+let dummyHash: Promise<string> | null = null;
+function getDummyHash(): Promise<string> {
+  if (!dummyHash) dummyHash = hashPassword(crypto.randomUUID());
+  return dummyHash;
 }
 
 export async function authenticateWithPassword(
@@ -72,62 +74,17 @@ export async function authenticateWithPassword(
     await ensureAuthIndexes(db);
     if (await isLockedOut(db, email)) return null;
 
-    const users = db.collection<AdminUserDocument>(ADMIN_USERS_COLLECTION);
-    const user = await users.findOne({ email });
-    const bootstrap = bootstrapPassword();
+    const user = await db
+      .collection<AdminUserDocument>(ADMIN_USERS_COLLECTION)
+      .findOne({ email });
 
-    if (!user) {
-      const bootstrapEmail = normalizeEmail(process.env.ADMIN_BOOTSTRAP_EMAIL || '');
-      const canBootstrap =
-        bootstrap &&
-        bootstrapEmail === email &&
-        timingSafeEqualStrings(password, bootstrap) &&
-        (await users.countDocuments({}, { limit: 1 })) === 0;
-      if (!canBootstrap) {
-        await recordFailure(db, email);
-        return null;
-      }
-      const nowIso = new Date().toISOString();
-      const owner: AdminUserDocument = {
-        id: 'admin-owner-001',
-        uid: 'admin-owner-001',
-        email,
-        displayName: 'রাধামাধব সাংস্কৃতিক জোট অ্যাডমিন',
-        role: 'admin',
-        passwordHash: await hashPassword(password),
-        createdAt: nowIso,
-      };
-      await users.insertOne({ ...owner });
-      await markSignedIn(db, owner);
-      return toSessionUser(owner);
+    const valid = user?.passwordHash
+      ? await verifyPassword(password, user.passwordHash)
+      : (await verifyPassword(password, await getDummyHash()), false);
+    if (!user || !valid) {
+      await recordFailure(db, email);
+      return null;
     }
-
-    if (user.passwordHash) {
-      if (!(await verifyPassword(password, user.passwordHash))) {
-        await recordFailure(db, email);
-        return null;
-      }
-      await markSignedIn(db, user);
-      return toSessionUser(user);
-    }
-
-    // Account created from the dashboard without a password yet.
-    if (bootstrap && timingSafeEqualStrings(password, bootstrap)) {
-      await markSignedIn(db, user, { passwordHash: await hashPassword(password) });
-      return toSessionUser(user);
-    }
-    await recordFailure(db, email);
-    return null;
-  });
-}
-
-/** Google sign-in: only emails already present in the `users` collection may enter. */
-export async function findAdminByEmail(emailInput: string): Promise<SessionUser | null> {
-  const email = normalizeEmail(emailInput);
-  if (!email) return null;
-  return withDb(async (db) => {
-    const user = await db.collection<AdminUserDocument>(ADMIN_USERS_COLLECTION).findOne({ email });
-    if (!user) return null;
     await markSignedIn(db, user);
     return toSessionUser(user);
   });

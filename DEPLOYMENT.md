@@ -12,7 +12,7 @@ is edited from `/admin/*` and stored in MongoDB (`DB_URL`).
 | Admin `/admin/*` | `src/app/admin/[[...slug]]/page.tsx` — dynamic, `noindex` |
 | Route guard | `src/middleware.ts` — Edge middleware; redirects signed-out visitors to `/admin/login?callbackUrl=…`, blocks unauthenticated CMS writes |
 | CMS API | `GET /api/cms/:collection` (public, except `users`), `PUT /api/cms/:collection` (admins; `users` needs role `admin`/`super_admin`) |
-| Auth | NextAuth v4 (`src/lib/server/authOptions.ts`), credentials + optional Google |
+| Auth | NextAuth v4 (`src/lib/server/authOptions.ts`), admin email + password only (no social/OAuth login) |
 
 ### Tokens
 
@@ -27,7 +27,7 @@ is edited from `/admin/*` and stored in MongoDB (`DB_URL`).
 ## Local development
 
 ```bash
-cp .env.example .env.local        # fill DB_URL, NEXTAUTH_SECRET, ADMIN_BOOTSTRAP_*
+cp .env.example .env.local        # fill DB_URL, NEXTAUTH_SECRET
 npm install
 npm run db:seed -- --dry          # see what would be inserted
 npm run db:seed                   # fills ONLY empty collections with the built-in content
@@ -37,16 +37,24 @@ npm run dev                       # http://localhost:3000, admin at /admin/login
 **MongoDB Atlas → Network Access** must allow your IP, otherwise connections fail
 with `tlsv1 alert internal error … SSL alert number 80`.
 
-### Admin accounts
+### Admin accounts (sign-in only — no registration)
 
-- Empty `users` collection: sign in with `ADMIN_BOOTSTRAP_EMAIL` + `ADMIN_BOOTSTRAP_PASSWORD` to create the first admin.
-- Admins added from the dashboard (or by `db:seed`) have no password yet; their **first** sign-in uses `ADMIN_BOOTSTRAP_PASSWORD`, which is then stored (hashed) as their password.
-- Set or reset a password directly (also signs out their sessions):
+- The only way in is **admin email + password** at `/admin/login`. There is no sign-up
+  page, no self-registration and no social/OAuth login.
+- A password is accepted only if it matches the account's stored hash. Accounts are never
+  created at sign-in.
+- Accounts are created by an existing admin (dashboard → `10. Admin Users`) or by an
+  operator. Accounts without a password (dashboard-added or from `db:seed`) cannot sign
+  in until a password is set server-side:
 
   ```bash
+  # first admin on a fresh database
+  npm run admin:password -- owner@example.org 'new-strong-password' --create "Display Name" admin
+  # set / reset the password of an existing account (also signs out its sessions)
   npm run admin:password -- someone@example.org 'new-strong-password'
-  npm run admin:password -- new@example.org 'new-strong-password' --create "Display Name" editor
   ```
+
+  Against production, run it locally with `DB_URL` pointing at the production database.
 
 ## Deploying to Cloudflare (Workers + OpenNext)
 
@@ -80,13 +88,10 @@ middleware support, run `npx @next/codemod@canary middleware-to-proxy .`.
    npx wrangler secret put DB_URL
    npx wrangler secret put NEXTAUTH_SECRET            # openssl rand -base64 32
    npx wrangler secret put NEXTAUTH_URL               # https://your-domain
-   npx wrangler secret put ADMIN_BOOTSTRAP_EMAIL
-   npx wrangler secret put ADMIN_BOOTSTRAP_PASSWORD
-   # optional: AUTH_GOOGLE_ID, AUTH_GOOGLE_SECRET, NEXT_PUBLIC_SITE_URL, MONGODB_DB_NAME
+   # optional: NEXT_PUBLIC_SITE_URL, MONGODB_DB_NAME
    ```
 
    `NEXTAUTH_URL` must be the public **https** URL (it also selects secure cookies).
-   For Google sign-in add `https://your-domain/api/auth/callback/google` as a redirect URI.
 
 ### Deploy
 

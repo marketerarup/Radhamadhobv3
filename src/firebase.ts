@@ -163,7 +163,6 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
   records: T[]
 ): Promise<void> {
   broadcastCollectionUpdate(collectionName, records);
-  if (!auth.currentUser) return;
   try {
     const existingSnap = await getDocs(collection(db, collectionName));
     const newIds = new Set(records.map((r) => r.id));
@@ -181,12 +180,7 @@ export async function syncCollectionToFirestore<T extends { id: string }>(
       await setDoc(doc(db, collectionName, record.id), sanitized);
     }
   } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message.includes('Missing or insufficient permissions')
-    ) {
-      handleFirestoreError(error, OperationType.WRITE, collectionName);
-    }
+    console.warn(`Firestore sync notice for ${collectionName}:`, error);
   }
 }
 

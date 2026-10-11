@@ -1,20 +1,22 @@
-import dramaMahishasuramardiniPoster from '../assets/images/drama_mahishasuramardini_1791069966707.jpg';
-import dramaDakshayajnaPoster from '../assets/images/drama_dakshayajna_1791069982560.jpg';
-import dramaDurgatinashiniPoster from '../assets/images/drama_durgatinashini_1791069999926.jpg';
-import dramaKaliChandaliniPoster from '../assets/images/drama_kali_chandalini_1791070017714.jpg';
-import dramaDebadidebPoster from '../assets/images/drama_debadideb_shiva_1791070032984.jpg';
-import dramaRadhaGobindaPoster from '../assets/images/drama_radha_gobinda_1791070047054.jpg';
-import dramaDashamahavidyaPoster from '../assets/images/drama_dasha_mahavidya_1791070065425.jpg';
-import dramaNimaiSannyasPoster from '../assets/images/drama_nimai_sannyas_1791070080853.jpg';
-import dramaMahalakshmiPoster from '../assets/images/drama_mahalakshmi_1791070096442.jpg';
-import dramaBishwaroopPoster from '../assets/images/drama_vishwaroop_1791070110675.jpg';
-import dramaGiriGovardhanPoster from '../assets/images/drama_giri_gobardhan_1791070126036.jpg';
-import dramaRamayanaPoster from '../assets/images/drama_ramayana_stage_1791070143542.jpg';
-import dramaJagannathPrakashPoster from '../assets/images/drama_jagannath_prakash_1791070159943.jpg';
 import {
-  fetchCollectionFromFirestore,
-  syncCollectionToFirestore,
-} from '../firebase';
+  fetchCollection,
+  syncCollection,
+} from '../lib/cmsClient';
+
+// Static stage photography served from /public/assets/images
+const dramaMahishasuramardiniPoster = '/assets/images/drama_mahishasuramardini_1791069966707.jpg';
+const dramaDakshayajnaPoster = '/assets/images/drama_dakshayajna_1791069982560.jpg';
+const dramaDurgatinashiniPoster = '/assets/images/drama_durgatinashini_1791069999926.jpg';
+const dramaKaliChandaliniPoster = '/assets/images/drama_kali_chandalini_1791070017714.jpg';
+const dramaDebadidebPoster = '/assets/images/drama_debadideb_shiva_1791070032984.jpg';
+const dramaRadhaGobindaPoster = '/assets/images/drama_radha_gobinda_1791070047054.jpg';
+const dramaDashamahavidyaPoster = '/assets/images/drama_dasha_mahavidya_1791070065425.jpg';
+const dramaNimaiSannyasPoster = '/assets/images/drama_nimai_sannyas_1791070080853.jpg';
+const dramaMahalakshmiPoster = '/assets/images/drama_mahalakshmi_1791070096442.jpg';
+const dramaBishwaroopPoster = '/assets/images/drama_vishwaroop_1791070110675.jpg';
+const dramaGiriGovardhanPoster = '/assets/images/drama_giri_gobardhan_1791070126036.jpg';
+const dramaRamayanaPoster = '/assets/images/drama_ramayana_stage_1791070143542.jpg';
+const dramaJagannathPrakashPoster = '/assets/images/drama_jagannath_prakash_1791070159943.jpg';
 
 /**
  * ============================================================================
@@ -1065,7 +1067,7 @@ export function normalizeVideoRecords(records: VideoRecord[]): VideoRecord[] {
 
 export async function loadDramasFromDatabase(): Promise<DramaRecord[]> {
   try {
-    const remote = await fetchCollectionFromFirestore<DramaRecord>('dramas');
+    const remote = await fetchCollection<DramaRecord>('dramas');
     if (remote && remote.length > 0) {
       return normalizeDramaRecords(remote).sort((a, b) =>
         (b.created_date || '').localeCompare(a.created_date || '')
@@ -1113,7 +1115,7 @@ export async function loadDramasFromDatabase(): Promise<DramaRecord[]> {
 export async function saveDramasToDatabase(dramas: DramaRecord[]): Promise<void> {
   const normalized = normalizeDramaRecords(dramas);
   try {
-    await syncCollectionToFirestore('dramas', normalized);
+    await syncCollection('dramas', normalized);
   } catch {
     // Continue to local persistence
   }
@@ -1140,7 +1142,7 @@ export async function saveDramasToDatabase(dramas: DramaRecord[]): Promise<void>
 
 export async function loadVideosFromDatabase(): Promise<VideoRecord[]> {
   try {
-    const remote = await fetchCollectionFromFirestore<VideoRecord>('videos');
+    const remote = await fetchCollection<VideoRecord>('videos');
     if (remote && remote.length > 0) {
       return normalizeVideoRecords(remote).sort((a, b) =>
         (b.created_date || '').localeCompare(a.created_date || '')
@@ -1188,7 +1190,7 @@ export async function loadVideosFromDatabase(): Promise<VideoRecord[]> {
 export async function saveVideosToDatabase(videos: VideoRecord[]): Promise<void> {
   const normalized = normalizeVideoRecords(videos);
   try {
-    await syncCollectionToFirestore('videos', normalized);
+    await syncCollection('videos', normalized);
   } catch {
     // Continue to local persistence
   }

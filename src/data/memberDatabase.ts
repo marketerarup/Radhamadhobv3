@@ -1,28 +1,30 @@
-import binoySenPortraitImg from '../assets/images/binoy_sen_director_portrait_1790455480817.jpg';
-import amitDasPortraitImg from '../assets/images/amit_das_portrait_1791053126528.jpg';
-import trishnaRaniDasPortraitImg from '../assets/images/trishna_rani_das_portrait_1791052436502.jpg';
-import samontiBiswasPortraitImg from '../assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078-D1-ibnCZ.jpg';
-import sumaDasPortraitImg from '../assets/images/suma_das_portrait_1791051380739.jpg';
-import apurbaSagarPortraitImg from '../assets/images/apurba_sagar_portrait_1791051802295.jpg';
-import dibakarDasPortraitImg from '../assets/images/dibakar_das_portrait_1791051877921.jpg';
-import badhonMondolPortraitImg from '../assets/images/badhon_mondol_portrait_1791052095695.jpg';
-import nayanDasPortraitImg from '../assets/images/nayan_das_portrait_1791052239800.jpg';
-import arpanSarkarPortraitImg from '../assets/images/arpan_sarkar_portrait_1791052321407.jpg';
-import shubhankarDasPortraitImg from '../assets/images/shubhankar_das_portrait_1791052532983.jpg';
-import hrishikeshDasSuitPortraitImg from '../assets/images/hrishikesh_das_suit_portrait_1791054301299.jpg';
-import synthiaRanjanPortraitImg from '../assets/images/synthia_ranjan_portrait_1791053316807.jpg';
-import ritiRanjanPortraitImg from '../assets/images/riti_ranjan_portrait_1791054258043.jpg';
-import arpitaDasPortraitImg from '../assets/images/arpita_das_portrait_1791054283177.jpg';
-import ankitaBhattacharyaPortraitImg from '../assets/images/ankita_bhattacharya_portrait_1791067244850.jpg';
-import arupSarkerShuvoPortraitImg from '../assets/images/arup_sarker_shuvo_portrait_1791072020673.jpg';
-import maumitaSutradharPortraitImg from '../assets/images/maumita_sutradhar_portrait_1791146058418.jpg';
-import devjaneeSutradharPortraitImg from '../assets/images/devjanee_sutradhar_portrait_1791146076800.jpg';
-import mithilaSutradharPortraitImg from '../assets/images/mithila_sutradhar_portrait_1791146308943.jpg';
-import manindraSutradharPortraitImg from '../assets/images/manindra_sutradhar_portrait_1791146331505.jpg';
 import {
-  fetchCollectionFromFirestore,
-  syncCollectionToFirestore,
-} from '../firebase';
+  fetchCollection,
+  syncCollection,
+} from '../lib/cmsClient';
+
+// Static stage photography served from /public/assets/images
+const binoySenPortraitImg = '/assets/images/binoy_sen_director_portrait_1790455480817.jpg';
+const amitDasPortraitImg = '/assets/images/amit_das_portrait_1791053126528.jpg';
+const trishnaRaniDasPortraitImg = '/assets/images/trishna_rani_das_portrait_1791052436502.jpg';
+const samontiBiswasPortraitImg = '/assets/images/samonti_biswas_assistant_instructor_portrait_1790456465078-D1-ibnCZ.jpg';
+const sumaDasPortraitImg = '/assets/images/suma_das_portrait_1791051380739.jpg';
+const apurbaSagarPortraitImg = '/assets/images/apurba_sagar_portrait_1791051802295.jpg';
+const dibakarDasPortraitImg = '/assets/images/dibakar_das_portrait_1791051877921.jpg';
+const badhonMondolPortraitImg = '/assets/images/badhon_mondol_portrait_1791052095695.jpg';
+const nayanDasPortraitImg = '/assets/images/nayan_das_portrait_1791052239800.jpg';
+const arpanSarkarPortraitImg = '/assets/images/arpan_sarkar_portrait_1791052321407.jpg';
+const shubhankarDasPortraitImg = '/assets/images/shubhankar_das_portrait_1791052532983.jpg';
+const hrishikeshDasSuitPortraitImg = '/assets/images/hrishikesh_das_suit_portrait_1791054301299.jpg';
+const synthiaRanjanPortraitImg = '/assets/images/synthia_ranjan_portrait_1791053316807.jpg';
+const ritiRanjanPortraitImg = '/assets/images/riti_ranjan_portrait_1791054258043.jpg';
+const arpitaDasPortraitImg = '/assets/images/arpita_das_portrait_1791054283177.jpg';
+const ankitaBhattacharyaPortraitImg = '/assets/images/ankita_bhattacharya_portrait_1791067244850.jpg';
+const arupSarkerShuvoPortraitImg = '/assets/images/arup_sarker_shuvo_portrait_1791072020673.jpg';
+const maumitaSutradharPortraitImg = '/assets/images/maumita_sutradhar_portrait_1791146058418.jpg';
+const devjaneeSutradharPortraitImg = '/assets/images/devjanee_sutradhar_portrait_1791146076800.jpg';
+const mithilaSutradharPortraitImg = '/assets/images/mithila_sutradhar_portrait_1791146308943.jpg';
+const manindraSutradharPortraitImg = '/assets/images/manindra_sutradhar_portrait_1791146331505.jpg';
 
 /**
  * ============================================================================
@@ -1244,7 +1246,7 @@ export async function loadMembersFromDatabase(): Promise<MemberRecord[]> {
   }
 
   try {
-    const remote = await fetchCollectionFromFirestore<MemberRecord>('members');
+    const remote = await fetchCollection<MemberRecord>('members');
     if (remote && remote.length > 0) {
       const combined = [...remote];
       const remoteIds = new Set(remote.map((r) => r.id));
@@ -1277,7 +1279,7 @@ export async function loadMembersFromDatabase(): Promise<MemberRecord[]> {
 export async function saveAllMembersToDatabase(members: MemberRecord[]): Promise<void> {
   const sorted = [...members].sort((a, b) => a.displayOrder - b.displayOrder);
   try {
-    await syncCollectionToFirestore('members', sorted);
+    await syncCollection('members', sorted);
   } catch {
     // Continue to local persistence
   }

@@ -5,6 +5,7 @@ import {
 import {
   fetchCollection,
   syncCollection,
+  uploadImage,
 } from '../lib/cmsClient';
 
 // Static stage photography served from /public/assets/images
@@ -521,21 +522,47 @@ Facebook Page: Visit Our Facebook Page`,
 };
 
 // ============================================================================
-// IMAGE VALIDATION & CLIENT-SIDE OPTIMIZATION ENGINE (Original Photos Only)
+// IMAGE VALIDATION, CLIENT-SIDE OPTIMIZATION & R2 UPLOAD (Original Photos Only)
 // ============================================================================
 
 export interface OptimizedImageResult {
-  dataUrl: string;
+  /** Public URL of the stored image (`/media/...`), saved into MongoDB. */
+  url: string;
   originalFileName: string;
   width: number;
   height: number;
   sizeBytes: number;
 }
 
+function loadImageFromFile(file: File): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(img);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(null);
+    };
+    img.src = objectUrl;
+  });
+}
+
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number
+): Promise<Blob | null> {
+  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+}
+
 /**
- * Validates that an uploaded file is a genuine image file and optimizes its
- * resolution/quality so it loads fast and fits within Firestore / Storage limits
- * WITHOUT altering faces, identities, or composition.
+ * Validates that an uploaded file is a genuine image file, optimizes its
+ * resolution/quality so it loads fast WITHOUT altering faces, identities, or
+ * composition, then uploads it to Cloudflare R2 and returns its URL.
+ * The server re-checks the file signature and stores only JPEG/PNG/WEBP/GIF.
  */
 export async function validateAndOptimizeUploadedImage(
   file: File,
@@ -558,73 +585,53 @@ export async function validateAndOptimizeUploadedImage(
     throw new Error('ছবির আকার ১৫ মেগাবাইটের কম হতে হবে (Max 15MB)।');
   }
 
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('ফাইল রিড করতে সমস্যা হয়েছে।'));
-    reader.onload = () => {
-      const rawDataUrl = reader.result as string;
-      const img = new Image();
-      img.onload = () => {
-        let targetWidth = img.width;
-        let targetHeight = img.height;
+  const img = await loadImageFromFile(file);
+  let upload: Blob = file;
+  let width = img?.width ?? 800;
+  let height = img?.height ?? 600;
 
-        if (targetWidth > maxDimension || targetHeight > maxDimension) {
-          if (targetWidth >= targetHeight) {
-            targetHeight = Math.round((targetHeight * maxDimension) / targetWidth);
-            targetWidth = maxDimension;
-          } else {
-            targetWidth = Math.round((targetWidth * maxDimension) / targetHeight);
-            targetHeight = maxDimension;
-          }
-        }
+  if (img) {
+    let targetWidth = img.width;
+    let targetHeight = img.height;
+    if (targetWidth > maxDimension || targetHeight > maxDimension) {
+      if (targetWidth >= targetHeight) {
+        targetHeight = Math.round((targetHeight * maxDimension) / targetWidth);
+        targetWidth = maxDimension;
+      } else {
+        targetWidth = Math.round((targetWidth * maxDimension) / targetHeight);
+        targetHeight = maxDimension;
+      }
+    }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve({
-            dataUrl: rawDataUrl,
-            originalFileName: file.name,
-            width: img.width,
-            height: img.height,
-            sizeBytes: file.size,
-          });
-          return;
-        }
+    const canvas = document.createElement('canvas');
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      // Use JPEG compression unless it is a small logo PNG under 450px
+      const usePng = file.type === 'image/png' && maxDimension <= 450;
+      const optimized = await canvasToBlob(
+        canvas,
+        usePng ? 'image/png' : 'image/jpeg',
+        quality
+      );
+      if (optimized) {
+        upload = optimized;
+        width = targetWidth;
+        height = targetHeight;
+      }
+    }
+  }
 
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-        // Use JPEG compression unless it is a small logo PNG under 450px
-        const usePng = file.type === 'image/png' && maxDimension <= 450;
-        let optimizedDataUrl = canvas.toDataURL(
-          usePng ? 'image/png' : 'image/jpeg',
-          quality
-        );
-        // Ensure base64 payload stays well under Firestore document & rule limits (< 450KB)
-        if (optimizedDataUrl.length > 450000) {
-          optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
-        }
-
-        resolve({
-          dataUrl: optimizedDataUrl,
-          originalFileName: file.name,
-          width: targetWidth,
-          height: targetHeight,
-          sizeBytes: Math.round((optimizedDataUrl.length * 3) / 4),
-        });
-      };
-      img.onerror = () =>
-        resolve({
-          dataUrl: rawDataUrl,
-          originalFileName: file.name,
-          width: 800,
-          height: 600,
-          sizeBytes: file.size,
-        });
-      img.src = rawDataUrl;
-    };
-    reader.readAsDataURL(file);
-  });
+  const url = await uploadImage(upload);
+  return {
+    url,
+    originalFileName: file.name,
+    width,
+    height,
+    sizeBytes: upload.size,
+  };
 }
 
 // ============================================================================

@@ -2,7 +2,11 @@
 
 The whole website is CMS-driven: every section (settings, logo, members, dramas,
 programs, events, gallery + categories, videos, SEO, privacy policy, admin users)
-is edited from `/admin/*` and stored in MongoDB (`DB_URL`).
+is edited from `/admin/*` and stored in MongoDB (`DB_URL`). Admin-uploaded images
+are stored in Cloudflare R2; MongoDB keeps only their URLs.
+
+Full codebase documentation (architecture, features, data model, API, security,
+operations) is in [`docs/`](docs/README.md).
 
 ## Architecture
 
@@ -13,6 +17,8 @@ is edited from `/admin/*` and stored in MongoDB (`DB_URL`).
 | Route guard | `src/middleware.ts` — Edge middleware; redirects signed-out visitors to `/admin/login?callbackUrl=…`, blocks unauthenticated CMS writes |
 | CMS API | `GET /api/cms/:collection` (public, except `users`), `PUT /api/cms/:collection` (admins; `users` needs role `admin`/`super_admin`) |
 | Auth | NextAuth v4 (`src/lib/server/authOptions.ts`), admin email + password only (no social/OAuth login) |
+| Image upload | `POST /api/media` (admins) → R2 bucket `radhamadhob-media`; returns the URL saved in MongoDB |
+| Image delivery | `GET /media/<key>` — streams from R2 with immutable caching (see `docs/media-uploads.md`) |
 
 ### Tokens
 
@@ -65,7 +71,7 @@ serves fully static exports, which cannot run middleware or the CMS API — so d
 
 Verified locally in `workerd` (`npm run cf:preview`): public SSG page, edge middleware,
 MongoDB reads/writes from the Worker, login + token rotation, and on-demand ISR after a
-dashboard save.
+dashboard save. R2 image upload/delivery verified with `next dev` (local R2 simulation).
 
 ### Version notes
 
@@ -96,11 +102,17 @@ Always build with `npm run cf:build` (or the `cf:*` scripts), never bare
    `0.0.0.0/0`, keep a strong database-user password, and rotate the current one (it was
    once placed in `.env.example`).
 3. **Log in** (opens a browser): `npx wrangler login`
-4. **R2 bucket** for the ISR cache (name must match `wrangler.jsonc`):
+4. **R2 buckets** (names must match `wrangler.jsonc`): one for the ISR cache, one for
+   admin-uploaded images:
 
    ```bash
    npx wrangler r2 bucket create radhamadhob-next-cache
+   npx wrangler r2 bucket create radhamadhob-media
    ```
+
+   Optional: connect a custom domain to `radhamadhob-media` and set the Worker variable
+   `MEDIA_PUBLIC_BASE_URL=https://<that-domain>` to serve new images straight from the
+   CDN. Without it, images are served by the Worker at `/media/*`.
 
 5. **Secrets**:
 
@@ -163,6 +175,7 @@ hostnames, update the `NEXTAUTH_URL` secret (and `NEXT_PUBLIC_SITE_URL`) to
 | --- | --- |
 | `ASSETS` + `public/_headers` | static files, pre-rendered pages, long-lived caching of `/_next/static` and images |
 | `NEXT_INC_CACHE_R2_BUCKET` (R2) | ISR incremental cache |
+| `MEDIA_BUCKET` (R2, `radhamadhob-media`) | admin-uploaded images, served at `/media/*` |
 | `NEXT_CACHE_DO_QUEUE` (Durable Object) | time-based revalidation queue |
 | `NEXT_TAG_CACHE_DO_SHARDED` (Durable Object) | on-demand `revalidatePath` after dashboard saves |
 | `WORKER_SELF_REFERENCE` | worker calling itself for revalidation |

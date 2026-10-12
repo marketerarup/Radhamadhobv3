@@ -81,6 +81,29 @@ export async function authorizedFetch(
   return res;
 }
 
+/**
+ * Upload one image to R2 (`POST /api/media`) and return its public URL, which
+ * is what gets saved into the MongoDB document.
+ */
+export async function uploadImage(image: Blob): Promise<string> {
+  const res = await authorizedFetch('/api/media', {
+    method: 'POST',
+    headers: { 'Content-Type': image.type || 'application/octet-stream' },
+    body: image,
+  });
+  const code = res.ok ? undefined : await readErrorCode(res);
+  const data = res.ok ? ((await res.json()) as { url?: string }) : null;
+  if (!data?.url) {
+    console.warn('Image upload notice:', res.status, code);
+    throw new CmsRequestError(
+      'ছবি আপলোড ব্যর্থ হয়েছে, আবার চেষ্টা করুন (Image upload failed, please try again)।',
+      res.status,
+      code
+    );
+  }
+  return data.url;
+}
+
 function broadcastCollectionUpdate<T>(collectionName: string, records: T[]): void {
   try {
     if (typeof window !== 'undefined') {

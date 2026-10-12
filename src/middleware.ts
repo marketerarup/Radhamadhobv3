@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 /**
- * Edge middleware (runs before every /admin page and CMS API call).
+ * Edge middleware (runs before every /admin page, CMS API call and media upload).
  *
  * Kept on the Edge runtime on purpose: the Cloudflare adapter (OpenNext)
  * supports edge `middleware.ts`, while Next 16 `proxy.ts` (Node runtime) is
@@ -36,7 +36,7 @@ export async function middleware(req: NextRequest) {
     typeof token?.refreshTokenExpires === 'number' &&
     token.refreshTokenExpires > Date.now();
 
-  if (pathname.startsWith('/api/cms')) {
+  if (pathname.startsWith('/api/cms') || pathname.startsWith('/api/media')) {
     if (WRITE_METHODS.has(req.method) && !hasLiveSession) {
       return NextResponse.json(
         { error: 'unauthenticated' },
@@ -71,5 +71,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin', '/admin/:path*', '/api/cms/:path*'],
+  matcher: ['/admin', '/admin/:path*', '/api/cms/:path*', '/api/media/:path*'],
 };

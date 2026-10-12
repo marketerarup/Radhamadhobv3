@@ -1,4 +1,11 @@
 import type { NextConfig } from 'next';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+
+// `next dev` only: expose the wrangler.jsonc bindings (R2 media bucket) locally,
+// simulated under .wrangler/state. Production gets them from the Worker.
+if (process.env.NODE_ENV === 'development') {
+  void initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

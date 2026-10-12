@@ -710,10 +710,10 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file, 420);
-    onUpdateLogo(res.dataUrl);
+    onUpdateLogo(res.url);
     await onUpdateSettings({
       ...settings,
-      logo: res.dataUrl,
+      logo: res.url,
       updated_date: new Date().toISOString().slice(0, 10),
     });
     notifySaved('Original organization logo uploaded & saved to `settings`!');
@@ -805,7 +805,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file, 900);
-    setMPhoto(res.dataUrl);
+    setMPhoto(res.url);
   };
 
   const handleSaveMember = async (e: React.FormEvent) => {
@@ -1042,7 +1042,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
           const f = e.target.files?.[0];
           if (f) {
             const res = await validateAndOptimizeUploadedImage(f);
-            setDPoster(res.dataUrl);
+            setDPoster(res.url);
           }
         }}
       />
@@ -1058,7 +1058,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
           const urls: string[] = [];
           for (let i = 0; i < files.length; i++) {
             const res = await validateAndOptimizeUploadedImage(files[i]);
-            urls.push(res.dataUrl);
+            urls.push(res.url);
           }
           setDGallery((prev) => [...prev, ...urls]);
         }}

@@ -1,7 +1,7 @@
 import {
-  fetchCollectionFromFirestore,
-  syncCollectionToFirestore,
-} from '../firebase';
+  fetchCollection,
+  syncCollection,
+} from '../lib/cmsClient';
 
 /**
  * ============================================================================
@@ -468,7 +468,7 @@ export function normalizeSiteSettings(
 
 export async function loadSettingsFromDatabase(): Promise<SiteSettingsRecord> {
   try {
-    const remote = await fetchCollectionFromFirestore<SiteSettingsRecord>('settings');
+    const remote = await fetchCollection<SiteSettingsRecord>('settings');
     if (remote && remote.length > 0) {
       const main = remote.find((r) => r.id === 'settings-main') || remote[0];
       const normalized = normalizeSiteSettings(main);
@@ -519,7 +519,7 @@ export async function saveSettingsToDatabase(
   settings: SiteSettingsRecord
 ): Promise<void> {
   try {
-    await syncCollectionToFirestore('settings', [settings]);
+    await syncCollection('settings', [settings]);
   } catch {
     // Continue to local persistence
   }

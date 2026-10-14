@@ -1,24 +1,25 @@
-import heroEnsembleImg from '../assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
-import durgaPalaImg from '../assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
-import shivaParvatiImg from '../assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
-import maaKaliImg from '../assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
-import parvatiDanceSoloImg from '../assets/images/parvati_classical_dance_solo_1790453805023.jpg';
-import asuraBattleImg from '../assets/images/asura_warriors_drama_climax_1790453816467.jpg';
-import youthMaskedImg from '../assets/images/youth_masked_kharga_performance_1790453826523.jpg';
-import shivaShaktiDuetImg from '../assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
-import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
-import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
-import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
-import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
-import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
-import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
-import heroTheatreAuditoriumImg from '../assets/images/hero_theatre_auditorium_1791070237582.jpg';
-import aboutTheatreRehearsalImg from '../assets/images/about_theatre_rehearsal_1791070252405.jpg';
-import aboutKirtanEnsembleImg from '../assets/images/about_kirtan_ensemble_1791070269031.jpg';
-import pillarEpicTheatreImg from '../assets/images/pillar_epic_theatre_1791070175651.jpg';
-import pillarVedicFashionImg from '../assets/images/pillar_vedic_fashion_1791070192014.jpg';
-import pillarSoundStudioImg from '../assets/images/pillar_sound_studio_1791070205060.jpg';
-import pillarYouthValuesImg from '../assets/images/pillar_youth_values_1791070219482.jpg';
+const heroEnsembleImg = '/assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
+const durgaPalaImg = '/assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
+const shivaParvatiImg = '/assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
+const maaKaliImg = '/assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
+const parvatiDanceSoloImg = '/assets/images/parvati_classical_dance_solo_1790453805023.jpg';
+const asuraBattleImg = '/assets/images/asura_warriors_drama_climax_1790453816467.jpg';
+const youthMaskedImg = '/assets/images/youth_masked_kharga_performance_1790453826523.jpg';
+const shivaShaktiDuetImg = '/assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
+const asuraTrioStageImg = '/assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
+const maaKaliTempleGateImg = '/assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
+const durgaStageSpotlightImg = '/assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
+const fullCastGeometricGroupImg = '/assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
+const rathYatraCommunityGroupImg = '/assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
+const pandalStageCastGroupImg = '/assets/images/pandal_stage_cast_group_1790542269211.jpg';
+const heroTheatreAuditoriumImg = '/assets/images/hero_theatre_auditorium_1791070237582.jpg';
+const aboutTheatreRehearsalImg = '/assets/images/about_theatre_rehearsal_1791070252405.jpg';
+const aboutKirtanEnsembleImg = '/assets/images/about_kirtan_ensemble_1791070269031.jpg';
+const pillarEpicTheatreImg = '/assets/images/pillar_epic_theatre_1791070175651.jpg';
+const pillarVedicFashionImg = '/assets/images/pillar_vedic_fashion_1791070192014.jpg';
+const pillarSoundStudioImg = '/assets/images/pillar_sound_studio_1791070205060.jpg';
+const pillarYouthValuesImg = '/assets/images/pillar_youth_values_1791070219482.jpg';
+
 
 export type LanguageMode = 'bn' | 'en' | 'bilingual';
 

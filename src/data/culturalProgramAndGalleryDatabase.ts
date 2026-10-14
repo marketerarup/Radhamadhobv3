@@ -1,32 +1,34 @@
-import heroEnsembleImg from '../assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
-import durgaPalaImg from '../assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
-import shivaParvatiImg from '../assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
-import maaKaliImg from '../assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
-import parvatiDanceSoloImg from '../assets/images/parvati_classical_dance_solo_1790453805023.jpg';
-import asuraBattleImg from '../assets/images/asura_warriors_drama_climax_1790453816467.jpg';
-import youthMaskedImg from '../assets/images/youth_masked_kharga_performance_1790453826523.jpg';
-import shivaShaktiDuetImg from '../assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
-import asuraTrioStageImg from '../assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
-import maaKaliTempleGateImg from '../assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
-import durgaStageSpotlightImg from '../assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
-import fullCastGeometricGroupImg from '../assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
-import beardedAsuraCloseupImg from '../assets/images/bearded_asura_warrior_closeup_1790542146338-DSL505iG.jpg';
-import rathYatraCommunityGroupImg from '../assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
-import soloAsuraPurpleStageImg from '../assets/images/solo_asura_purple_stage_1790542195989.jpg';
-import durgaGreenTridentImg from '../assets/images/durga_green_trident_portrait_1790542210952.jpg';
-import durgaLionCurtainImg from '../assets/images/durga_lion_mahishasura_curtain_1790542225436.jpg';
-import durgaSunsetMeditationImg from '../assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
-import durgaSunsetProfileImg from '../assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
-import pandalStageCastGroupImg from '../assets/images/pandal_stage_cast_group_1790542269211.jpg';
-import krishnaRasLeelaImg from '../assets/images/krishna_ras_leela_stage_1791070495861.jpg';
-import saraswatiPujaImg from '../assets/images/saraswati_puja_celebration_1791070508405.jpg';
-import dhakiDrummersImg from '../assets/images/dhaki_drummers_durga_puja_1791070519329.jpg';
-import bhaktaHaridasImg from '../assets/images/bhakta_haridas_stage_drama_1791070531334.jpg';
-import gitaJayantiImg from '../assets/images/gita_jayanti_recitation_1791070544226.jpg';
 import {
-  fetchCollectionFromFirestore,
-  syncCollectionToFirestore,
-} from '../firebase';
+  fetchCollection,
+  syncCollection,
+} from '../lib/cmsClient';
+
+// Static stage photography served from /public/assets/images
+const heroEnsembleImg = '/assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
+const durgaPalaImg = '/assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
+const shivaParvatiImg = '/assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
+const maaKaliImg = '/assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
+const parvatiDanceSoloImg = '/assets/images/parvati_classical_dance_solo_1790453805023.jpg';
+const asuraBattleImg = '/assets/images/asura_warriors_drama_climax_1790453816467.jpg';
+const youthMaskedImg = '/assets/images/youth_masked_kharga_performance_1790453826523.jpg';
+const shivaShaktiDuetImg = '/assets/images/shiva_shakti_dance_duet_1790453838732.jpg';
+const asuraTrioStageImg = '/assets/images/asura_trio_stage_dialogue_1790542085635.jpg';
+const maaKaliTempleGateImg = '/assets/images/maa_kali_temple_gate_portrait_1790542103323.jpg';
+const durgaStageSpotlightImg = '/assets/images/durga_stage_dance_spotlight_1790542118917.jpg';
+const fullCastGeometricGroupImg = '/assets/images/full_cast_geometric_floor_group_1790542131414.jpg';
+const beardedAsuraCloseupImg = '/assets/images/bearded_asura_warrior_closeup_1790542146338-DSL505iG.jpg';
+const rathYatraCommunityGroupImg = '/assets/images/rath_yatra_outdoor_community_group_1790542160871.jpg';
+const soloAsuraPurpleStageImg = '/assets/images/solo_asura_purple_stage_1790542195989.jpg';
+const durgaGreenTridentImg = '/assets/images/durga_green_trident_portrait_1790542210952.jpg';
+const durgaLionCurtainImg = '/assets/images/durga_lion_mahishasura_curtain_1790542225436.jpg';
+const durgaSunsetMeditationImg = '/assets/images/durga_sunset_meditation_rooftop_1790542241507.jpg';
+const durgaSunsetProfileImg = '/assets/images/durga_sunset_profile_rooftop_1790542255424.jpg';
+const pandalStageCastGroupImg = '/assets/images/pandal_stage_cast_group_1790542269211.jpg';
+const krishnaRasLeelaImg = '/assets/images/krishna_ras_leela_stage_1791070495861.jpg';
+const saraswatiPujaImg = '/assets/images/saraswati_puja_celebration_1791070508405.jpg';
+const dhakiDrummersImg = '/assets/images/dhaki_drummers_durga_puja_1791070519329.jpg';
+const bhaktaHaridasImg = '/assets/images/bhakta_haridas_stage_drama_1791070531334.jpg';
+const gitaJayantiImg = '/assets/images/gita_jayanti_recitation_1791070544226.jpg';
 
 /**
  * ============================================================================
@@ -865,7 +867,7 @@ export function normalizeGalleryRecords(records: GalleryRecord[]): GalleryRecord
 
 export async function loadEventsFromDatabase(): Promise<EventRecord[]> {
   try {
-    const remote = await fetchCollectionFromFirestore<EventRecord>('events');
+    const remote = await fetchCollection<EventRecord>('events');
     if (remote && remote.length > 0) return normalizeEventRecords(remote);
   } catch {
     // Fallback to IndexedDB
@@ -906,7 +908,7 @@ export async function loadEventsFromDatabase(): Promise<EventRecord[]> {
 export async function saveEventsToDatabase(events: EventRecord[]): Promise<void> {
   const normalized = normalizeEventRecords(events);
   try {
-    await syncCollectionToFirestore('events', normalized);
+    await syncCollection('events', normalized);
   } catch {
     // Continue to local persistence
   }
@@ -933,7 +935,7 @@ export async function saveEventsToDatabase(events: EventRecord[]): Promise<void>
 
 export async function loadGalleryFromDatabase(): Promise<GalleryRecord[]> {
   try {
-    const remote = await fetchCollectionFromFirestore<GalleryRecord>('gallery');
+    const remote = await fetchCollection<GalleryRecord>('gallery');
     if (remote && remote.length > 0) return normalizeGalleryRecords(remote);
   } catch {
     // Fallback to IndexedDB
@@ -974,7 +976,7 @@ export async function loadGalleryFromDatabase(): Promise<GalleryRecord[]> {
 export async function saveGalleryToDatabase(gallery: GalleryRecord[]): Promise<void> {
   const normalized = normalizeGalleryRecords(gallery);
   try {
-    await syncCollectionToFirestore('gallery', normalized);
+    await syncCollection('gallery', normalized);
   } catch {
     // Continue to local persistence
   }
@@ -1020,4 +1022,37 @@ export function saveGalleryCategories(categories: string[]): void {
   } catch {
     // Ignore
   }
+  syncCollection<GalleryCategoriesDoc>(GALLERY_CATEGORIES_COLLECTION, [
+    { id: GALLERY_CATEGORIES_DOC_ID, categories },
+  ]).catch(() => {
+    // Local copy above keeps the admin's change until the next successful sync
+  });
+}
+
+// --- `gallery_categories` collection (single document holding the filter tabs) ---
+export const GALLERY_CATEGORIES_COLLECTION = 'gallery_categories';
+export const GALLERY_CATEGORIES_DOC_ID = 'gallery-categories-main';
+
+export interface GalleryCategoriesDoc {
+  id: string;
+  categories: string[];
+}
+
+export function normalizeGalleryCategories(categories: unknown): string[] {
+  if (!Array.isArray(categories)) return DEFAULT_GALLERY_CATEGORIES;
+  const cleaned = categories.filter(
+    (c): c is string => typeof c === 'string' && c.trim().length > 0
+  );
+  return cleaned.length > 0
+    ? Array.from(new Set(['সব ছবি', ...cleaned]))
+    : DEFAULT_GALLERY_CATEGORIES;
+}
+
+export async function loadGalleryCategoriesFromDatabase(): Promise<string[] | null> {
+  const remote = await fetchCollection<GalleryCategoriesDoc>(
+    GALLERY_CATEGORIES_COLLECTION
+  );
+  const main =
+    remote?.find((d) => d.id === GALLERY_CATEGORIES_DOC_ID) || remote?.[0];
+  return main ? normalizeGalleryCategories(main.categories) : null;
 }

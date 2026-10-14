@@ -1,0 +1,70 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Next.js on Cloudflare Workers via @opennextjs/cloudflare — see DEPLOYMENT.md
+  "name": "radhamadhob",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-23",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+
+  // Static files + pre-rendered pages (headers in public/_headers)
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  // Run the Worker near MongoDB Atlas instead of near each visitor: every
+  // dynamic request makes several database round trips.
+  "placement": { "mode": "smart" },
+
+  // Custom domain (uncomment after adding the zone to Cloudflare):
+  // "routes": [
+  //   { "pattern": "example.org", "custom_domain": true },
+  //   { "pattern": "www.example.org", "custom_domain": true }
+  // ],
+  "workers_dev": true,
+  "preview_urls": true,
+
+  "services": [
+    {
+      // Lets the worker call itself for ISR revalidation
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "radhamadhob"
+    }
+  ],
+  "r2_buckets": [
+    {
+      // ISR incremental cache — create once: npx wrangler r2 bucket create radhamadhob-next-cache
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "radhamadhob-next-cache"
+    },
+    {
+      // Admin-uploaded images (served at /media/*; URLs stored in MongoDB).
+      // Create once: npx wrangler r2 bucket create radhamadhob-media
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "radhamadhob-media"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" },
+      { "name": "NEXT_TAG_CACHE_DO_SHARDED", "class_name": "DOShardedTagCache" }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler", "DOShardedTagCache"]
+    }
+  ],
+
+  // Plain (non-secret) runtime settings. Secrets (DB_URL, NEXTAUTH_SECRET,
+  // NEXTAUTH_URL) are set with `npm run cf:secrets` and never live here.
+  // Optional: "vars": { "MEDIA_PUBLIC_BASE_URL": "https://media.example.org" }
+  // when the media bucket has a public custom domain (otherwise /media/* is used).
+  // Keep variables added in the dashboard when deploying from the CLI.
+  "keep_vars": true,
+
+  "observability": {
+    "enabled": true
+  }
+}

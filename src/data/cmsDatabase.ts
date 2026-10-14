@@ -1,16 +1,19 @@
-import heroEnsembleImg from '../assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
-import durgaPalaImg from '../assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
-import shivaParvatiImg from '../assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
-import maaKaliImg from '../assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
-import parvatiDanceSoloImg from '../assets/images/parvati_classical_dance_solo_1790453805023.jpg';
 import {
   CulturalActivityItem,
   FIVE_CULTURAL_ACTIVITIES,
 } from './culturalProgramAndGalleryDatabase';
 import {
-  fetchCollectionFromFirestore,
-  syncCollectionToFirestore,
-} from '../firebase';
+  fetchCollection,
+  syncCollection,
+  uploadImage,
+} from '../lib/cmsClient';
+
+// Static stage photography served from /public/assets/images
+const heroEnsembleImg = '/assets/images/hero_ensemble_stage_finale_1790453758034.jpg';
+const durgaPalaImg = '/assets/images/durga_mahishasuramardini_pala_1790453769632.jpg';
+const shivaParvatiImg = '/assets/images/shiva_parvati_divine_stage_1790453780630.jpg';
+const maaKaliImg = '/assets/images/maa_kali_shiva_tableau_1790453792636.jpg';
+const parvatiDanceSoloImg = '/assets/images/parvati_classical_dance_solo_1790453805023.jpg';
 
 /**
  * ============================================================================
@@ -519,21 +522,47 @@ Facebook Page: Visit Our Facebook Page`,
 };
 
 // ============================================================================
-// IMAGE VALIDATION & CLIENT-SIDE OPTIMIZATION ENGINE (Original Photos Only)
+// IMAGE VALIDATION, CLIENT-SIDE OPTIMIZATION & R2 UPLOAD (Original Photos Only)
 // ============================================================================
 
 export interface OptimizedImageResult {
-  dataUrl: string;
+  /** Public URL of the stored image (`/media/...`), saved into MongoDB. */
+  url: string;
   originalFileName: string;
   width: number;
   height: number;
   sizeBytes: number;
 }
 
+function loadImageFromFile(file: File): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(img);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(null);
+    };
+    img.src = objectUrl;
+  });
+}
+
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number
+): Promise<Blob | null> {
+  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+}
+
 /**
- * Validates that an uploaded file is a genuine image file and optimizes its
- * resolution/quality so it loads fast and fits within Firestore / Storage limits
- * WITHOUT altering faces, identities, or composition.
+ * Validates that an uploaded file is a genuine image file, optimizes its
+ * resolution/quality so it loads fast WITHOUT altering faces, identities, or
+ * composition, then uploads it to Cloudflare R2 and returns its URL.
+ * The server re-checks the file signature and stores only JPEG/PNG/WEBP/GIF.
  */
 export async function validateAndOptimizeUploadedImage(
   file: File,
@@ -556,73 +585,53 @@ export async function validateAndOptimizeUploadedImage(
     throw new Error('ছবির আকার ১৫ মেগাবাইটের কম হতে হবে (Max 15MB)।');
   }
 
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('ফাইল রিড করতে সমস্যা হয়েছে।'));
-    reader.onload = () => {
-      const rawDataUrl = reader.result as string;
-      const img = new Image();
-      img.onload = () => {
-        let targetWidth = img.width;
-        let targetHeight = img.height;
+  const img = await loadImageFromFile(file);
+  let upload: Blob = file;
+  let width = img?.width ?? 800;
+  let height = img?.height ?? 600;
 
-        if (targetWidth > maxDimension || targetHeight > maxDimension) {
-          if (targetWidth >= targetHeight) {
-            targetHeight = Math.round((targetHeight * maxDimension) / targetWidth);
-            targetWidth = maxDimension;
-          } else {
-            targetWidth = Math.round((targetWidth * maxDimension) / targetHeight);
-            targetHeight = maxDimension;
-          }
-        }
+  if (img) {
+    let targetWidth = img.width;
+    let targetHeight = img.height;
+    if (targetWidth > maxDimension || targetHeight > maxDimension) {
+      if (targetWidth >= targetHeight) {
+        targetHeight = Math.round((targetHeight * maxDimension) / targetWidth);
+        targetWidth = maxDimension;
+      } else {
+        targetWidth = Math.round((targetWidth * maxDimension) / targetHeight);
+        targetHeight = maxDimension;
+      }
+    }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve({
-            dataUrl: rawDataUrl,
-            originalFileName: file.name,
-            width: img.width,
-            height: img.height,
-            sizeBytes: file.size,
-          });
-          return;
-        }
+    const canvas = document.createElement('canvas');
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      // Use JPEG compression unless it is a small logo PNG under 450px
+      const usePng = file.type === 'image/png' && maxDimension <= 450;
+      const optimized = await canvasToBlob(
+        canvas,
+        usePng ? 'image/png' : 'image/jpeg',
+        quality
+      );
+      if (optimized) {
+        upload = optimized;
+        width = targetWidth;
+        height = targetHeight;
+      }
+    }
+  }
 
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-        // Use JPEG compression unless it is a small logo PNG under 450px
-        const usePng = file.type === 'image/png' && maxDimension <= 450;
-        let optimizedDataUrl = canvas.toDataURL(
-          usePng ? 'image/png' : 'image/jpeg',
-          quality
-        );
-        // Ensure base64 payload stays well under Firestore document & rule limits (< 450KB)
-        if (optimizedDataUrl.length > 450000) {
-          optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
-        }
-
-        resolve({
-          dataUrl: optimizedDataUrl,
-          originalFileName: file.name,
-          width: targetWidth,
-          height: targetHeight,
-          sizeBytes: Math.round((optimizedDataUrl.length * 3) / 4),
-        });
-      };
-      img.onerror = () =>
-        resolve({
-          dataUrl: rawDataUrl,
-          originalFileName: file.name,
-          width: 800,
-          height: 600,
-          sizeBytes: file.size,
-        });
-      img.src = rawDataUrl;
-    };
-    reader.readAsDataURL(file);
-  });
+  const url = await uploadImage(upload);
+  return {
+    url,
+    originalFileName: file.name,
+    width,
+    height,
+    sizeBytes: upload.size,
+  };
 }
 
 // ============================================================================
@@ -690,8 +699,6 @@ const USERS_STORE = 'users';
 const PROGRAMS_LS_KEY = 'radhamadhob_cms_programs_bilingual_v7';
 const SEO_LS_KEY = 'radhamadhob_cms_seo_bilingual_v7';
 const PRIVACY_LS_KEY = 'radhamadhob_cms_privacy_policy_bilingual_v7';
-const USERS_LS_KEY = 'radhamadhob_cms_users_v1';
-const ADMIN_SESSION_LS_KEY = 'radhamadhob_cms_admin_session_v1';
 
 function openCmsIndexedDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -782,7 +789,7 @@ export async function loadProgramsFromDatabase(): Promise<
   CulturalProgramRecord[]
 > {
   try {
-    const remote = await fetchCollectionFromFirestore<CulturalProgramRecord>('programs');
+    const remote = await fetchCollection<CulturalProgramRecord>('programs');
     if (remote && remote.length > 0) return normalizeProgramRecords(remote);
   } catch {
     // Fallback to IndexedDB
@@ -825,7 +832,7 @@ export async function saveProgramsToDatabase(
 ): Promise<void> {
   const normalized = normalizeProgramRecords(programs);
   try {
-    await syncCollectionToFirestore('programs', normalized);
+    await syncCollection('programs', normalized);
   } catch {
     // Continue to local persistence
   }
@@ -854,7 +861,7 @@ export async function saveProgramsToDatabase(
 // --- `seo` collection ---
 export async function loadSeoFromDatabase(): Promise<SeoPageRecord[]> {
   try {
-    const remote = await fetchCollectionFromFirestore<SeoPageRecord>('seo');
+    const remote = await fetchCollection<SeoPageRecord>('seo');
     if (remote && remote.length > 0) {
       const order: SeoPageKey[] = [
         'home',
@@ -920,7 +927,7 @@ export async function saveSeoToDatabase(
   seoPages: SeoPageRecord[]
 ): Promise<void> {
   try {
-    await syncCollectionToFirestore('seo', seoPages);
+    await syncCollection('seo', seoPages);
   } catch {
     // Continue to local persistence
   }
@@ -949,7 +956,7 @@ export async function saveSeoToDatabase(
 // --- `privacy_policy` collection ---
 export async function loadPrivacyPolicyDocFromDatabase(): Promise<PrivacyPolicyCollectionDoc> {
   try {
-    const remote = await fetchCollectionFromFirestore<PrivacyPolicyCollectionDoc>(
+    const remote = await fetchCollection<PrivacyPolicyCollectionDoc>(
       'privacy_policy'
     );
     if (remote && remote.length > 0) {
@@ -995,7 +1002,7 @@ export async function savePrivacyPolicyDocToDatabase(
   docRecord: PrivacyPolicyCollectionDoc
 ): Promise<void> {
   try {
-    await syncCollectionToFirestore('privacy_policy', [docRecord]);
+    await syncCollection('privacy_policy', [docRecord]);
   } catch {
     // Continue to local persistence
   }
@@ -1018,62 +1025,26 @@ export async function savePrivacyPolicyDocToDatabase(
   }
 }
 
-// --- `users` collection & Protected Admin Session ---
-export function loadAdminSession(): AdminUserRecord | null {
-  try {
-    const raw = localStorage.getItem(ADMIN_SESSION_LS_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as AdminUserRecord;
-      if (parsed && parsed.uid && parsed.email) return parsed;
-    }
-  } catch {
-    // Ignore
-  }
-  return null;
+// --- `users` collection (admin accounts; served only to signed-in admins) ---
+export async function fetchAdminUsersFromDatabase(): Promise<AdminUserRecord[] | null> {
+  const remote = await fetchCollection<AdminUserRecord & { id: string }>('users');
+  if (!remote) return null;
+  return remote.map(({ id, ...rest }) => ({ ...rest, uid: rest.uid || id }));
 }
 
-export function saveAdminSession(user: AdminUserRecord | null): void {
-  try {
-    if (!user) {
-      localStorage.removeItem(ADMIN_SESSION_LS_KEY);
-    } else {
-      localStorage.setItem(ADMIN_SESSION_LS_KEY, JSON.stringify(user));
-    }
-  } catch {
-    // Ignore
-  }
-}
-
-export function loadAdminUsersFromDatabase(): AdminUserRecord[] {
-  try {
-    const raw = localStorage.getItem(USERS_LS_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as AdminUserRecord[];
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch {
-    // Ignore
-  }
-  return INITIAL_ADMIN_USERS;
-}
-
-export function saveAdminUsersToDatabase(
+export async function saveAdminUsersToDatabase(
   users: AdminUserRecord[]
-): void {
-  try {
-    localStorage.setItem(USERS_LS_KEY, JSON.stringify(users));
-  } catch {
-    // Ignore
-  }
-  const firestorePayload = users.map((u) => ({
+): Promise<void> {
+  const payload = users.map((u) => ({
+    id: u.uid,
     uid: u.uid,
     email: u.email,
     displayName: u.displayName,
-    role: u.role === 'super_admin' ? 'admin' : u.role,
+    role: u.role,
+    photoURL: u.photoURL,
     createdAt: u.createdAt || new Date().toISOString(),
-    id: u.uid,
   }));
-  void syncCollectionToFirestore('users', firestorePayload);
+  await syncCollection('users', payload);
 }
 
 export const INITIAL_SEO_PAGES_SEED = INITIAL_SEO_SEED;

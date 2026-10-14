@@ -1,0 +1,6 @@
+# Runtime variables for `npm run cf:preview` (local workerd). cp → .dev.vars
+# The Worker does not read .env.local (see scripts/cf-strip-env.mjs).
+NEXTJS_ENV=production
+DB_URL=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<database>
+NEXTAUTH_SECRET=<openssl rand -base64 32>
+NEXTAUTH_URL=http://localhost:8787

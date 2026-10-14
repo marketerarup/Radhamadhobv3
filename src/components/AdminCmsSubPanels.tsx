@@ -102,7 +102,7 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
     setUploadError(null);
     try {
       const res = await validateAndOptimizeUploadedImage(file);
-      setImage(res.dataUrl);
+      setImage(res.url);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload failed');
     }
@@ -631,7 +631,7 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file);
-    setCoverImage(res.dataUrl);
+    setCoverImage(res.url);
   };
 
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -640,7 +640,7 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
     const urls: string[] = [];
     for (let i = 0; i < files.length; i++) {
       const res = await validateAndOptimizeUploadedImage(files[i]);
-      urls.push(res.dataUrl);
+      urls.push(res.url);
     }
     setGalleryImages((prev) => [...prev, ...urls]);
   };
@@ -1088,7 +1088,7 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file);
-    setGImage(res.dataUrl);
+    setGImage(res.url);
   };
 
   const handleSaveGalleryItem = async (e: React.FormEvent) => {
@@ -1165,7 +1165,7 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
       const descEn = `Authentic stage photograph from ${catEn} performance (${files[i].name}).`;
       added.push({
         id: `gal-${Date.now()}-${i}`,
-        image: res.dataUrl,
+        image: res.url,
         title: titleBn,
         title_bn: titleBn,
         titleEn: titleEn,
@@ -1723,7 +1723,7 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file);
-    setThumbnail(res.dataUrl);
+    setThumbnail(res.url);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -2194,7 +2194,7 @@ export const CmsSeoManagementPanel: React.FC<SeoManagementProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file);
-    setOgImage(res.dataUrl);
+    setOgImage(res.url);
   };
 
   const handleCreateSeoPage = async (e: React.FormEvent) => {

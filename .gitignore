@@ -7,3 +7,14 @@ coverage/
 .env*
 !.env.example
 bun.lock*
+
+# Next.js / Cloudflare (OpenNext)
+.next/
+.open-next/
+.wrangler/
+next-env.d.ts
+*.tsbuildinfo
+.dev.vars*
+!.dev.vars.example
+cloudflare-env.d.ts
+!.env.cloudflare.example

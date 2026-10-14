@@ -1,0 +1,107 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "PerformingGroup"
+      ],
+      "@id": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#organization",
+      "name": "রাধামাধব সাংস্কৃতিক জোট",
+      "alternateName": "Radhamadhob Cultural Alliance",
+      "url": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/",
+      "description": "রাধামাধব সাংস্কৃতিক জোট একটি সনাতন ধর্মীয় ও ঐতিহ্যবাহী সাংস্কৃতিক সংগঠন। নাটক, বৈদিক নৃত্য ও সাংস্কৃতিক অনুষ্ঠানের মাধ্যমে ঐতিহ্য ও মূল্যবোধ চর্চা।",
+      "telephone": "+8801797059419",
+      "founder": {
+        "@type": "Person",
+        "name": "বিনয় কুমার সেন (Binoy Kumar Sen)",
+        "jobTitle": "পরিচালক ও নির্দেশক (Director & Instructor)"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "BD"
+      },
+      "sameAs": [
+        "https://www.facebook.com/share/1CAS3VWrHc/",
+        "https://www.youtube.com/@joyradhe9917",
+        "https://wa.me/8801797059419"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+880-1797-059419",
+        "contactType": "customer support",
+        "availableLanguage": [
+          "Bengali",
+          "English"
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#website",
+      "url": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/",
+      "name": "রাধামাধব সাংস্কৃতিক জোট",
+      "inLanguage": [
+        "bn-BD",
+        "en-US"
+      ],
+      "publisher": {
+        "@id": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "প্রচ্ছদ (Home)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "আমাদের সম্পর্কে (About)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#about-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "সদস্যবৃন্দ (Members)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#members-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "আমাদের নাটক (Drama)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#drama-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "সাংস্কৃতিক কার্যক্রম (Programs)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#cultural-program-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "গ্যালারি (Gallery)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#gallery-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "ভিডিও (Videos)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#video-section"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "যুক্ত হোন ও যোগাযোগ (Join & Contact)",
+          "item": "https://ais-pre-vnallxdzcijd54wr2mufep-294768179212.asia-east1.run.app/#contact-section"
+        }
+      ]
+    }
+  ]
+}

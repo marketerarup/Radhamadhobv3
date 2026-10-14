@@ -1,13 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  auth,
-  createUserWithEmailAndPassword,
-  googleProvider,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from '../firebase';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import {
   ArrowLeft,
   Calendar,
@@ -39,12 +31,9 @@ import { OfficialLogo } from './OfficialLogo';
 import {
   AdminUserRecord,
   CulturalProgramRecord,
-  INITIAL_ADMIN_USERS,
   PrivacyPolicyCollectionDoc,
   SeoPageRecord,
-  loadAdminSession,
-  loadAdminUsersFromDatabase,
-  saveAdminSession,
+  fetchAdminUsersFromDatabase,
   saveAdminUsersToDatabase,
   validateAndOptimizeUploadedImage,
 } from '../data/cmsDatabase';
@@ -104,6 +93,26 @@ function getAdminPathForTab(tab: CmsTabId): string {
   return `/admin/${tab}`;
 }
 
+// Module requested before the middleware redirected to /admin/login (?callbackUrl=/admin/members)
+function getRequestedTabFromLocation(): CmsTabId {
+  if (typeof window === 'undefined') return 'dashboard';
+  const callbackUrl = new URLSearchParams(window.location.search).get('callbackUrl');
+  if (callbackUrl && callbackUrl.startsWith('/admin')) {
+    return getTabFromAdminPath(callbackUrl.split('?')[0]);
+  }
+  return getTabFromAdminPath(window.location.pathname);
+}
+
+const LOGIN_ERROR_INVALID_CREDENTIALS =
+  'লগইন ব্যর্থ হয়েছে: ভুল ইমেইল অথবা পাসওয়ার্ড (Invalid Admin Email or Password)।';
+
+// NextAuth may redirect back to /admin/login?error=<code> (e.g. a stale sign-in link)
+function getLoginErrorFromLocation(): string | null {
+  if (typeof window === 'undefined') return null;
+  const code = new URLSearchParams(window.location.search).get('error');
+  return code ? LOGIN_ERROR_INVALID_CREDENTIALS : null;
+}
+
 interface AdminDashboardCMSProps {
   lang: 'bn' | 'en';
   settings: SiteSettingsRecord;
@@ -156,16 +165,29 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   onUpdatePrivacyDoc,
   onExitCms,
 }) => {
-  // Protected Admin Authentication State (`users` collection + Firebase Auth)
-  const [adminUser, setAdminUser] = useState<AdminUserRecord | null>(() =>
-    loadAdminSession()
-  );
-  const [adminUsersList, setAdminUsersList] = useState<AdminUserRecord[]>(() =>
-    loadAdminUsersFromDatabase()
-  );
+  // Protected Admin Authentication State (`users` collection + NextAuth session)
+  const { data: session, status: sessionStatus } = useSession();
+  const adminUser: AdminUserRecord | null =
+    session?.user && !session.error
+      ? {
+          uid: session.user.id,
+          email: session.user.email || '',
+          displayName:
+            session.user.name || 'রাধামাধব সাংস্কৃতিক জোট অ্যাডমিন',
+          role: session.user.role || 'admin',
+          photoURL: session.user.image || undefined,
+          emailVerified: true,
+          lastLoginAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+        }
+      : null;
+  const [adminUsersList, setAdminUsersList] = useState<AdminUserRecord[]>([]);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPin, setLoginPin] = useState('');
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(() =>
+    getLoginErrorFromLocation()
+  );
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   // Active Sidebar Module (synced with /admin/dashboard, /admin/members, /admin/gallery, /admin/drama, /admin/settings, /admin/seo)
   const [activeTab, setActiveTab] = useState<CmsTabId>(() =>
@@ -174,9 +196,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
       : 'dashboard'
   );
   const [requestedTabBeforeLogin] = useState<CmsTabId>(() =>
-    typeof window !== 'undefined'
-      ? getTabFromAdminPath(window.location.pathname)
-      : 'dashboard'
+    getRequestedTabFromLocation()
   );
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -367,47 +387,35 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   );
 
   // =========================================================================
-  // AUTHENTICATION HANDLERS (Firebase Authentication + Route Guard)
+  // AUTHENTICATION HANDLERS (NextAuth: access token + rotating refresh token)
+  // Route guard: Next.js middleware redirects signed-out visitors to /admin/login
   // =========================================================================
-  const ALLOWED_ADMIN_EMAILS = [
-    'seo@cottagehomecare.com',
-    'mdleveragerm@gmail.com',
-    'admin@radhamadhob.org',
-  ];
+  const isAuthenticated = Boolean(adminUser);
+  const sessionUserId = adminUser?.uid;
 
+  // Load the authorised admin accounts (`users` collection) once signed in
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
-      if (fbUser && fbUser.email) {
-        const emailLower = fbUser.email.toLowerCase();
-        const isAllowed =
-          ALLOWED_ADMIN_EMAILS.includes(emailLower) ||
-          INITIAL_ADMIN_USERS.some(
-            (u) => u.email.toLowerCase() === emailLower
-          ) ||
-          adminUsersList.some((u) => u.email.toLowerCase() === emailLower);
-        if (isAllowed) {
-          const loggedInUser: AdminUserRecord = {
-            uid: fbUser.uid,
-            email: fbUser.email,
-            displayName:
-              fbUser.displayName || 'রাধামাধব সাংস্কৃতিক জোট অ্যাডমিন',
-            role: 'admin',
-            photoURL: fbUser.photoURL || undefined,
-            emailVerified: fbUser.emailVerified,
-            lastLoginAt: new Date().toISOString(),
-            createdAt: new Date().toISOString(),
-          };
-          setAdminUser(loggedInUser);
-          saveAdminSession(loggedInUser);
-        }
-      }
+    if (!sessionUserId) return;
+    let cancelled = false;
+    fetchAdminUsersFromDatabase().then((users) => {
+      if (!cancelled && users) setAdminUsersList(users);
     });
-    return () => unsubscribe();
-  }, [adminUsersList]);
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionUserId]);
+
+  // A rejected refresh token (expired / revoked / reused) ends the session
+  useEffect(() => {
+    if (session?.error === 'RefreshTokenError') {
+      void signOut({ callbackUrl: '/admin/login' });
+    }
+  }, [session?.error]);
 
   useEffect(() => {
+    if (sessionStatus === 'loading') return;
     try {
-      if (!adminUser) {
+      if (!isAuthenticated) {
         if (window.location.pathname !== '/admin/login') {
           window.history.replaceState({}, '', '/admin/login');
         }
@@ -420,149 +428,49 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     } catch {
       // Ignore history API restrictions in sandboxed environments
     }
-  }, [adminUser, activeTab]);
-
-  const handleGoogleSignIn = async () => {
-    setLoginError(null);
-    try {
-      const cred = await signInWithPopup(auth, googleProvider);
-      const fbUser = cred.user;
-      const emailLower = (fbUser.email || '').toLowerCase();
-      const isAllowed =
-        ALLOWED_ADMIN_EMAILS.includes(emailLower) ||
-        INITIAL_ADMIN_USERS.some((u) => u.email.toLowerCase() === emailLower) ||
-        adminUsersList.some((u) => u.email.toLowerCase() === emailLower);
-
-      if (!isAllowed) {
-        await signOut(auth);
-        setLoginError(
-          'অনুমোদিত অ্যাডমিন ইমেইল নয় (Unauthorized email). শুধুমাত্র অনুমোদিত অ্যাডমিন প্রবেশ করতে পারবেন।'
-        );
-        return;
-      }
-
-      const loggedInUser: AdminUserRecord = {
-        uid: fbUser.uid,
-        email: fbUser.email || 'seo@cottagehomecare.com',
-        displayName:
-          fbUser.displayName || 'রাধামাধব সাংস্কৃতিক জোট অ্যাডমিন',
-        role: 'admin',
-        photoURL: fbUser.photoURL || undefined,
-        emailVerified: fbUser.emailVerified,
-        lastLoginAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      };
-      setAdminUser(loggedInUser);
-      saveAdminSession(loggedInUser);
-      setActiveTab(requestedTabBeforeLogin || 'dashboard');
-    } catch (err) {
-      setLoginError(
-        err instanceof Error
-          ? err.message
-          : 'Google Sign-In failed. Please use your Admin Email and Password below.'
-      );
-    }
-  };
+  }, [isAuthenticated, sessionStatus, activeTab]);
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSigningIn) return;
     setLoginError(null);
     const trimmedEmail = loginEmail.trim().toLowerCase();
     const trimmedPassword = loginPin.trim();
 
-    const matched =
-      adminUsersList.find((u) => u.email.toLowerCase() === trimmedEmail) ||
-      INITIAL_ADMIN_USERS.find((u) => u.email.toLowerCase() === trimmedEmail);
-    const isAllowedEmail =
-      Boolean(matched) || ALLOWED_ADMIN_EMAILS.includes(trimmedEmail);
-
-    if (!isAllowedEmail) {
-      setLoginError(
-        'লগইন ব্যর্থ হয়েছে: অনুমোদিত অ্যাডমিন ইমেইল নয় (Unauthorized Admin Email)।'
-      );
-      return;
-    }
-
     if (trimmedPassword.length < 6) {
       setLoginError(
-        'লগইন ব্যর্থ হয়েছে: সঠিক পাসওয়ার্ড প্রদান করুন (Invalid Password)।'
+        'লগইন ব্যর্থ হয়েছে: সঠিক পাসওয়ার্ড প্রদান করুন (Invalid Password)।'
       );
       return;
     }
 
-    let firebaseSignedIn = false;
+    setIsSigningIn(true);
     try {
-      await signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword);
-      firebaseSignedIn = true;
-    } catch (signInErr: unknown) {
-      const errCode =
-        signInErr && typeof signInErr === 'object' && 'code' in signInErr
-          ? String((signInErr as { code?: string }).code)
-          : '';
-
-      if (
-        errCode === 'auth/wrong-password' ||
-        errCode === 'auth/invalid-credential'
-      ) {
-        // Check if it matches the master admin password for initial setup
-        if (
-          trimmedPassword !== '01797059419' &&
-          trimmedPassword !== 'Admin@123456'
-        ) {
-          setLoginError(
-            'লগইন ব্যর্থ হয়েছে: ভুল পাসওয়ার্ড প্রদান করা হয়েছে (Incorrect Password)।'
-          );
-          return;
-        }
+      const result = await signIn('credentials', {
+        email: trimmedEmail,
+        password: trimmedPassword,
+        redirect: false,
+      });
+      if (!result || result.error) {
+        setLoginError(LOGIN_ERROR_INVALID_CREDENTIALS);
+        return;
       }
-
-      // If user does not exist yet in Firebase Email/Password Auth, provision if valid master password
-      if (
-        trimmedPassword === '01797059419' ||
-        trimmedPassword === 'Admin@123456'
-      ) {
-        try {
-          await createUserWithEmailAndPassword(
-            auth,
-            trimmedEmail,
-            trimmedPassword
-          );
-          firebaseSignedIn = true;
-        } catch {
-          firebaseSignedIn = true;
-        }
-      }
+      setLoginPin('');
+      setActiveTab(requestedTabBeforeLogin || 'dashboard');
+    } catch {
+      setLoginError(LOGIN_ERROR_INVALID_CREDENTIALS);
+    } finally {
+      setIsSigningIn(false);
     }
-
-    if (!firebaseSignedIn) {
-      setLoginError(
-        'লগইন ব্যর্থ হয়েছে: ভুল ইমেইল অথবা পাসওয়ার্ড (Invalid Admin Email or Password)।'
-      );
-      return;
-    }
-
-    const loggedInUser: AdminUserRecord = matched || {
-      uid: auth.currentUser?.uid || `admin-${Date.now()}`,
-      email: trimmedEmail,
-      displayName: 'রাধামাধব সাংস্কৃতিক জোট অ্যাডমিন',
-      role: 'admin',
-      emailVerified: true,
-      lastLoginAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-    };
-    setAdminUser(loggedInUser);
-    saveAdminSession(loggedInUser);
-    setActiveTab(requestedTabBeforeLogin || 'dashboard');
   };
 
   const handleLogout = async () => {
+    setAdminUsersList([]);
     try {
-      await signOut(auth);
+      await signOut({ redirect: false });
     } catch {
       // Ignore signOut error
     }
-    setAdminUser(null);
-    saveAdminSession(null);
     try {
       window.history.replaceState({}, '', '/admin/login');
     } catch {
@@ -570,9 +478,35 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     }
   };
 
+  // Persist the admin list; on rejection restore the server copy and explain why
+  const persistAdminUsers = (next: AdminUserRecord[], successMsg: string) => {
+    setAdminUsersList(next);
+    saveAdminUsersToDatabase(next)
+      .then(() => notifySaved(successMsg))
+      .catch(async (err: unknown) => {
+        const code =
+          err && typeof err === 'object' && 'code' in err
+            ? String((err as { code?: string }).code || '')
+            : '';
+        notifySaved(
+          code === 'insufficient_role'
+            ? 'Only Admin / Super Admin roles can manage admin users.'
+            : code || 'Could not save admin users. Please try again.'
+        );
+        const serverCopy = await fetchAdminUsersFromDatabase();
+        if (serverCopy) setAdminUsersList(serverCopy);
+      });
+  };
+
   // =========================================================================
   // PROTECTED ROUTE GUARD: SHOW ADMIN LOGIN IF NOT AUTHENTICATED
   // =========================================================================
+  if (sessionStatus === 'loading' && !adminUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#140807] via-[#240B09] to-[#0B2216]" />
+    );
+  }
+
   if (!adminUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#140807] via-[#240B09] to-[#0B2216] flex items-center justify-center p-4">
@@ -613,24 +547,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
               {loginError}
             </div>
           )}
-
-          {/* Primary Google Sign-In via Firebase Authentication */}
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            className="w-full py-3.5 px-4 rounded-xl bg-[#1C1917] hover:bg-black text-white font-bold text-sm border border-[#D4AF37] shadow-md transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <Globe className="w-4 h-4 text-[#FDE68A]" />
-            <span>Sign in with Google (Firebase Authentication)</span>
-          </button>
-
-          <div className="relative flex items-center justify-center">
-            <div className="border-t border-[#E5DEC9] w-full" />
-            <span className="bg-white px-3 text-[11px] font-bold text-[#78716C] uppercase">
-              অথবা / OR
-            </span>
-            <div className="border-t border-[#E5DEC9] w-full" />
-          </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             <div>
@@ -794,10 +710,10 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file, 420);
-    onUpdateLogo(res.dataUrl);
+    onUpdateLogo(res.url);
     await onUpdateSettings({
       ...settings,
-      logo: res.dataUrl,
+      logo: res.url,
       updated_date: new Date().toISOString().slice(0, 10),
     });
     notifySaved('Original organization logo uploaded & saved to `settings`!');
@@ -889,7 +805,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const res = await validateAndOptimizeUploadedImage(file, 900);
-    setMPhoto(res.dataUrl);
+    setMPhoto(res.url);
   };
 
   const handleSaveMember = async (e: React.FormEvent) => {
@@ -1126,7 +1042,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
           const f = e.target.files?.[0];
           if (f) {
             const res = await validateAndOptimizeUploadedImage(f);
-            setDPoster(res.dataUrl);
+            setDPoster(res.url);
           }
         }}
       />
@@ -1142,7 +1058,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
           const urls: string[] = [];
           for (let i = 0; i < files.length; i++) {
             const res = await validateAndOptimizeUploadedImage(files[i]);
-            urls.push(res.dataUrl);
+            urls.push(res.url);
           }
           setDGallery((prev) => [...prev, ...urls]);
         }}
@@ -2954,9 +2870,10 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                               const next = adminUsersList.filter(
                                 (item) => item.uid !== u.uid
                               );
-                              setAdminUsersList(next);
-                              saveAdminUsersToDatabase(next);
-                              notifySaved('Admin user removed from `users` collection.');
+                              persistAdminUsers(
+                                next,
+                                'Admin user removed from `users` collection.'
+                              );
                             }}
                             className="px-3 py-1.5 rounded-lg text-[#CC0000] hover:bg-red-50 text-xs font-bold inline-flex items-center gap-1 cursor-pointer"
                           >
@@ -3013,9 +2930,10 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                                 }
                               : u
                           );
-                          setAdminUsersList(next);
-                          saveAdminUsersToDatabase(next);
-                          notifySaved('Admin user updated in `users` collection!');
+                          persistAdminUsers(
+                            next,
+                            'Admin user updated in `users` collection!'
+                          );
                         } else {
                           const newUser: AdminUserRecord = {
                             uid: `admin-${Date.now()}`,
@@ -3027,9 +2945,10 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                             createdAt: nowIso,
                           };
                           const next = [...adminUsersList, newUser];
-                          setAdminUsersList(next);
-                          saveAdminUsersToDatabase(next);
-                          notifySaved('New admin user added to `users` collection!');
+                          persistAdminUsers(
+                            next,
+                            'New admin user added to `users` collection!'
+                          );
                         }
                         setIsUserModalOpen(false);
                       }}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
   ArrowUp,
@@ -21,67 +22,11 @@ import { PhotoGallerySection } from './components/PhotoGallerySection';
 import { DramaAndVideoSection } from './components/DramaAndVideoSection';
 import { JoinContactPrivacyFooterSection } from './components/JoinContactPrivacyFooterSection';
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
-import { AdminDashboardCMS } from './components/AdminDashboardCMS';
 import { useLanguage } from './context/LanguageContext';
 import { ANALYZED_PHOTOS } from './data/culturalData';
-import { subscribeCollectionFromFirestore } from './firebase';
-import {
-  CulturalProgramRecord,
-  INITIAL_PRIVACY_POLICY_DOC,
-  INITIAL_PROGRAMS_SEED,
-  INITIAL_SEO_PAGES_SEED,
-  PrivacyPolicyCollectionDoc,
-  SeoPageRecord,
-  applyDynamicSeoMetaToDocument,
-  loadPrivacyPolicyDocFromDatabase,
-  loadProgramsFromDatabase,
-  loadSeoPagesFromDatabase,
-  normalizeProgramRecords,
-  savePrivacyPolicyDocToDatabase,
-  saveProgramsToDatabase,
-  saveSeoPagesToDatabase,
-} from './data/cmsDatabase';
-import {
-  INITIAL_MEMBERS_SEED,
-  MemberRecord,
-  loadMembersFromDatabase,
-  normalizeMemberRecords,
-  saveAllMembersToDatabase,
-} from './data/memberDatabase';
-import {
-  DramaRecord,
-  INITIAL_DRAMAS_SEED,
-  INITIAL_VIDEOS_SEED,
-  VideoRecord,
-  loadDramasFromDatabase,
-  loadVideosFromDatabase,
-  normalizeDramaRecords,
-  normalizeVideoRecords,
-  saveDramasToDatabase,
-  saveVideosToDatabase,
-} from './data/dramaAndVideoDatabase';
-import {
-  DEFAULT_GALLERY_CATEGORIES,
-  EventRecord,
-  GalleryRecord,
-  INITIAL_EVENTS_SEED,
-  INITIAL_GALLERY_SEED,
-  loadEventsFromDatabase,
-  loadGalleryCategories,
-  loadGalleryFromDatabase,
-  normalizeEventRecords,
-  normalizeGalleryRecords,
-  saveEventsToDatabase,
-  saveGalleryCategories,
-  saveGalleryToDatabase,
-} from './data/culturalProgramAndGalleryDatabase';
-import {
-  INITIAL_SETTINGS_SEED,
-  SiteSettingsRecord,
-  loadSettingsFromDatabase,
-  normalizeSiteSettings,
-  saveSettingsToDatabase,
-} from './data/settingsDatabase';
+import { applyDynamicSeoMetaToDocument } from './data/cmsDatabase';
+import { useCmsCollections } from './hooks/useCmsCollections';
+import type { CmsSnapshot } from './lib/cmsTypes';
 
 type Lang = 'bn' | 'en';
 
@@ -93,8 +38,6 @@ interface HeroSlideData {
   captionEn: string;
 }
 
-const CUSTOM_LOGO_STORAGE_KEY = 'radhamadhob_original_logo_v1';
-
 const DEFAULT_HERO_SLIDES: HeroSlideData[] = ANALYZED_PHOTOS.slice(0, 6).map(
   (photo, idx) => ({
     id: `slide-${idx + 1}`,
@@ -105,20 +48,13 @@ const DEFAULT_HERO_SLIDES: HeroSlideData[] = ANALYZED_PHOTOS.slice(0, 6).map(
   })
 );
 
-function isUrlAdminRoute(): boolean {
-  if (typeof window === 'undefined') return false;
-  const path = window.location.pathname.toLowerCase();
-  const hash = window.location.hash.toLowerCase();
-  return (
-    path === '/admin' ||
-    path.startsWith('/admin/') ||
-    hash === '#/admin' ||
-    hash === '#admin' ||
-    hash.startsWith('#/admin/')
-  );
+interface AppProps {
+  initialData?: CmsSnapshot;
 }
 
-export default function App() {
+export default function App({ initialData }: AppProps) {
+  const router = useRouter();
+
   // Primary Language: Bengali ('bn'), Secondary: English ('en') via LanguageContext + localStorage
   const { lang, setLang, t, formatNumber, tDigits } = useLanguage();
 
@@ -132,237 +68,36 @@ export default function App() {
   // Active Navigation Item Highlight
   const [activeNav, setActiveNav] = useState<string>('home');
 
-  // Strict Route Separation: `/` (Public Read-Only Website) vs `/admin` & `/admin/dashboard` (Protected Admin CMS)
-  const [isCmsDashboardOpen, setIsCmsDashboardOpen] = useState<boolean>(() =>
-    isUrlAdminRoute()
-  );
-
+  // Strict Route Separation: `/` (Public Read-Only Website) vs `/admin/*` (Protected Admin CMS, own route)
   useEffect(() => {
-    const syncRoute = () => {
-      setIsCmsDashboardOpen(isUrlAdminRoute());
-    };
-    window.addEventListener('popstate', syncRoute);
-    window.addEventListener('hashchange', syncRoute);
-
     // Keyboard shortcut Ctrl+Shift+A for Admin route navigation in preview environments
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
         e.preventDefault();
-        try {
-          window.history.pushState({}, '', '/admin');
-        } catch {
-          // Ignore
-        }
-        setIsCmsDashboardOpen(true);
+        router.push('/admin');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('popstate', syncRoute);
-      window.removeEventListener('hashchange', syncRoute);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [router]);
 
   // =========================================================================
-  // DATABASE STATE & REAL-TIME FIRESTORE SYNC (Admin -> Firebase -> Public)
+  // DATABASE STATE & LIVE SYNC (Admin -> MongoDB -> Public), read-only here
   // =========================================================================
-  const [members, setMembers] = useState<MemberRecord[]>(INITIAL_MEMBERS_SEED);
-  const [dramas, setDramas] = useState<DramaRecord[]>(INITIAL_DRAMAS_SEED);
-  const [videos, setVideos] = useState<VideoRecord[]>(INITIAL_VIDEOS_SEED);
-  const [events, setEvents] = useState<EventRecord[]>(INITIAL_EVENTS_SEED);
-  const [gallery, setGallery] = useState<GalleryRecord[]>(INITIAL_GALLERY_SEED);
-  const [galleryCategories, setGalleryCategories] = useState<string[]>(() =>
-    loadGalleryCategories()
-  );
-  const [siteSettings, setSiteSettings] = useState<SiteSettingsRecord>(
-    INITIAL_SETTINGS_SEED
-  );
-  const [programs, setPrograms] = useState<CulturalProgramRecord[]>(
-    INITIAL_PROGRAMS_SEED
-  );
-  const [seoPages, setSeoPages] = useState<SeoPageRecord[]>(
-    INITIAL_SEO_PAGES_SEED
-  );
-  const [privacyDoc, setPrivacyDoc] = useState<PrivacyPolicyCollectionDoc>(
-    INITIAL_PRIVACY_POLICY_DOC
-  );
-
-  // Initial load + Real-time Firestore subscriptions for all collections
-  useEffect(() => {
-    let isMounted = true;
-
-    loadMembersFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setMembers(loaded);
-    });
-    loadDramasFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setDramas(loaded);
-    });
-    loadVideosFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setVideos(loaded);
-    });
-    loadEventsFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setEvents(loaded);
-    });
-    loadGalleryFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setGallery(loaded);
-    });
-    loadSettingsFromDatabase().then((loaded) => {
-      if (isMounted && loaded) setSiteSettings(loaded);
-    });
-    loadProgramsFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setPrograms(loaded);
-    });
-    loadSeoPagesFromDatabase().then((loaded) => {
-      if (isMounted && loaded && loaded.length > 0) setSeoPages(loaded);
-    });
-    loadPrivacyPolicyDocFromDatabase().then((loaded) => {
-      if (isMounted && loaded) setPrivacyDoc(loaded);
-    });
-
-    // Real-time Firestore listeners so Public Website automatically displays Admin updates
-    const unsubMembers = subscribeCollectionFromFirestore<MemberRecord>(
-      'members',
-      (items) => {
-        if (!isMounted || !items || items.length === 0) return;
-        setMembers(normalizeMemberRecords(items));
-      }
-    );
-    const unsubDramas = subscribeCollectionFromFirestore<DramaRecord>(
-      'dramas',
-      (items) => {
-        if (isMounted && items && items.length > 0) {
-          setDramas(normalizeDramaRecords(items));
-        }
-      }
-    );
-    const unsubVideos = subscribeCollectionFromFirestore<VideoRecord>(
-      'videos',
-      (items) => {
-        if (isMounted && items && items.length > 0) {
-          setVideos(normalizeVideoRecords(items));
-        }
-      }
-    );
-    const unsubEvents = subscribeCollectionFromFirestore<EventRecord>(
-      'events',
-      (items) => {
-        if (isMounted && items && items.length > 0) {
-          setEvents(normalizeEventRecords(items));
-        }
-      }
-    );
-    const unsubGallery = subscribeCollectionFromFirestore<GalleryRecord>(
-      'gallery',
-      (items) => {
-        if (isMounted && items && items.length > 0) {
-          setGallery(normalizeGalleryRecords(items));
-        }
-      }
-    );
-    const unsubPrograms =
-      subscribeCollectionFromFirestore<CulturalProgramRecord>(
-        'programs',
-        (items) => {
-          if (isMounted && items && items.length > 0) {
-            setPrograms(normalizeProgramRecords(items));
-          }
-        }
-      );
-    const unsubSettings = subscribeCollectionFromFirestore<SiteSettingsRecord>(
-      'settings',
-      (items) => {
-        if (isMounted && items && items.length > 0) {
-          const main = items.find((r) => r.id === 'settings-main') || items[0];
-          setSiteSettings(normalizeSiteSettings(main));
-        }
-      }
-    );
-    const unsubSeo = subscribeCollectionFromFirestore<SeoPageRecord>(
-      'seo',
-      (items) => {
-        if (isMounted && items && items.length > 0) setSeoPages(items);
-      }
-    );
-    const unsubPrivacy =
-      subscribeCollectionFromFirestore<PrivacyPolicyCollectionDoc>(
-        'privacy_policy',
-        (items) => {
-          if (isMounted && items[0]) setPrivacyDoc(items[0]);
-        }
-      );
-
-    return () => {
-      isMounted = false;
-      unsubMembers();
-      unsubDramas();
-      unsubVideos();
-      unsubEvents();
-      unsubGallery();
-      unsubPrograms();
-      unsubSettings();
-      unsubSeo();
-      unsubPrivacy();
-    };
-  }, []);
-
-  // Admin-Only Persistence Handlers (passed ONLY to AdminDashboardCMS at /admin/dashboard)
-  const handleUpdateMembers = async (updated: MemberRecord[]) => {
-    const sorted = [...updated].sort((a, b) => a.displayOrder - b.displayOrder);
-    setMembers(sorted);
-    await saveAllMembersToDatabase(sorted);
-  };
-
-  const handleUpdateDramas = async (updated: DramaRecord[]) => {
-    setDramas(updated);
-    await saveDramasToDatabase(updated);
-  };
-
-  const handleUpdateVideos = async (updated: VideoRecord[]) => {
-    setVideos(updated);
-    await saveVideosToDatabase(updated);
-  };
-
-  const handleUpdateEvents = async (updated: EventRecord[]) => {
-    setEvents(updated);
-    await saveEventsToDatabase(updated);
-  };
-
-  const handleUpdateGallery = async (updated: GalleryRecord[]) => {
-    setGallery(updated);
-    await saveGalleryToDatabase(updated);
-  };
-
-  const handleUpdateGalleryCategories = (updated: string[]) => {
-    const normalized =
-      updated.length > 0
-        ? Array.from(new Set(['সব ছবি', ...updated]))
-        : DEFAULT_GALLERY_CATEGORIES;
-    setGalleryCategories(normalized);
-    saveGalleryCategories(normalized);
-  };
-
-  const handleUpdateSettings = async (updated: SiteSettingsRecord) => {
-    setSiteSettings(updated);
-    await saveSettingsToDatabase(updated);
-  };
-
-  const handleUpdatePrograms = async (updated: CulturalProgramRecord[]) => {
-    setPrograms(updated);
-    await saveProgramsToDatabase(updated);
-  };
-
-  const handleUpdateSeoPages = async (updated: SeoPageRecord[]) => {
-    setSeoPages(updated);
-    await saveSeoPagesToDatabase(updated);
-  };
-
-  const handleUpdatePrivacyDoc = async (
-    updated: PrivacyPolicyCollectionDoc
-  ) => {
-    setPrivacyDoc(updated);
-    await savePrivacyPolicyDocToDatabase(updated);
-  };
+  const {
+    members,
+    dramas,
+    videos,
+    events,
+    gallery,
+    galleryCategories,
+    siteSettings,
+    seoPages,
+    privacyDoc,
+    customLogoUrl,
+  } = useCmsCollections(initialData);
 
   // Dynamically apply active page SEO metadata (`seo` collection) to document head
   useEffect(() => {
@@ -392,39 +127,6 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isHoveringSlider, setIsHoveringSlider] = useState(false);
-
-  // Custom Logo URL (controlled strictly from Admin Dashboard & synced with `settings.logo`)
-  const [customLogoUrl, setCustomLogoUrl] = useState<string | null>(() => {
-    try {
-      return localStorage.getItem(CUSTOM_LOGO_STORAGE_KEY);
-    } catch {
-      return null;
-    }
-  });
-
-  useEffect(() => {
-    if (siteSettings.logo && siteSettings.logo.trim().length > 0) {
-      setCustomLogoUrl(siteSettings.logo);
-      try {
-        localStorage.setItem(CUSTOM_LOGO_STORAGE_KEY, siteSettings.logo);
-      } catch {
-        // Ignore storage error
-      }
-    }
-  }, [siteSettings.logo]);
-
-  const handleUpdateCustomLogo = (logoUrl: string | null) => {
-    setCustomLogoUrl(logoUrl);
-    try {
-      if (logoUrl) {
-        localStorage.setItem(CUSTOM_LOGO_STORAGE_KEY, logoUrl);
-      } else {
-        localStorage.removeItem(CUSTOM_LOGO_STORAGE_KEY);
-      }
-    } catch {
-      // Ignore storage error
-    }
-  };
 
   // Distinct photos 6..11 from ANALYZED_PHOTOS for Storytelling Section
   const aboutSectionPhotos = ANALYZED_PHOTOS.slice(6, 12);
@@ -797,48 +499,6 @@ export default function App() {
 
   const activeSlideData =
     activeHeroSlides[currentSlide] || activeHeroSlides[0] || slides[0];
-
-  // =========================================================================
-  // SEPARATED ADMIN PANEL ROUTE (/admin & /admin/dashboard)
-  // =========================================================================
-  if (isCmsDashboardOpen) {
-    return (
-      <AdminDashboardCMS
-        lang={lang}
-        settings={siteSettings}
-        members={members}
-        dramas={dramas}
-        programs={programs}
-        events={events}
-        gallery={gallery}
-        galleryCategories={galleryCategories}
-        videos={videos}
-        seoPages={seoPages}
-        privacyDoc={privacyDoc}
-        customLogoUrl={customLogoUrl || siteSettings.logo || null}
-        onUpdateSettings={handleUpdateSettings}
-        onUpdateLogo={handleUpdateCustomLogo}
-        onUpdateMembers={handleUpdateMembers}
-        onUpdateDramas={handleUpdateDramas}
-        onUpdatePrograms={handleUpdatePrograms}
-        onUpdateEvents={handleUpdateEvents}
-        onUpdateGallery={handleUpdateGallery}
-        onUpdateGalleryCategories={handleUpdateGalleryCategories}
-        onUpdateVideos={handleUpdateVideos}
-        onUpdateSeoPages={handleUpdateSeoPages}
-        onUpdatePrivacyDoc={handleUpdatePrivacyDoc}
-        onExitCms={() => {
-          setIsCmsDashboardOpen(false);
-          try {
-            window.history.pushState({}, '', '/');
-          } catch {
-            // Ignore
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-      />
-    );
-  }
 
   // =========================================================================
   // PUBLIC WEBSITE ROUTE (`/`) — STRICTLY READ-ONLY
@@ -1493,13 +1153,7 @@ export default function App() {
         customLogoUrl={customLogoUrl || siteSettings.logo || null}
         onNavigateSection={(sectionId) => handleNavClick(sectionId)}
         onOpenAdminLogin={() => {
-          try {
-            window.history.pushState({}, '', '/admin/login');
-          } catch {
-            // Ignore history restrictions in sandboxed environments
-          }
-          setIsCmsDashboardOpen(true);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          router.push('/admin/login');
         }}
       />
 

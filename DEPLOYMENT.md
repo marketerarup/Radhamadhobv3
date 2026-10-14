@@ -5,6 +5,8 @@ programs, events, gallery + categories, videos, SEO, privacy policy, admin users
 is edited from `/admin/*` and stored in MongoDB (`DB_URL`). Admin-uploaded images
 are stored in Cloudflare R2; MongoDB keeps only their URLs.
 
+Deploying to **Vercel** instead of Cloudflare Workers? See [`VERCEL_DEPLOY.md`](VERCEL_DEPLOY.md).
+
 Full codebase documentation (architecture, features, data model, API, security,
 operations) is in [`docs/`](docs/README.md).
 

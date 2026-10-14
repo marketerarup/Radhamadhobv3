@@ -1,8 +1,15 @@
 import 'server-only';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { AwsClient } from 'aws4fetch';
 
 /**
- * Admin image storage in Cloudflare R2 (binding `MEDIA_BUCKET`, see wrangler.jsonc).
+ * Admin image storage in Cloudflare R2.
+ *
+ * - On Vercel / plain Node: R2's S3-compatible API, configured with
+ *   `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` and optionally
+ *   `R2_BUCKET_NAME` (default `radhamadhob-media`).
+ * - On Cloudflare Workers (OpenNext): the `MEDIA_BUCKET` binding (wrangler.jsonc),
+ *   used when the S3 credentials above are not set.
  *
  * - Uploads are image bytes only. The type is detected from the file signature,
  *   never trusted from the client, and only JPEG / PNG / WEBP / GIF are kept
@@ -13,7 +20,9 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
  *   `MEDIA_PUBLIC_BASE_URL/<key>` when the bucket has a public custom domain).
  */
 
-export const MAX_MEDIA_UPLOAD_BYTES = 10 * 1024 * 1024;
+// Vercel Functions reject request bodies over 4.5 MB; the browser already
+// resizes images to ≤ 900 px, so real uploads are far below this.
+export const MAX_MEDIA_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 const MEDIA_ROUTE_PREFIX = '/media';
 const KEY_PATTERN = /^images\/\d{4}\/\d{2}\/[0-9a-f-]{36}\.(jpg|png|webp|gif)$/;
@@ -46,16 +55,82 @@ interface MediaBucket {
 
 export class MediaStorageUnavailableError extends Error {
   constructor() {
-    super('MEDIA_BUCKET binding is not configured');
+    super('Media storage is not configured (R2_* env vars or MEDIA_BUCKET binding)');
     this.name = 'MediaStorageUnavailableError';
   }
 }
 
+const DEFAULT_BUCKET_NAME = 'radhamadhob-media';
+
+/** R2 bucket accessed over its S3-compatible API (Vercel, `next start`). */
+function createS3Bucket(): MediaBucket | null {
+  const accountId = process.env.R2_ACCOUNT_ID;
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  if (!accountId || !accessKeyId || !secretAccessKey) return null;
+
+  const client = new AwsClient({ accessKeyId, secretAccessKey, service: 's3', region: 'auto' });
+  const bucketName = process.env.R2_BUCKET_NAME || DEFAULT_BUCKET_NAME;
+  const objectUrl = (key: string) =>
+    `https://${accountId}.r2.cloudflarestorage.com/${bucketName}/${key}`;
+
+  return {
+    async put(key, value, options) {
+      const headers: Record<string, string> = {};
+      const meta = options?.httpMetadata;
+      if (meta?.contentType) headers['Content-Type'] = meta.contentType;
+      if (meta?.cacheControl) headers['Cache-Control'] = meta.cacheControl;
+      for (const [name, val] of Object.entries(options?.customMetadata ?? {})) {
+        headers[`x-amz-meta-${name.toLowerCase()}`] = encodeURIComponent(val);
+      }
+      const res = await client.fetch(objectUrl(key), { method: 'PUT', headers, body: value });
+      if (!res.ok) throw new Error(`R2 PUT ${key} failed: ${res.status} ${await res.text()}`);
+      return {
+        key,
+        size: value.byteLength,
+        httpEtag: res.headers.get('etag') || '',
+        httpMetadata: meta,
+      };
+    },
+
+    async get(key, options) {
+      const headers: Record<string, string> = {};
+      const ifNoneMatch = options?.onlyIf?.get('if-none-match');
+      if (ifNoneMatch) headers['If-None-Match'] = ifNoneMatch;
+      const res = await client.fetch(objectUrl(key), { headers });
+      if (res.status === 404) return null;
+
+      const object: MediaObject = {
+        key,
+        size: Number(res.headers.get('content-length') || 0),
+        httpEtag: res.headers.get('etag') || '',
+        httpMetadata: {
+          contentType: res.headers.get('content-type') || undefined,
+          cacheControl: res.headers.get('cache-control') || undefined,
+        },
+      };
+      // 304: return metadata without a body, matching the R2 binding.
+      if (res.status === 304) return object;
+      if (!res.ok || !res.body) {
+        throw new Error(`R2 GET ${key} failed: ${res.status} ${await res.text()}`);
+      }
+      return { ...object, body: res.body };
+    },
+  };
+}
+
 async function getBucket(): Promise<MediaBucket> {
-  const { env } = await getCloudflareContext({ async: true });
-  const bucket = (env as unknown as { MEDIA_BUCKET?: MediaBucket }).MEDIA_BUCKET;
-  if (!bucket) throw new MediaStorageUnavailableError();
-  return bucket;
+  const s3Bucket = createS3Bucket();
+  if (s3Bucket) return s3Bucket;
+
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    const bucket = (env as unknown as { MEDIA_BUCKET?: MediaBucket }).MEDIA_BUCKET;
+    if (bucket) return bucket;
+  } catch {
+    // Not running on Cloudflare and no S3 credentials configured.
+  }
+  throw new MediaStorageUnavailableError();
 }
 
 function startsWith(bytes: Uint8Array, signature: number[], offset = 0): boolean {

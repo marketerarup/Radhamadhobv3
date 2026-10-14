@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(stored, { status: 201, headers: NO_STORE });
   } catch (err) {
     if (err instanceof MediaStorageUnavailableError) {
-      console.error('Media upload failed: MEDIA_BUCKET binding missing');
+      console.error('Media upload failed: media storage is not configured');
       return fail(503, 'media_storage_unavailable');
     }
     console.error('Media upload failed:', err);

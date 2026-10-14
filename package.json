@@ -19,6 +19,7 @@
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "aws4fetch": "^1.0.20",
     "jose": "^6.2.12",
     "lucide-react": "^0.546.0",
     "mongodb": "^6.21.0",

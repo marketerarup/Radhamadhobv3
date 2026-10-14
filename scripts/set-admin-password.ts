@@ -1,5 +1,6 @@
 /**
- * Set (or reset) an admin's password and sign out their existing sessions.
+ * Set (or reset) an admin's password, sign out their existing sessions and
+ * clear any failed-login lockout.
  *
  *   npm run admin:password -- <email> <new-password>
  *   npm run admin:password -- <email> <new-password> --create "Display Name" [role]
@@ -25,6 +26,8 @@ async function main() {
     const users = db.collection('users');
     const passwordHash = await hashPassword(password);
     const existing = await users.findOne({ email });
+    // Lift a failed-login lockout so the new password works immediately.
+    await db.collection<{ _id: string }>('auth_login_attempts').deleteOne({ _id: email });
 
     if (!existing) {
       if (flag !== '--create') throw new Error(`No admin with email ${email}. Add --create "Name" to create one.`);

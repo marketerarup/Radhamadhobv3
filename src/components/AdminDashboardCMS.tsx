@@ -559,7 +559,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                 placeholder="admin@radhamadhob.org"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-[#FAF8F5] border border-[#E5DEC9] rounded-xl font-mono-code"
+                className="w-full px-4 py-2.5 text-sm text-[#1C1917] bg-[#FAF8F5] border border-[#E5DEC9] rounded-xl font-mono-code"
               />
             </div>
 
@@ -573,7 +573,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                 placeholder="••••••••••"
                 value={loginPin}
                 onChange={(e) => setLoginPin(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-[#FAF8F5] border border-[#E5DEC9] rounded-xl font-mono-code"
+                className="w-full px-4 py-2.5 text-sm text-[#1C1917] bg-[#FAF8F5] border border-[#E5DEC9] rounded-xl font-mono-code"
               />
             </div>
 

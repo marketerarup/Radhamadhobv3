@@ -5,7 +5,10 @@
  */
 
 const ALGORITHM = 'pbkdf2_sha256';
-const DEFAULT_ITERATIONS = 600_000; // OWASP 2023 recommendation for PBKDF2-SHA256
+// Cloudflare Workers rejects PBKDF2 above 100,000 iterations in production
+// ("iteration counts above 100000 are not supported"); local workerd has no cap.
+// Hashes are verified with their stored count, so this applies to new hashes.
+const DEFAULT_ITERATIONS = 100_000;
 const KEY_LENGTH_BITS = 256;
 
 function toBase64(bytes: Uint8Array): string {

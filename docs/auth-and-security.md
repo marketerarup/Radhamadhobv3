@@ -12,9 +12,11 @@
      for one hash check so timing does not reveal which emails exist;
   4. on failure, counts the attempt; on success, clears the counter and records
      `lastLoginAt`.
-- Passwords use **PBKDF2-HMAC-SHA256, 600,000 iterations**, 16-byte random salt,
+- Passwords use **PBKDF2-HMAC-SHA256, 100,000 iterations**, 16-byte random salt,
   constant-time comparison (`src/lib/server/passwords.ts`, Web Crypto, so it runs
-  on Workers).
+  on Workers). 100,000 is the maximum Cloudflare Workers accepts in production;
+  a hash with more iterations (e.g. an older 600,000 one) cannot be verified there
+  and that admin cannot sign in until the password is reset with `npm run admin:password`.
 
 ## Session and tokens
 

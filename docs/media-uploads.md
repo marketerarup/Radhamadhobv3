@@ -1,5 +1,9 @@
 # Media uploads (Cloudflare R2)
 
+> **Currently unused by the dashboard.** Admin image fields take image URLs
+> (`src/components/AdminImageUrlField.tsx`); the upload pipeline below is kept so
+> it can be switched back on.
+
 Admin images are stored in the R2 bucket **`radhamadhob-media`** (binding
 `MEDIA_BUCKET`). MongoDB documents store only the image URL.
 

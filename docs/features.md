@@ -31,20 +31,24 @@ registration; accounts are created by an admin or an operator (see
 | # | Module | URL | Manages |
 | --- | --- | --- | --- |
 | — | Dashboard overview | `/admin/dashboard` | Summary of the content collections |
-| 1 | Website settings | `/admin/settings` | Organization names and tagline, **logo upload**, hero and intro texts, about / history / vision / mission, address, phone, WhatsApp number and prefilled message, Facebook / YouTube links, footer, copyright, privacy-policy intro and sections |
-| 2 | Members | `/admin/members` | Add / edit / delete members, **photo upload**, bilingual name, position, parents' names, address, biography, joining date, display order |
-| 3 | Dramas | `/admin/drama` | Productions with category, **poster upload**, **multi-image gallery upload**, director, cast, year, YouTube link, bilingual descriptions |
-| 4 | Cultural programs | `/admin/programs` | Programs with category, date, **image upload**, bilingual title and description |
-| 5 | Events | `/admin/events` | Events with date, location, **cover image upload**, **multi-image gallery upload**, SEO file name and alt text |
-| 6 | Gallery | `/admin/gallery` | Single photo add/edit, **bulk upload** into a category, category list management (filter tabs) |
-| 7 | YouTube videos | `/admin/videos` | Video links; thumbnail taken from YouTube automatically or **uploaded** |
-| 8 | SEO | `/admin/seo` | Per-page SEO title, meta description, keywords, URL slug, **OG image upload**, JSON-LD schema text; add new SEO pages |
+| 1 | Website settings | `/admin/settings` | Organization names, **logo URL**, intro texts, about / history / vision / mission, phone, WhatsApp number, Facebook / YouTube links, footer, copyright |
+| 1A | Homepage content | `/admin/homepage` | Hero title / subtitle and **slider images** (max 6), About-section quote and **photos** (max 5), the 4 Cultural Highlights cards' text, tagline, WhatsApp prefilled message. Stored on the `settings` document; built-in content is shown until saved |
+| 2 | Members | `/admin/members` | Add / edit / delete members, **photo URL**, bilingual name, position, parents' names, address, biography, joining date, display order |
+| 3 | Dramas | `/admin/drama` | Productions with category, **poster URL**, **gallery image URLs**, director, cast, year, YouTube link, bilingual descriptions |
+| 4 | Cultural programs | `/admin/programs` | Programs with category, date, **image URL**, bilingual title and description |
+| 5 | Events | `/admin/events` | Events with date, location, **cover image URL**, **gallery image URLs**, SEO file name and alt text |
+| 6 | Gallery | `/admin/gallery` | Single photo add/edit, **add many image URLs at once** into a category, category list management (filter tabs) |
+| 7 | YouTube videos | `/admin/videos` | Video links; thumbnail taken from YouTube automatically or a **thumbnail URL** |
+| 8 | SEO | `/admin/seo` | Per-page SEO title, meta description, keywords, URL slug, **OG image URL**, JSON-LD schema text; add new SEO pages |
 | 9 | Privacy policy | `/admin/privacy` | Bengali and English policy text |
 | 10 | Admin users | `/admin/users` | Add / edit / remove admin accounts and roles (requires `admin` or `super_admin`) |
 
-**Bold** items are image uploads. They all go through the same pipeline: validate
-→ resize in the browser → upload to R2 → store the URL (see
-[media-uploads.md](media-uploads.md)).
+**Bold** items are images, entered as links (no file upload for now). Every image
+field (`src/components/AdminImageUrlField.tsx`) shows the ratio, recommended size
+and how that section crops the image, a preview cropped the same way, and a fit
+check measured from the real image. The R2 upload API (`POST /api/media`, see
+[media-uploads.md](media-uploads.md)) is still deployed but no longer used by the
+dashboard.
 
 ### Saving and live updates
 

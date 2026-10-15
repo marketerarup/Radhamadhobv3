@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Drama,
   Crown,
@@ -14,24 +14,13 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { CinematicCard3D } from './CinematicCard3D';
+import { HighlightText, mergeHighlightText } from '../data/homepageContent';
 
-interface HighlightItem {
+interface HighlightItem extends HighlightText {
   id: string;
   order: string;
-  titleBn: string;
-  titleEn: string;
-  tagBn: string;
-  tagEn: string;
-  shortDescBn: string;
-  shortDescEn: string;
-  fullDescBn: string;
-  fullDescEn: string;
-  bulletPointsBn: string[];
-  bulletPointsEn: string[];
   icon: React.ComponentType<{ className?: string }>;
   accentColor: string;
-  badgeBn: string;
-  badgeEn: string;
 }
 
 const CULTURAL_HIGHLIGHTS: HighlightItem[] = [
@@ -157,8 +146,24 @@ const CULTURAL_HIGHLIGHTS: HighlightItem[] = [
   },
 ];
 
-export const CulturalHighlightsSection: React.FC = () => {
+/** Built-in card text, shown in the admin as the starting point for edits. */
+export const DEFAULT_HIGHLIGHT_TEXTS: HighlightText[] = CULTURAL_HIGHLIGHTS.map(
+  ({ id: _id, order: _order, icon: _icon, accentColor: _accent, ...text }) => text
+);
+
+interface CulturalHighlightsSectionProps {
+  /** Admin text overrides per card position (`settings.highlights`) */
+  content?: Partial<HighlightText>[];
+}
+
+export const CulturalHighlightsSection: React.FC<CulturalHighlightsSectionProps> = ({
+  content,
+}) => {
   const { lang } = useLanguage();
+  const highlights = useMemo(
+    () => CULTURAL_HIGHLIGHTS.map((item, idx) => mergeHighlightText(item, content?.[idx])),
+    [content]
+  );
   const [selectedHighlight, setSelectedHighlight] = useState<HighlightItem | null>(null);
 
   // Responsive Cards Per View: Mobile: 1, Small Tablet: 2, Large Tablet: 3, Desktop: 4
@@ -192,7 +197,7 @@ export const CulturalHighlightsSection: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const maxSlideIndex = Math.max(0, CULTURAL_HIGHLIGHTS.length - cardsPerView);
+  const maxSlideIndex = Math.max(0, highlights.length - cardsPerView);
 
   useEffect(() => {
     if (currentSlideIndex > maxSlideIndex) {
@@ -316,7 +321,7 @@ export const CulturalHighlightsSection: React.FC = () => {
                 transform: `translateX(-${currentSlideIndex * (100 / cardsPerView)}%)`,
               }}
             >
-              {CULTURAL_HIGHLIGHTS.map((item) => {
+              {highlights.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div

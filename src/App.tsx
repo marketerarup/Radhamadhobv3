@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
@@ -23,7 +23,7 @@ import { DramaAndVideoSection } from './components/DramaAndVideoSection';
 import { JoinContactPrivacyFooterSection } from './components/JoinContactPrivacyFooterSection';
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
 import { useLanguage } from './context/LanguageContext';
-import { ANALYZED_PHOTOS } from './data/culturalData';
+import { resolveAboutPhotos, resolveHeroSlides } from './data/homepageContent';
 import { applyDynamicSeoMetaToDocument } from './data/cmsDatabase';
 import { useCmsCollections } from './hooks/useCmsCollections';
 import type { CmsSnapshot } from './lib/cmsTypes';
@@ -33,20 +33,10 @@ type Lang = 'bn' | 'en';
 interface HeroSlideData {
   id: string;
   imageUrl: string;
-  originalFileName: string;
   captionBn: string;
   captionEn: string;
 }
 
-const DEFAULT_HERO_SLIDES: HeroSlideData[] = ANALYZED_PHOTOS.slice(0, 6).map(
-  (photo, idx) => ({
-    id: `slide-${idx + 1}`,
-    imageUrl: photo.imageUrl,
-    originalFileName: photo.originalFileRef,
-    captionBn: photo.titleBn,
-    captionEn: photo.titleEn,
-  })
-);
 
 interface AppProps {
   initialData?: CmsSnapshot;
@@ -123,13 +113,32 @@ export default function App({ initialData }: AppProps) {
   }, [seoPages, activeNav]);
 
   // Hero Slider State
-  const [slides] = useState<HeroSlideData[]>(DEFAULT_HERO_SLIDES);
+  // Admin → Homepage Content (`settings.hero_slides`), else the built-in slides
+  const slides = useMemo<HeroSlideData[]>(
+    () =>
+      resolveHeroSlides(siteSettings).map((slide) => ({
+        id: slide.id,
+        imageUrl: slide.image,
+        captionBn: slide.caption_bn,
+        captionEn: slide.caption_en,
+      })),
+    [siteSettings]
+  );
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isHoveringSlider, setIsHoveringSlider] = useState(false);
 
-  // Distinct photos 6..11 from ANALYZED_PHOTOS for Storytelling Section
-  const aboutSectionPhotos = ANALYZED_PHOTOS.slice(6, 12);
+  // Admin → Homepage Content (`settings.about_photos`), else built-in stage photos
+  const aboutSectionPhotos = useMemo(
+    () =>
+      resolveAboutPhotos(siteSettings).map((photo) => ({
+        id: photo.id,
+        imageUrl: photo.image,
+        titleBn: photo.caption_bn,
+        titleEn: photo.caption_en,
+      })),
+    [siteSettings]
+  );
 
   // Mobile Viewport Detection (< 768px shows 3 best Hero slides; Desktop shows 5 slides)
   const [isMobileViewport, setIsMobileViewport] = useState<boolean>(() =>
@@ -1124,7 +1133,7 @@ export default function App({ initialData }: AppProps) {
       {/* =================================================================== */}
       {/* 3. FOUR CULTURAL HIGHLIGHTS (চারটি অনন্য গৌরবগাঁথা - 3D Museum Pillars) */}
       {/* =================================================================== */}
-      <CulturalHighlightsSection />
+      <CulturalHighlightsSection content={siteSettings.highlights} />
 
       {/* =================================================================== */}
       {/* 5. PHOTO GALLERY SECTION (ফটো গ্যালারি ও মঞ্চের স্মৃতিচারণ)         */}

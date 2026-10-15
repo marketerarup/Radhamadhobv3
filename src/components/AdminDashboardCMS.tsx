@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import {
   ArrowLeft,
@@ -21,13 +21,19 @@ import {
   ShieldCheck,
   Sparkles,
   Trash2,
-  Upload,
   UserCheck,
   Users,
   Video,
   X,
 } from 'lucide-react';
 import { OfficialLogo } from './OfficialLogo';
+import { CmsHomepageContentPanel } from './AdminHomepageContentPanel';
+import {
+  IMAGE_GUIDES,
+  ImageUrlField,
+  ImageUrlListField,
+  isValidImageUrl,
+} from './AdminImageUrlField';
 import {
   AdminUserRecord,
   CulturalProgramRecord,
@@ -35,7 +41,6 @@ import {
   SeoPageRecord,
   fetchAdminUsersFromDatabase,
   saveAdminUsersToDatabase,
-  validateAndOptimizeUploadedImage,
 } from '../data/cmsDatabase';
 import { MemberRecord } from '../data/memberDatabase';
 import {
@@ -62,6 +67,7 @@ import {
 export type CmsTabId =
   | 'dashboard'
   | 'settings'
+  | 'homepage'
   | 'members'
   | 'dramas'
   | 'programs'
@@ -78,6 +84,7 @@ function getTabFromAdminPath(pathname: string): CmsTabId {
   if (clean === '/admin/gallery') return 'gallery';
   if (clean === '/admin/drama' || clean === '/admin/dramas') return 'dramas';
   if (clean === '/admin/settings') return 'settings';
+  if (clean === '/admin/homepage') return 'homepage';
   if (clean === '/admin/seo') return 'seo';
   if (clean === '/admin/programs') return 'programs';
   if (clean === '/admin/events') return 'events';
@@ -284,7 +291,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [copyrightTextEn, setCopyrightTextEn] = useState(
     settings.copyright_text_en || '© Radhamadhob Cultural Alliance'
   );
-  const logoInputRef = useRef<HTMLInputElement | null>(null);
+  const [logoUrlDraft, setLogoUrlDraft] = useState(customLogoUrl || '');
 
   // Sync local form state when `settings` loads asynchronously from Firestore / IndexedDB
   useEffect(() => {
@@ -346,7 +353,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [mFather, setMFather] = useState('');
   const [mMother, setMMother] = useState('');
   const [mEmail, setMEmail] = useState('');
-  const memberPhotoRef = useRef<HTMLInputElement | null>(null);
 
   // =========================================================================
   // 3. DRAMA MANAGEMENT STATE (`dramas` collection — Bilingual BN + EN)
@@ -372,8 +378,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [dGallery, setDGallery] = useState<string[]>([
     ORIGINAL_STAGE_PHOTO_OPTIONS[0].url,
   ]);
-  const dramaPosterRef = useRef<HTMLInputElement | null>(null);
-  const dramaGalleryRef = useRef<HTMLInputElement | null>(null);
 
   // =========================================================================
   // 10. ADMIN USERS CRUD STATE (`users` collection)
@@ -636,6 +640,14 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
       icon: Settings,
     },
     {
+      id: 'homepage',
+      num: '1A',
+      label: '1A. Homepage Content',
+      labelBn: '১ক. হোমপেজ কনটেন্ট',
+      collection: 'settings',
+      icon: Sparkles,
+    },
+    {
       id: 'members',
       num: '02',
       label: '2. Members Management',
@@ -712,17 +724,16 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   // =========================================================================
   // MODULE 1 HANDLERS: WEBSITE SETTINGS (Bilingual BN + EN)
   // =========================================================================
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file, 420);
-    onUpdateLogo(res.url);
+  const handleSaveLogoUrl = async () => {
+    const url = logoUrlDraft.trim();
+    if (!isValidImageUrl(url)) return;
+    onUpdateLogo(url);
     await onUpdateSettings({
       ...settings,
-      logo: res.url,
+      logo: url,
       updated_date: new Date().toISOString().slice(0, 10),
     });
-    notifySaved('Original organization logo uploaded & saved to `settings`!');
+    notifySaved('Organization logo saved to `settings`!');
   };
 
   const handleSaveWebsiteSettings = async (e: React.FormEvent) => {
@@ -803,15 +814,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
     setMMother(m.mother_name || '');
     setMEmail(m.email || '');
     setIsMemberModalOpen(true);
-  };
-
-  const handleMemberPhotoUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file, 900);
-    setMPhoto(res.url);
   };
 
   const handleSaveMember = async (e: React.FormEvent) => {
@@ -1024,52 +1026,6 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
 
   return (
     <div className="min-h-screen bg-[#F3EFE6] text-[#1C1917] flex flex-col lg:flex-row">
-      {/* Hidden File Inputs */}
-      <input
-        ref={logoInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleLogoUpload}
-      />
-      <input
-        ref={memberPhotoRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleMemberPhotoUpload}
-      />
-      <input
-        ref={dramaPosterRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={async (e) => {
-          const f = e.target.files?.[0];
-          if (f) {
-            const res = await validateAndOptimizeUploadedImage(f);
-            setDPoster(res.url);
-          }
-        }}
-      />
-      <input
-        ref={dramaGalleryRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={async (e) => {
-          const files = e.target.files;
-          if (!files) return;
-          const urls: string[] = [];
-          for (let i = 0; i < files.length; i++) {
-            const res = await validateAndOptimizeUploadedImage(files[i]);
-            urls.push(res.url);
-          }
-          setDGallery((prev) => [...prev, ...urls]);
-        }}
-      />
-
       {/* =================================================================== */}
       {/* SIDEBAR MENU (Desktop Fixed + Mobile Drawer)                        */}
       {/* =================================================================== */}
@@ -1288,6 +1244,13 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                     stat: 'Logo, Name, About, Contact, Footer (বাংলা + English)',
                   },
                   {
+                    id: 'homepage' as CmsTabId,
+                    title: '1A. Homepage Content',
+                    titleBn: '১ক. হোমপেজ কনটেন্ট',
+                    col: 'settings',
+                    stat: 'Hero slider, About photos, Highlights, Tagline',
+                  },
+                  {
                     id: 'members' as CmsTabId,
                     title: '2. Members Management (Full CRUD)',
                     titleBn: '২. সদস্য ব্যবস্থাপনা (Add · Edit · Delete)',
@@ -1382,6 +1345,14 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
           {/* =============================================================== */}
           {/* 1. WEBSITE SETTINGS (`settings` Collection — Bilingual BN + EN) */}
           {/* =============================================================== */}
+          {activeTab === 'homepage' && (
+            <CmsHomepageContentPanel
+              settings={settings}
+              onUpdateSettings={onUpdateSettings}
+              notifySaved={notifySaved}
+            />
+          )}
+
           {activeTab === 'settings' && (
             <form
               onSubmit={handleSaveWebsiteSettings}
@@ -1408,8 +1379,9 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                 </button>
               </div>
 
-              {/* Logo Upload & Preview */}
-              <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* Logo (image URL) & Preview */}
+              <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 rounded-full bg-white p-1 border-2 border-[#D4AF37] overflow-hidden shrink-0">
                     {customLogoUrl ? (
@@ -1427,32 +1399,43 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                   </div>
                   <div>
                     <div className="text-sm font-bold text-[#1C1917] font-display-bn">
-                      Organization Logo (লোগো আপলোড)
+                      Organization Logo (লোগো)
                     </div>
                     <div className="text-xs text-[#57534E]">
-                      Upload original organization logo image file (JPG/PNG/WEBP).
+                      লোগো ছবির লিংক দিন, তারপর সংরক্ষণ করুন (Paste the logo image link, then Save Logo).
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => logoInputRef.current?.click()}
-                    className="px-4 py-2.5 rounded-xl bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                    onClick={handleSaveLogoUrl}
+                    disabled={!isValidImageUrl(logoUrlDraft) || logoUrlDraft === customLogoUrl}
+                    className="px-4 py-2.5 rounded-xl bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>Upload Logo</span>
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Save Logo</span>
                   </button>
                   {customLogoUrl && (
                     <button
                       type="button"
-                      onClick={() => onUpdateLogo(null)}
+                      onClick={() => {
+                        onUpdateLogo(null);
+                        setLogoUrlDraft('');
+                      }}
                       className="px-3 py-2.5 rounded-xl border border-[#E5DEC9] text-xs font-bold text-[#CC0000] cursor-pointer"
                     >
                       Reset Default Seal
                     </button>
                   )}
                 </div>
+              </div>
+              <ImageUrlField
+                label="Logo Image URL (লোগো ছবির লিংক)"
+                value={logoUrlDraft}
+                onChange={setLogoUrlDraft}
+                guide={IMAGE_GUIDES.logo}
+              />
               </div>
 
               {/* Bilingual Organization Name & Home Intro */}
@@ -2061,25 +2044,16 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                     </div>
 
                     <form onSubmit={handleSaveMember} className="space-y-4">
-                      {/* Photo Upload & Common Contact Fields */}
+                      {/* Photo (image URL) & Common Contact Fields */}
+                      <ImageUrlField
+                        label="Member Photo URL (সদস্যের ছবির লিংক)"
+                        value={mPhoto}
+                        onChange={setMPhoto}
+                        guide={IMAGE_GUIDES.member}
+                        required
+                      />
                       <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center p-4 bg-[#FAF8F5] rounded-2xl border border-[#E5DEC9]">
-                        <div className="sm:col-span-5 flex items-center gap-3">
-                          <img
-                            src={mPhoto}
-                            alt="Member"
-                            className="w-16 h-16 rounded-full object-cover border-2 border-[#D4AF37] shrink-0"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => memberPhotoRef.current?.click()}
-                            className="px-3.5 py-2 rounded-xl bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
-                          >
-                            <Upload className="w-3.5 h-3.5" />
-                            <span>Upload Photo</span>
-                          </button>
-                        </div>
-
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-6">
                           <label className="block text-xs font-bold mb-1">
                             Mobile Number (মোবাইল নম্বর) *
                           </label>
@@ -2093,7 +2067,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                           />
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-6">
                           <label className="block text-xs font-bold mb-1">
                             Joining Date (যোগদানের তারিখ) *
                           </label>
@@ -2671,34 +2645,19 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9] flex items-center gap-3">
-                          <img
-                            src={dPoster}
-                            alt="Poster"
-                            className="w-16 h-11 object-cover rounded border"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => dramaPosterRef.current?.click()}
-                            className="px-3 py-1.5 rounded-lg bg-[#CC0000] text-white text-xs font-bold cursor-pointer"
-                          >
-                            Upload Poster
-                          </button>
-                        </div>
-                        <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9] flex items-center justify-between">
-                          <span className="text-xs font-bold">
-                            Gallery ({dGallery.length})
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => dramaGalleryRef.current?.click()}
-                            className="px-3 py-1.5 rounded-lg bg-[#0F5132] text-white text-xs font-bold cursor-pointer"
-                          >
-                            + Add Stage Photos
-                          </button>
-                        </div>
-                      </div>
+                      <ImageUrlField
+                        label="Drama Poster URL (নাটকের পোস্টারের লিংক)"
+                        value={dPoster}
+                        onChange={setDPoster}
+                        guide={IMAGE_GUIDES.dramaPoster}
+                        required
+                      />
+                      <ImageUrlListField
+                        label="Stage Photo Gallery (মঞ্চের ছবি)"
+                        values={dGallery}
+                        onChange={setDGallery}
+                        guide={IMAGE_GUIDES.dramaGallery}
+                      />
 
                       <div className="pt-3 border-t border-[#E5DEC9] flex justify-end gap-3">
                         <button

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Calendar,
   Edit3,
@@ -10,7 +10,6 @@ import {
   Plus,
   Save,
   Trash2,
-  Upload,
   X,
 } from 'lucide-react';
 import {
@@ -20,7 +19,6 @@ import {
   SeoPageKey,
   SeoPageRecord,
   applyDynamicSeoToDocumentHead,
-  validateAndOptimizeUploadedImage,
 } from '../data/cmsDatabase';
 import {
   EventRecord,
@@ -33,6 +31,13 @@ import {
   extractYouTubeId,
 } from '../data/dramaAndVideoDatabase';
 import { SiteSettingsRecord } from '../data/settingsDatabase';
+import {
+  IMAGE_GUIDES,
+  ImageGuideBox,
+  ImageUrlField,
+  ImageUrlListField,
+  parseImageUrls,
+} from './AdminImageUrlField';
 
 // ============================================================================
 // 4. CULTURAL PROGRAM MANAGEMENT (`programs` Collection — Bilingual BN + EN)
@@ -63,8 +68,6 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
   const [descriptionBn, setDescriptionBn] = useState('');
   const [descriptionEn, setDescriptionEn] = useState('');
   const [image, setImage] = useState(ORIGINAL_STAGE_PHOTO_OPTIONS[0].url);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const openAdd = () => {
     setEditingId(null);
@@ -76,7 +79,6 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
     setDescriptionBn('');
     setDescriptionEn('');
     setImage(ORIGINAL_STAGE_PHOTO_OPTIONS[0].url);
-    setUploadError(null);
     setIsModalOpen(true);
   };
 
@@ -92,20 +94,7 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
       prog.description_en || prog.descriptionEn || prog.description || ''
     );
     setImage(prog.image);
-    setUploadError(null);
     setIsModalOpen(true);
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadError(null);
-    try {
-      const res = await validateAndOptimizeUploadedImage(file);
-      setImage(res.url);
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : 'Upload failed');
-    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -167,13 +156,6 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleImageUpload}
-      />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E5DEC9] shadow-xs">
         <div>
@@ -410,11 +392,6 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
               </button>
             </div>
 
-            {uploadError && (
-              <div className="p-3 rounded-xl bg-red-50 border border-red-300 text-xs text-red-700 font-bold">
-                {uploadError}
-              </div>
-            )}
 
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -521,22 +498,15 @@ export const CmsProgramsManagementPanel: React.FC<ProgramsManagementProps> = ({
                   </select>
                 </div>
 
-                <div className="flex items-center gap-3 p-2.5 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9]">
-                  <img
-                    src={image}
-                    alt="Preview"
-                    className="w-16 h-12 object-cover rounded border border-stone-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    className="px-3.5 py-2 rounded-lg bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>Upload Image</span>
-                  </button>
-                </div>
               </div>
+
+              <ImageUrlField
+                label="Program Image URL (অনুষ্ঠানের ছবির লিংক)"
+                value={image}
+                onChange={setImage}
+                guide={IMAGE_GUIDES.program}
+                required
+              />
 
               <div className="pt-3 border-t border-[#E5DEC9] flex justify-end gap-3">
                 <button
@@ -592,8 +562,6 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
   const [galleryImages, setGalleryImages] = useState<string[]>([
     ORIGINAL_STAGE_PHOTO_OPTIONS[0].url,
   ]);
-  const coverRef = useRef<HTMLInputElement | null>(null);
-  const galleryRef = useRef<HTMLInputElement | null>(null);
 
   const openAdd = () => {
     setEditingId(null);
@@ -625,24 +593,6 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
       ev.gallery_images?.length ? ev.gallery_images : [ev.cover_image]
     );
     setIsModalOpen(true);
-  };
-
-  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file);
-    setCoverImage(res.url);
-  };
-
-  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const urls: string[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const res = await validateAndOptimizeUploadedImage(files[i]);
-      urls.push(res.url);
-    }
-    setGalleryImages((prev) => [...prev, ...urls]);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -705,21 +655,6 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      <input
-        ref={coverRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleCoverUpload}
-      />
-      <input
-        ref={galleryRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={handleGalleryUpload}
-      />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E5DEC9] shadow-xs">
         <div>
@@ -940,40 +875,18 @@ export const CmsEventsManagementPanel: React.FC<EventsManagementProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9] space-y-2">
-                  <div className="text-xs font-bold text-[#1C1917]">
-                    Cover Image (কভার ছবি)
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={coverImage}
-                      alt="Cover"
-                      className="w-16 h-12 object-cover rounded border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => coverRef.current?.click()}
-                      className="px-3 py-1.5 rounded-lg bg-[#CC0000] text-white text-xs font-bold cursor-pointer"
-                    >
-                      Upload Cover
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9] space-y-2">
-                  <div className="text-xs font-bold text-[#1C1917]">
-                    Gallery Images ({galleryImages.length})
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => galleryRef.current?.click()}
-                    className="px-3 py-1.5 rounded-lg bg-[#0F5132] text-white text-xs font-bold cursor-pointer"
-                  >
-                    + Upload Event Gallery Photos
-                  </button>
-                </div>
-              </div>
+              <ImageUrlField
+                label="Cover Image URL (কভার ছবির লিংক)"
+                value={coverImage}
+                onChange={setCoverImage}
+                guide={IMAGE_GUIDES.eventCover}
+              />
+              <ImageUrlListField
+                label="Event Gallery Images (ইভেন্টের ছবি)"
+                values={galleryImages}
+                onChange={setGalleryImages}
+                guide={IMAGE_GUIDES.eventGallery}
+              />
 
               <div className="pt-3 border-t border-[#E5DEC9] flex justify-end gap-3">
                 <button
@@ -1049,8 +962,9 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
   // View Modal State
   const [viewingItem, setViewingItem] = useState<GalleryRecord | null>(null);
 
-  const singleFileRef = useRef<HTMLInputElement | null>(null);
-  const multiRef = useRef<HTMLInputElement | null>(null);
+  // Batch add by image URLs (one per line)
+  const [isBatchOpen, setIsBatchOpen] = useState(false);
+  const [batchUrls, setBatchUrls] = useState('');
 
   const availableCategories = categories.filter((c) => c !== 'সব ছবি');
 
@@ -1080,15 +994,6 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
     setGCategory(item.category || availableCategories[0] || 'নাটক');
     setGDate(item.date || '২০২৫');
     setIsFormModalOpen(true);
-  };
-
-  const handleSingleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file);
-    setGImage(res.url);
   };
 
   const handleSaveGalleryItem = async (e: React.FormEvent) => {
@@ -1150,22 +1055,23 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
     setIsFormModalOpen(false);
   };
 
-  const handleMultiUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const added: GalleryRecord[] = [];
+  const batch = parseImageUrls(batchUrls);
+
+  const handleBatchAdd = async () => {
+    if (batch.valid.length === 0) return;
     const catEn =
       GALLERY_CATEGORY_TRANSLATIONS[uploadCategory] || uploadCategory;
-    for (let i = 0; i < files.length; i++) {
-      const res = await validateAndOptimizeUploadedImage(files[i]);
-      const base = files[i].name.replace(/\.[^/.]+$/, '');
-      const titleBn = `রাধামাধব সাংস্কৃতিক জোট — ${uploadCategory} (${base})`;
-      const titleEn = `Radhamadhob Cultural Alliance — ${catEn} (${base})`;
-      const descBn = `${uploadCategory} পর্বের আসল মঞ্চ আলোকচিত্র (${files[i].name})।`;
-      const descEn = `Authentic stage photograph from ${catEn} performance (${files[i].name}).`;
-      added.push({
-        id: `gal-${Date.now()}-${i}`,
-        image: res.url,
+    const stamp = Date.now();
+    const today = new Date().toISOString().slice(0, 10);
+    const added: GalleryRecord[] = batch.valid.map((url, i) => {
+      const n = gallery.length + i + 1;
+      const titleBn = `রাধামাধব সাংস্কৃতিক জোট — ${uploadCategory} (${n})`;
+      const titleEn = `Radhamadhob Cultural Alliance — ${catEn} (${n})`;
+      const descBn = `${uploadCategory} পর্বের আসল মঞ্চ আলোকচিত্র।`;
+      const descEn = `Authentic stage photograph from ${catEn} performance.`;
+      return {
+        id: `gal-${stamp}-${i}`,
+        image: url,
         title: titleBn,
         title_bn: titleBn,
         titleEn: titleEn,
@@ -1176,17 +1082,15 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
         description_bn: descBn,
         descriptionEn: descEn,
         description_en: descEn,
-        date: new Date().toISOString().slice(0, 10),
-        seo_filename: files[i].name.toLowerCase().replace(/\s+/g, '-'),
+        date: today,
+        seo_filename: `radhamadhob-gallery-${stamp}-${i}.jpg`,
         alt_text: titleBn,
-      });
-    }
-    if (added.length > 0) {
-      await onUpdateGallery([...added, ...gallery]);
-      notifySaved(
-        `${added.length} original photos uploaded to \`gallery\` collection!`
-      );
-    }
+      };
+    });
+    await onUpdateGallery([...added, ...gallery]);
+    notifySaved(`${added.length} photos added to \`gallery\` collection!`);
+    setBatchUrls('');
+    setIsBatchOpen(false);
   };
 
   const handleCreateCategory = (e: React.FormEvent) => {
@@ -1205,21 +1109,6 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      <input
-        ref={singleFileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleSingleImageUpload}
-      />
-      <input
-        ref={multiRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={handleMultiUpload}
-      />
 
       {/* Header with Create Gallery Image + Bulk Upload */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E5DEC9] shadow-xs">
@@ -1261,15 +1150,72 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
             </select>
             <button
               type="button"
-              onClick={() => multiRef.current?.click()}
+              onClick={() => setIsBatchOpen((open) => !open)}
               className="px-4 py-2.5 rounded-xl bg-[#0F5132] hover:bg-[#0B3D25] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
             >
-              <Upload className="w-3.5 h-3.5 text-[#FDE68A]" />
-              <span>Multi Upload</span>
+              <Plus className="w-3.5 h-3.5 text-[#FDE68A]" />
+              <span>একসাথে অনেক ছবি (Add Multiple URLs)</span>
             </button>
           </div>
         </div>
       </div>
+
+      {/* Batch add: several image URLs into the selected category */}
+      {isBatchOpen && (
+        <div className="bg-white p-5 rounded-2xl border border-[#E5DEC9] space-y-3">
+          <div className="text-sm font-bold text-[#1C1917] font-display-bn">
+            একসাথে অনেক ছবি যুক্ত করুন → {uploadCategory} (Add several photos at once)
+          </div>
+          <ImageGuideBox guide={IMAGE_GUIDES.gallery} />
+          <textarea
+            rows={5}
+            value={batchUrls}
+            onChange={(e) => setBatchUrls(e.target.value)}
+            placeholder={'https://example.com/photo-1.jpg\nhttps://example.com/photo-2.jpg'}
+            className="w-full px-3 py-2 text-xs text-[#1C1917] bg-white border border-[#E5DEC9] rounded-xl font-mono-code"
+          />
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[11px]">
+            <span className="text-[#57534E]">
+              প্রতি লাইনে একটি লিংক — {batch.valid.length}টি সঠিক
+              {batch.invalid.length > 0 && (
+                <span className="text-red-700 font-bold">
+                  , {batch.invalid.length}টি ভুল (must start with https://)
+                </span>
+              )}
+              {' '}(One link per line; titles can be edited afterwards)
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setIsBatchOpen(false)}
+                className="px-4 py-2 text-xs font-bold border border-[#E5DEC9] rounded-xl cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleBatchAdd}
+                disabled={batch.valid.length === 0}
+                className="px-4 py-2 text-xs font-bold text-white bg-[#CC0000] rounded-xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {batch.valid.length}টি ছবি যুক্ত করুন (Add {batch.valid.length} photos)
+              </button>
+            </div>
+          </div>
+          {batch.valid.length > 0 && (
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {batch.valid.slice(0, 12).map((url, i) => (
+                <div
+                  key={`${url}-${i}`}
+                  className="aspect-[4/3] rounded-lg overflow-hidden border border-[#E5DEC9] bg-[#140807]"
+                >
+                  <img src={url} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Category Creator & Filter Bar */}
       <div className="bg-white p-5 rounded-2xl border border-[#E5DEC9] flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -1508,32 +1454,13 @@ export const CmsGalleryManagementPanel: React.FC<GalleryManagementProps> = ({
             </div>
 
             <form onSubmit={handleSaveGalleryItem} className="space-y-4">
-              {/* Image Preview & Upload */}
-              <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E5DEC9] flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={gImage}
-                    alt="Gallery Preview"
-                    className="w-24 h-16 object-cover rounded-xl border border-[#D4AF37]"
-                  />
-                  <div>
-                    <div className="text-xs font-bold text-[#1C1917]">
-                      Gallery Image (ছবি) *
-                    </div>
-                    <div className="text-[11px] text-[#57534E]">
-                      Upload a photo or choose from existing stage photographs
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => singleFileRef.current?.click()}
-                  className="px-4 py-2.5 rounded-xl bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Upload Image</span>
-                </button>
-              </div>
+              <ImageUrlField
+                label="Gallery Image URL (ছবির লিংক)"
+                value={gImage}
+                onChange={setGImage}
+                guide={IMAGE_GUIDES.gallery}
+                required
+              />
 
               {/* Bilingual Title & Description Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1693,7 +1620,6 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
   const [thumbnail, setThumbnail] = useState(
     ORIGINAL_STAGE_PHOTO_OPTIONS[0].url
   );
-  const thumbRef = useRef<HTMLInputElement | null>(null);
 
   const openAdd = () => {
     setEditingId(null);
@@ -1717,13 +1643,6 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
     );
     setThumbnail(v.thumbnail);
     setIsModalOpen(true);
-  };
-
-  const handleThumbUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file);
-    setThumbnail(res.url);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -1784,13 +1703,6 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      <input
-        ref={thumbRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleThumbUpload}
-      />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E5DEC9] shadow-xs">
         <div>
@@ -2088,20 +2000,12 @@ export const CmsVideosManagementPanel: React.FC<VideosManagementProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9]">
-                <img
-                  src={thumbnail}
-                  alt="Thumbnail"
-                  className="w-20 h-12 object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => thumbRef.current?.click()}
-                  className="px-3.5 py-2 rounded-lg bg-[#CC0000] text-white text-xs font-bold cursor-pointer"
-                >
-                  Upload Custom Thumbnail
-                </button>
-              </div>
+              <ImageUrlField
+                label="Custom Thumbnail URL (থাম্বনেইল ছবির লিংক)"
+                value={thumbnail}
+                onChange={setThumbnail}
+                guide={IMAGE_GUIDES.videoThumb}
+              />
 
               <div className="pt-3 border-t border-[#E5DEC9] flex justify-end gap-3">
                 <button
@@ -2151,7 +2055,6 @@ export const CmsSeoManagementPanel: React.FC<SeoManagementProps> = ({
   const [urlSlug, setUrlSlug] = useState(activePage.url_slug);
   const [ogImage, setOgImage] = useState(activePage.og_image);
   const [schemaData, setSchemaData] = useState(activePage.schema_data);
-  const ogFileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!activePage) return;
@@ -2188,13 +2091,6 @@ export const CmsSeoManagementPanel: React.FC<SeoManagementProps> = ({
     setUrlSlug(page.url_slug);
     setOgImage(page.og_image);
     setSchemaData(page.schema_data);
-  };
-
-  const handleOgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const res = await validateAndOptimizeUploadedImage(file);
-    setOgImage(res.url);
   };
 
   const handleCreateSeoPage = async (e: React.FormEvent) => {
@@ -2275,13 +2171,6 @@ export const CmsSeoManagementPanel: React.FC<SeoManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      <input
-        ref={ogFileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleOgUpload}
-      />
 
       <div className="bg-white p-6 rounded-2xl border border-[#E5DEC9] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -2391,26 +2280,12 @@ export const CmsSeoManagementPanel: React.FC<SeoManagementProps> = ({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-[#1C1917]">
-              OG Image (সোশ্যাল শেয়ার ছবি — Original Photo Only)
-            </label>
-            <div className="flex items-center gap-4 p-3 bg-[#FAF8F5] rounded-xl border border-[#E5DEC9]">
-              <img
-                src={ogImage}
-                alt="OG Preview"
-                className="w-24 h-14 object-cover rounded border"
-              />
-              <button
-                type="button"
-                onClick={() => ogFileRef.current?.click()}
-                className="px-3.5 py-2 rounded-lg bg-[#CC0000] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Upload Original OG Image</span>
-              </button>
-            </div>
-          </div>
+          <ImageUrlField
+            label="OG Image URL (সোশ্যাল শেয়ার ছবির লিংক)"
+            value={ogImage}
+            onChange={setOgImage}
+            guide={IMAGE_GUIDES.ogImage}
+          />
 
           <div>
             <label className="block text-xs font-bold text-[#1C1917] mb-1">

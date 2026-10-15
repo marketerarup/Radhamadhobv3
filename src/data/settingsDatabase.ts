@@ -2,6 +2,7 @@ import {
   fetchCollection,
   syncCollection,
 } from '../lib/cmsClient';
+import type { HighlightText, HomeImageItem } from './homepageContent';
 
 /**
  * ============================================================================
@@ -83,6 +84,10 @@ export interface SiteSettingsRecord {
   privacy_policy_intro_note: string;
   privacy_policy_intro_note_en: string;
   privacy_policy_sections: PrivacyPolicySectionData[];
+  // Homepage Content module (see src/data/homepageContent.ts); unset = built-in content
+  hero_slides?: HomeImageItem[];
+  about_photos?: HomeImageItem[];
+  highlights?: Partial<HighlightText>[];
   updated_date: string;
 }
 

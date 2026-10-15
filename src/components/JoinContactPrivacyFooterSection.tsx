@@ -10,7 +10,7 @@ import {
   MessageCircle,
   Phone,
   Shield,
-  Sparkles,
+  ListChecks,
   UserPlus,
 } from 'lucide-react';
 import { OfficialLogo } from './OfficialLogo';
@@ -125,7 +125,7 @@ export const JoinContactPrivacyFooterSection: React.FC<
               {/* Official Condition Box */}
               <div className="p-4 sm:p-5 rounded-2xl bg-black/35 border-2 border-[#FDE68A]/50 space-y-2">
                 <div className="text-xs sm:text-sm font-bold text-[#FDE68A] flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <ListChecks className="w-4 h-4 shrink-0" />
                   <span>
                     {lang === 'bn'
                       ? 'সদস্য ও অভিনয়শিল্পী হওয়ার শর্তাবলি:'

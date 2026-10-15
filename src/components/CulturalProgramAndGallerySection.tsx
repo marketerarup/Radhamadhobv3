@@ -7,7 +7,7 @@ import {
   ChevronRight,
   Eye,
   MapPin,
-  Sparkles,
+  Music,
   X,
 } from 'lucide-react';
 import { CulturalProgramRecord } from '../data/cmsDatabase';
@@ -153,7 +153,7 @@ export const CulturalProgramAndGallerySection: React.FC<
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D4AF37]/20 pb-5">
             <div className="space-y-2 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Music className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
                     ? 'বৈদিক সংস্কৃতি, গীতিনাট্য ও বিশেষ উৎসব'

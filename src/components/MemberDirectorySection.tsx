@@ -13,7 +13,7 @@ import {
   Phone,
   Search,
   SlidersHorizontal,
-  Sparkles,
+  BadgeCheck,
   UserCheck,
   Users,
   X,
@@ -631,7 +631,7 @@ export const MemberDirectorySection: React.FC<MemberDirectorySectionProps> = ({
                 </div>
                 <div className="text-center sm:text-left space-y-1.5">
                   <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-black/40 border border-[#FDE68A]/40 text-[#FDE68A] text-xs font-mono-code font-bold">
-                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <BadgeCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>{getMemberPosition(selectedMember)}</span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold font-display-bn gold-text-gradient">

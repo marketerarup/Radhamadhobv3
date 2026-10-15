@@ -6,7 +6,7 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
+  MoveHorizontal,
   X,
   Award,
   Layers,
@@ -251,7 +251,7 @@ export const CulturalHighlightsSection: React.FC<CulturalHighlightsSectionProps>
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/35 text-[#FDE68A] text-xs font-semibold tracking-wider uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>
               {lang === 'bn' ? 'আমাদের বিশেষত্ব ও সাংস্কৃতিক স্তম্ভ' : 'Core Pillars & Achievements'}
             </span>
@@ -289,7 +289,7 @@ export const CulturalHighlightsSection: React.FC<CulturalHighlightsSectionProps>
           {maxSlideIndex > 0 && (
             <div className="flex items-center justify-between px-1">
               <span className="text-xs text-[#FDE68A] font-medium font-mono-code flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-[#D4AF37]" />
+                <MoveHorizontal className="w-3 h-3 text-[#D4AF37]" />
                 <span>{lang === 'bn' ? 'সোয়াইপ করে সবগুলো দেখুন' : 'Swipe to explore all'}</span>
               </span>
               <div className="flex items-center gap-2">

@@ -7,7 +7,7 @@ import {
   Maximize2,
   Pause,
   Play,
-  Sparkles,
+  Camera,
   X,
   ZoomIn,
 } from 'lucide-react';
@@ -176,7 +176,7 @@ export const PhotoGallerySection: React.FC<PhotoGallerySectionProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#D4AF37]/20 pb-6 sm:pb-8">
             <div className="space-y-3 max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Camera className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
                     ? 'আলোকচিত্র মহাফেজখানা ও মঞ্চস্মৃতি'

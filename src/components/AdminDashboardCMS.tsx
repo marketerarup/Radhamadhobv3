@@ -19,7 +19,8 @@ import {
   Save,
   Settings,
   ShieldCheck,
-  Sparkles,
+  LayoutTemplate,
+  Music,
   Trash2,
   UserCheck,
   Users,
@@ -645,7 +646,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
       label: '1A. Homepage Content',
       labelBn: '১ক. হোমপেজ কনটেন্ট',
       collection: 'settings',
-      icon: Sparkles,
+      icon: LayoutTemplate,
     },
     {
       id: 'members',
@@ -669,7 +670,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
       label: '4. Cultural Programs',
       labelBn: '৪. সাংস্কৃতিক কার্যক্রম',
       collection: 'programs',
-      icon: Sparkles,
+      icon: Music,
     },
     {
       id: 'events',

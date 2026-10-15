@@ -8,7 +8,7 @@ import {
   Crown,
   Flame,
   Quote,
-  Sparkles,
+  Landmark,
   Users,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -178,7 +178,7 @@ export const StorytellingSection: React.FC<StorytellingSectionProps> = ({
           </div>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#180C0B] border border-[#D4AF37]/35 text-[#FDE68A] text-xs font-semibold tracking-wider uppercase shadow-inner">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Landmark className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>
               {lang === 'bn'
                 ? 'ঐতিহ্য ও সাংস্কৃতিক প্রেক্ষাপট · ২০১১ হতে চলমান'

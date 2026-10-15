@@ -12,7 +12,7 @@ import {
   Maximize2,
   Pause,
   Play,
-  Sparkles,
+  Tag,
   UserCheck,
   Users,
   Video,
@@ -252,7 +252,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-[#D4AF37]/20 pb-6 sm:pb-8">
             <div className="space-y-3 max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#180C0B] border border-[#D4AF37]/30 text-[#FDE68A] text-xs font-semibold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Drama className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>
                   {lang === 'bn'
                     ? 'মঞ্চনাটক ও পৌরাণিক পালা সম্ভার'
@@ -841,7 +841,7 @@ export const DramaAndVideoSection: React.FC<DramaAndVideoSectionProps> = ({
 
               <div className="absolute bottom-4 left-5 right-5 text-white space-y-1">
                 <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#990000] text-[#FDE68A] text-xs font-bold border border-[#D4AF37]/40">
-                  <Sparkles className="w-3 h-3 text-[#D4AF37]" />
+                  <Tag className="w-3 h-3 text-[#D4AF37]" />
                   <span>{tCategory(selectedDrama.category)}</span>
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold font-display-bn gold-text-gradient">

@@ -149,17 +149,20 @@ export async function fetchCollection<T extends { id: string }>(
 /**
  * Persist an admin update for a whole collection (upsert + delete removed).
  * Throws CmsRequestError when the server rejects the write.
+ * `requestBody` overrides what is sent to the server when it carries
+ * write-only fields (a new admin password) that other tabs must not receive.
  */
 export async function syncCollection<T extends { id: string }>(
   collectionName: string,
-  records: T[]
+  records: T[],
+  requestBody: unknown[] = records
 ): Promise<void> {
   broadcastCollectionUpdate(collectionName, records);
 
   const res = await authorizedFetch(collectionUrl(collectionName), {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(records),
+    body: JSON.stringify(requestBody),
   });
   if (!res.ok) {
     const code = await readErrorCode(res);

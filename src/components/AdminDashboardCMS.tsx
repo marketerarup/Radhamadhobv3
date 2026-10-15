@@ -382,6 +382,8 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   const [editingUserUid, setEditingUserUid] = useState<string | null>(null);
   const [uDisplayName, setUDisplayName] = useState('');
   const [uEmail, setUEmail] = useState('');
+  // Write-only: sent once with the save, then cleared (see saveAdminUsersToDatabase)
+  const [uPassword, setUPassword] = useState('');
   const [uRole, setURole] = useState<'admin' | 'super_admin' | 'editor'>(
     'admin'
   );
@@ -479,9 +481,13 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
   };
 
   // Persist the admin list; on rejection restore the server copy and explain why
-  const persistAdminUsers = (next: AdminUserRecord[], successMsg: string) => {
+  const persistAdminUsers = (
+    next: AdminUserRecord[],
+    successMsg: string,
+    newPasswords?: Record<string, string>
+  ) => {
     setAdminUsersList(next);
-    saveAdminUsersToDatabase(next)
+    saveAdminUsersToDatabase(next, newPasswords)
       .then(() => notifySaved(successMsg))
       .catch(async (err: unknown) => {
         const code =
@@ -2809,6 +2815,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                     setEditingUserUid(null);
                     setUDisplayName('');
                     setUEmail('');
+                    setUPassword('');
                     setURole('admin');
                     setIsUserModalOpen(true);
                   }}
@@ -2852,6 +2859,7 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                             setEditingUserUid(u.uid);
                             setUDisplayName(u.displayName);
                             setUEmail(u.email);
+                            setUPassword('');
                             setURole(
                               (u.role as 'admin' | 'super_admin' | 'editor') ||
                                 'admin'
@@ -2919,6 +2927,8 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                         e.preventDefault();
                         if (!uDisplayName.trim() || !uEmail.trim()) return;
                         const nowIso = new Date().toISOString();
+                        const newPasswordFor = (uid: string) =>
+                          uPassword ? { [uid]: uPassword } : undefined;
                         if (editingUserUid) {
                           const next = adminUsersList.map((u) =>
                             u.uid === editingUserUid
@@ -2932,7 +2942,8 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                           );
                           persistAdminUsers(
                             next,
-                            'Admin user updated in `users` collection!'
+                            'Admin user updated in `users` collection!',
+                            newPasswordFor(editingUserUid)
                           );
                         } else {
                           const newUser: AdminUserRecord = {
@@ -2947,9 +2958,11 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                           const next = [...adminUsersList, newUser];
                           persistAdminUsers(
                             next,
-                            'New admin user added to `users` collection!'
+                            'New admin user added to `users` collection!',
+                            newPasswordFor(newUser.uid)
                           );
                         }
+                        setUPassword('');
                         setIsUserModalOpen(false);
                       }}
                       className="space-y-3.5"
@@ -2977,6 +2990,33 @@ export const AdminDashboardCMS: React.FC<AdminDashboardCMSProps> = ({
                           value={uEmail}
                           onChange={(e) => setUEmail(e.target.value)}
                           placeholder="admin@radhamadhob.org"
+                          className="w-full px-3.5 py-2 text-sm font-mono-code border border-[#E5DEC9] rounded-xl"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold mb-1">
+                          {editingUserUid
+                            ? 'New Password (নতুন পাসওয়ার্ড)'
+                            : 'Password (পাসওয়ার্ড) *'}
+                        </label>
+                        <input
+                          type="password"
+                          // A changed email drops the old password server-side
+                          required={
+                            !editingUserUid ||
+                            adminUsersList.find((u) => u.uid === editingUserUid)
+                              ?.email !== uEmail.trim().toLowerCase()
+                          }
+                          minLength={10}
+                          maxLength={200}
+                          autoComplete="new-password"
+                          value={uPassword}
+                          onChange={(e) => setUPassword(e.target.value)}
+                          placeholder={
+                            editingUserUid
+                              ? 'খালি রাখলে আগের পাসওয়ার্ড থাকবে (leave blank to keep)'
+                              : 'কমপক্ষে ১০ অক্ষর (min. 10 characters)'
+                          }
                           className="w-full px-3.5 py-2 text-sm font-mono-code border border-[#E5DEC9] rounded-xl"
                         />
                       </div>

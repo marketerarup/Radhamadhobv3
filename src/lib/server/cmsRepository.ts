@@ -1,6 +1,7 @@
 import 'server-only';
 import type { AnyBulkWriteOperation, Db, Document } from 'mongodb';
 import { withDb } from './mongodb';
+import { hashPassword } from './passwords';
 import { revokeUserSessions } from './refreshTokens';
 
 /**
@@ -142,14 +143,21 @@ export async function writeCollection(
   return docs.length;
 }
 
+export const MIN_ADMIN_PASSWORD_LENGTH = 10;
+const MAX_ADMIN_PASSWORD_LENGTH = 200;
+
 /**
  * Replace the admin `users` list. Only whitelisted profile fields are accepted;
  * password hashes and login metadata stay server-owned and are preserved.
+ * An optional write-only `password` sets (or resets) that account's password:
+ * it is hashed here, never stored or returned in plain text, and signs the
+ * account out of its other sessions.
  */
 export async function writeAdminUsers(
   payload: unknown,
   actingUserId: string
 ): Promise<number> {
+  const newPasswords = new Map<string, string>();
   const incoming = validateDocuments(payload).map((doc) => {
     const email = typeof doc.email === 'string' ? doc.email.trim().toLowerCase() : '';
     const displayName =
@@ -164,6 +172,16 @@ export async function writeAdminUsers(
     if (!ADMIN_ROLES.includes(role)) {
       throw new CmsValidationError(`Invalid role for user "${doc.id}".`);
     }
+    const password = typeof doc.password === 'string' && doc.password ? doc.password : undefined;
+    if (
+      password !== undefined &&
+      (password.length < MIN_ADMIN_PASSWORD_LENGTH || password.length > MAX_ADMIN_PASSWORD_LENGTH)
+    ) {
+      throw new CmsValidationError(
+        `Password for "${email}" must be ${MIN_ADMIN_PASSWORD_LENGTH}–${MAX_ADMIN_PASSWORD_LENGTH} characters.`
+      );
+    }
+    if (password !== undefined) newPasswords.set(doc.id, password);
     return {
       id: doc.id,
       uid: doc.id,
@@ -190,6 +208,13 @@ export async function writeAdminUsers(
     throw new CmsValidationError('At least one admin or super admin must remain.', 409);
   }
 
+  // Hash before opening the database connection (PBKDF2 is CPU-bound).
+  const newHashes = new Map(
+    await Promise.all(
+      [...newPasswords].map(async ([id, pw]) => [id, await hashPassword(pw)] as const)
+    )
+  );
+
   return withDb(async (db) => {
     const col = db.collection<AdminUserDocument>(ADMIN_USERS_COLLECTION);
     const existing = await col.find({}).toArray();
@@ -204,6 +229,8 @@ export async function writeAdminUsers(
         if (prev.passwordHash) doc.passwordHash = prev.passwordHash;
         if (prev.lastLoginAt) doc.lastLoginAt = prev.lastLoginAt;
       }
+      const newHash = newHashes.get(u.id);
+      if (newHash) doc.passwordHash = newHash;
       return doc;
     });
 
@@ -216,6 +243,21 @@ export async function writeAdminUsers(
       .map((u) => u.id);
     if (revokedUserIds.length > 0) {
       await revokeUserSessions(db, revokedUserIds, 'account_changed');
+    }
+
+    // A new password signs the account out elsewhere (the acting admin keeps
+    // this session) and lifts any failed-login lockout.
+    const passwordChangedIds = [...newHashes.keys()].filter(
+      (id) => id !== actingUserId && existingById.has(id)
+    );
+    if (passwordChangedIds.length > 0) {
+      await revokeUserSessions(db, passwordChangedIds, 'password_changed');
+    }
+    const passwordEmails = incoming.filter((u) => newHashes.has(u.id)).map((u) => u.email);
+    if (passwordEmails.length > 0) {
+      await db
+        .collection<{ _id: string }>('auth_login_attempts')
+        .deleteMany({ _id: { $in: passwordEmails } });
     }
     return docs.length;
   });

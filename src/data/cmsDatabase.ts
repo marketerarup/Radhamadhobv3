@@ -1032,8 +1032,11 @@ export async function fetchAdminUsersFromDatabase(): Promise<AdminUserRecord[] |
   return remote.map(({ id, ...rest }) => ({ ...rest, uid: rest.uid || id }));
 }
 
+// `newPasswords` (uid → password) is sent to the server once, where it is
+// hashed; it is never kept in the admin list or broadcast to other tabs.
 export async function saveAdminUsersToDatabase(
-  users: AdminUserRecord[]
+  users: AdminUserRecord[],
+  newPasswords: Record<string, string> = {}
 ): Promise<void> {
   const payload = users.map((u) => ({
     id: u.uid,
@@ -1044,7 +1047,10 @@ export async function saveAdminUsersToDatabase(
     photoURL: u.photoURL,
     createdAt: u.createdAt || new Date().toISOString(),
   }));
-  await syncCollection('users', payload);
+  const requestBody = payload.map((u) =>
+    newPasswords[u.id] ? { ...u, password: newPasswords[u.id] } : u
+  );
+  await syncCollection('users', payload, requestBody);
 }
 
 export const INITIAL_SEO_PAGES_SEED = INITIAL_SEO_SEED;
